@@ -1,0 +1,15 @@
+.about {
+    height: 500px;
+
+    /* 
+    #009FEE -> Skyblue  
+    #123E7C -> Darkblue 
+    #7CA9E6 -> Lightblue
+    */
+
+    background-color: #7CA9E6; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}

@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website</title>
+
+    <link rel="stylesheet" href="{% static 'website/navbar.css' %}">    
+    <link rel="stylesheet" href="{% static 'website/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'website/home.css' %}">
+    <link rel="stylesheet" href="{% static 'website/about.css' %}">
+    <link rel="stylesheet" href="{% static 'website/services.css' %}">
+    <link rel="stylesheet" href="{% static 'website/contact.css' %}">
+    <link rel="stylesheet" href="{% static 'website/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'website/login.css' %}">
+    <link rel="stylesheet" href="{% static 'website/login_modal.css' %}">
+    <link rel="stylesheet" href="{% static 'website/signup.css' %}">
+
+</head>
+
+<style>
+    body {
+        margin: 0;
+        background-color: aliceblue;
+        color: black;
+    }
+
+    h1, h2, p {
+        margin: 0;
+        font-family: sans-serif;
+    }
+</style>
+
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <i class="fa-solid fa-bars" id="nav-menu-btn"></i>
+        <img hidden src="doc2ne_transparent_logo.png" alt="" class="doc2ne-logo">
+        <strong>Doc2ne Clinic</strong>
+        <!-- <div id="nav-login-btn">Log in</div> -->
+        <button class="nav-login-btn" id="openModalBtn"><p>Log in</p></button>
+    </div>
+
+    <!-- Landing Page -->
+    <div class="landing">
+        <h1>Doc2ne</h1>
+        <h2>Dental Clinic</h2>
+        <p>"Creating smiles with a gentle touch"</p>
+        <div id="landing-services-btn">See Services</div>
+        <div id="landing-contact-btn">Contact Us</div>
+    </div>
+
+    <!-- About -->
+    <div class="about"></div>
+
+    <!-- Services -->
+    <div class="services"></div>
+
+    <!-- Contacts -->
+    <div class="contact"></div>
+
+    <!-- Login Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModalBtn" class="close">&times;</span>
+            <h2>Welcome Back</h2>
+            <p>Doesn't have an account yet?<a href="">Sign Up</a></p>
+            <form action="/action_page.php">
+                <!-- Email Address -->
+                <label for="fname"><i class="fa-regular fa-envelope"></i>Email Address</label><br>
+                <input type="text" id="fname" name="fname" value="" placeholder="  You@example.com" class="text"><br>
+                <!-- Password -->
+                <label for="lname"><i class="fa-solid fa-lock"></i>Password</label><br>
+                <input type="text" id="lname" name="lname" value="" placeholder="  Enter 10 characters or more" class="text"><br> 
+                <div class="remember-me-box">
+                <!-- Remember Me -->
+                <input type="checkbox" class="checkbox" >    
+                <label for="remember-me">Remember Me</label>
+                <!-- Forgot Password -->
+                <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+                <input type="submit" value="Login" class="login-button">
+                
+            </form> 
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <div class="footer"></div>
+    
+    <script src="https://kit.fontawesome.com/603a80fa25.js" crossorigin="anonymous"></script>
+    <script src="{% static 'website/login_modal.js' %}"></script>
+</body>
+</html>

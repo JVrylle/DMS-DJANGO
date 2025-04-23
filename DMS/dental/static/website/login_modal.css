@@ -1,0 +1,114 @@
+/* Hide modal by default */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; 
+    top: 0;
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    }
+
+/* Close button */
+.close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+
+/* Modal box */
+.modal-content {
+    background-color: white;
+
+    margin: 15vh auto;    
+    width: 260px;
+    min-width: 260px;
+    max-width: 320px;
+    height: auto;
+    border-radius: 10px;
+    position: relative;
+    padding: 20px;
+}
+
+.modal-content h2 {
+    font-size: 28px;
+    margin-top: 10px;
+    color: black;
+}
+
+.modal-content a {
+    margin-left: 10px;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.modal-content p {
+    color: black;
+    font-size: 12px;
+    margin-top:10px ;
+    margin-bottom: 20px;
+}
+
+.modal-content label {
+    font-family: sans-serif;
+    font-size: 12px;
+}
+
+.modal-content i {
+    font-size: 12px;
+    margin-right: 10px;
+    margin-left: 3px;
+}
+
+.modal-content input.text {
+    font-size: 12px;
+    border-radius: 4px;
+    border: 1px solid grey;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    width: 98%;
+    height: 30px;
+}
+
+.remember-me-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-content input.checkbox {
+    height: 15px;
+    margin: 0px;
+    margin-right: 8px;
+    padding: 0px;
+    width: auto;
+}
+
+.modal-content a.forgot-password {
+    margin: 0px;
+    margin-left: auto;
+    font-family: sans-serif;
+}
+
+.modal-content input.login-button {
+    font-size: 12px;
+    border-radius: 4px;
+    border: 1px solid grey;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    width: 98%;
+    height: 30px;
+}
+
+
+@media screen and (min-width: 375px) {
+    .modal-content {
+        width: auto;
+        max-width: 300px;
+    }
+}

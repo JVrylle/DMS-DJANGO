@@ -1,0 +1,149 @@
+.main {
+    width: 100%;
+    height: 100vh;
+    background-color: aliceblue;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    padding-left: 60px;
+}
+
+.main::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+
+.main-header {
+    height: 70px;
+    width: 100%;
+    margin: auto;
+    background-color:white;
+    display:flex ;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-header i {
+    font-size: 1.2rem;
+    color: black;
+    margin: 10px;
+}
+
+.main-header-container {
+    margin-left: auto;
+    display: flex;
+    margin-right: 2.5%;
+}
+
+.search-container {
+    padding-left: 20px;
+    padding-right: 10px;
+    width: 100%;
+}
+
+.search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 100%;
+    min-width: 160px;
+    max-width: 400px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    border: solid 1px rgba(0, 0, 0, 0.178);
+    margin: auto;
+}
+
+.search p {
+    color: rgba(0, 0, 0, 0.515);
+    margin-left: auto;
+}
+
+#search-logo {
+    color: rgb(66, 66, 66);
+    font-size: 20px;
+    margin-left: auto;
+    margin-right: 10px;
+    border-radius: 15px;
+}
+
+.main-content-spacing {
+    height: 100%;
+    width: 95%;
+    margin: auto;
+}
+
+.banner {
+    width: 100%;
+    height: 170px;
+    background-color: #1E3A8A;
+    border-radius: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.banner p {
+    font-size: 2rem;
+    margin: 15px 0px 0px 15px;
+    padding-top: 10px;
+    color: white;
+
+}
+
+
+.main-container {
+    height: auto;
+    width: 100%;    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+
+.main-containers {
+    background-color: #ffffff;
+    height: 300px;
+    flex: 1 0 300px;
+    border-radius: 15px;
+}
+
+.main-containers .first{
+    background-color:  #1E3A8A;
+}
+
+.main-containers .second{
+    background-color: #1E3A8A;
+}
+
+.main-containers .third{
+    background-color: #1E3A8A;
+}
+
+.main-containers .fourth{
+    background-color: #1E3A8A;
+}
+
+
+/* MOBILE */
+
+@media screen and (max-width: 450px) {
+    .main-containers {
+        flex-basis: 247px;
+        height: auto;
+        min-height: 247px;
+    }
+    .banner p {
+        font-size: 1.5rem;
+    }
+}
+
+/* TABLET */
+
+@media screen and (max-width: 780px) {
+
+}

@@ -1,0 +1,249 @@
+/* SIDEBAR */
+.sidebar {
+    width: 100%;
+    height: 100vh;
+    max-width: 300px;
+    background-color: white;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 300px;
+    background-color: white;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    
+    /* Hidden off-screen */
+    /* transform: translateX(-100%);  */
+}
+
+
+.sidebar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+
+
+/* SIDEBAR MENU */
+
+.sidebar-menu {
+    font-size: 1.8rem;
+    background-color: #1E3A8A;
+    color: white;
+    display: flex;
+    justify-content: right;
+}
+
+.sidebar-menu #close-menu{
+    margin: 10px;
+    padding: 10px;
+    border-radius: 15px;
+
+}
+
+.sidebar-menu #open-menu{
+    margin: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    display: none;
+}
+
+
+/* SIDEBAR PROFILE */
+.sidebar-profile {
+    background-color: #1E3A8A;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar-profile-pic {
+    font-size: 3rem;
+    color: #1E3A8A;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+
+    scale: 30%;
+    transition: scale 0.5s ease;
+}
+
+.sidebar-profile-name {
+    padding-top: 10px;
+    font-size: 1.5rem;
+    color: white;
+    text-wrap: nowrap;
+    margin: 0px;
+    margin-bottom: 20px;
+}
+
+/* SIDEBAR BUTTONS */
+.sidebar-buttons {
+    background-color: white;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content:baseline ;
+    margin: 3px 0px 3px 0px;
+    font-size: 1.2rem;
+    text-wrap: nowrap;
+}
+
+.buttons i {
+    text-align: center;
+    margin: 20px;
+    height: 1.2rem;
+    width: 1.2rem;
+    /* background-color: red; */
+}
+
+.button-title {
+    margin: 0px;
+    width: 100%;
+}
+
+/* Hover Animations*/
+.buttons:hover{
+    background-color: #1E3A8A;
+    color: white;
+    transition: .3s;
+}
+
+
+.sidebar-menu i:hover {
+    background-color: #16207b;
+    transition: .5s;
+}
+
+
+/* Hover Active Animations */
+.active {
+    border-left: 6px solid #1E3A8A;
+}
+
+
+
+/* MENU ANIMATION */
+
+
+
+/* Add smooth transition */
+.sidebar {
+    transition: .5s ease;
+}
+
+/* When collapsed */
+.sidebar.collapsed {
+    max-width: 60px;
+}
+
+/* Hide text in collapsed mode */
+.sidebar.collapsed .sidebar-profile-name {
+    color: #16207b;
+    text-wrap: nowrap;
+    scale: 0%;
+}
+
+/* .sidebar.collapsed .sidebar-profile-pic {
+    scale: 30%;
+    animation-name: scaledown_profile_pic;
+    animation-duration: .5s;
+} */
+
+.sidebar:not(.collapsed) .sidebar-profile-pic {
+  scale: 100%;
+}
+
+@keyframes scaledown_profile_pic {
+    from {scale: 100%; }
+    to {scale: 30%;}
+
+}
+
+.sidebar.collapsed .button-title,
+.sidebar.collapsed #close-menu {
+    display: none;
+}
+
+.sidebar.collapsed #open-menu {
+    display: inline;
+}
+
+/* Default hidden open-menu */
+#open-menu {
+    display: none;
+}
+
+/* Animation for scaling up profile pic */
+
+/* @keyframes scaleup_profile_pic {
+  from { scale: 30%; }
+  to { scale: 100%; }
+} */
+
+/* When expanding (remove collapsed) */
+/* .sidebar:not(.collapsed) .sidebar-profile-pic {
+  scale: 100%;
+  animation: scaleup_profile_pic 0.5s forwards;
+} */
+
+.sidebar:not(.collapsed) .sidebar-profile-name {
+  color: white;
+  animation: fadein_text 0.5s ease-in forwards;
+}
+
+.sidebar:not(.collapsed) .button-title {
+  animation: fadein_button 0.5s ease-in forwards;
+}
+  
+
+@keyframes fadein_text {
+  0% { opacity: 0; color: transparent; }
+  100% { opacity: 1; color: white; }
+}
+
+@keyframes fadein_button {
+  0% { opacity: 0;  }
+  100% { opacity: 1;  }
+
+}
+
+
+/* Scrollable Buttons only Sidebar */
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent sidebar itself from scrolling */
+}
+
+.sidebar-scrollable {
+overflow-y: auto;
+flex-grow: 1; /* Take up remaining space */
+}
+
+
+.sidebar-scrollable::-webkit-scrollbar {
+width: 0;
+background: transparent;
+}
+
+
+/* MOBILE STYLES */
+/* @media only screen and (max-width: 425px) {
+    .banner p {
+       
+  } */

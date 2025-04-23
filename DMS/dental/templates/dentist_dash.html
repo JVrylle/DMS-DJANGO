@@ -1,0 +1,114 @@
+{% extends "dash_master.html" %}
+{% load static %}
+
+
+{% block title %} Dentist Dashboard {% endblock %}
+
+{% block content %}
+
+<style>
+body {
+    font-family: sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    background-color: aliceblue;
+}
+</style>
+
+
+<div class="sidebar collapsed">
+
+    <div class="sidebar-menu">
+        <i class="fa-regular fa-square-caret-left" id="close-menu"></i>
+        <i class="fa-solid fa-bars" id="open-menu"></i>
+    </div>
+    
+    <div class="sidebar-profile">
+        <div class="sidebar-profile-pic">
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <p class="sidebar-profile-name">Dr. Orias</p>
+    </div>
+
+    <div class="sidebar-scrollable">
+        <div class="sidebar-buttons">
+            <div class="buttons active">
+                <i class="fa-solid fa-table-columns"></i>
+                <p class="button-title">Dashboard</p>
+                
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-calendar-check"></i>
+                <p class="button-title">Appointments</p>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-notes-medical"></i>
+                <p class="button-title">Patient Information Record</p>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-chart-simple"></i>
+                <p class="button-title">Analytics</p>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-envelope"></i>
+                <p class="button-title">Notifications</p>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-prescription"></i>
+                <p class="button-title">Give Prescription</p>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-file-medical"></i>
+                <p class="button-title">Health Records</p>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <p class="button-title" id="Emergency">Emergency Notification</p>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-question"></i>
+                <p class="button-title">F.A.Q.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="main">
+    <div class="main-header">
+        <i class="fa-solid fa-bars" id="open-menu"></i>
+        <div class="search-container">
+            <div class="search">
+                <p>Search</p>
+                <i class="fa-solid fa-magnifying-glass" id="search-logo"></i>
+            </div>
+        </div>
+        <div class="main-header-container">
+            <i class="fa-solid fa-gear" class="main-settings"></i>
+            <i class="fa-solid fa-user" class="main-profile"></i> 
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="main-content-spacing">
+            <div class="banner">
+                <p>Dentist Dashboard</p>
+            </div>
+            <div class="main-container">
+                <div class="main-containers first"></div>
+                <div class="main-containers second"></div>
+                <div class="main-containers third"></div>
+                <div class="main-containers fourth"></div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
