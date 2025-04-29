@@ -6,9 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-    {% for loop in testing_list %}
-    <p>{{loop}}</p>
-
-    {% endfor %}
+    {% if request.user.role == "ADMIN" %}
+        YOU ARE ADMIN!!!!!!!!
+    {% endif %}
+  
+    {% if request.user.role == "DENTIST" %}
+        BROOO YOU ARE DENTIST
+    {% endif %}
 </body>
 </html>
