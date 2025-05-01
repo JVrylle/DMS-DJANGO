@@ -1,10 +1,40 @@
 {% extends "Admin/admin_dash.html" %}
 {% block admincontent %}
 <div class="main-container">
-    <div class="main-containers first">Patient Information Records</div>
-    <div class="main-containers second">Patient Information Records</div>
-    <div class="main-containers third">Patient Information Records</div>
-    <div class="main-containers fourth">Patient Information Records</div>
+    <div class="main-containers first">
+        <!-- THIS IS SUPPOSED TO BE A FORM WIZARD/ MULTI STEP FORM -->
+        <form action="">
+            <div class="tab">
+                <h1>Patient Information Record</h1>
+                <label for="">Name:</label>
+                <input type="text" placeholder="Last name">
+                <input type="text" placeholder="First name">
+                <input type="text" placeholder="Middle name">
+                <br>
+                <label for="">Birthdate(mm/dd/yy) </label>
+                <input type="text" placeholder="month">
+                <input type="text" placeholder="day">
+                <input type="text" placeholder="year">
+                <br>
+                <label for="">Religion:</label>
+                <input type="text" placeholder="ex. Roman Catholic">
+                <label for="">Nationality</label>
+                <input type="text" placeholder="ex. Filipino">
+            </div>
+            <div class="tab">
+
+            </div>
+            <div class="tab">
+
+            </div>
+            <div class="tab">
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
 
 <script>
