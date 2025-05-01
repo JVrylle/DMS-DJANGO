@@ -3,59 +3,120 @@ from django.http import HttpResponse
 from django.template import loader
 from .decorators import role_required
 
+# NOTICE IMPOTANT
+# Decorators are temporarily disabled for faster development
+#
+#
+
 
 # WEBSITE
 def website(request):
     return render(request, 'website.html')
 
 # USER
-@role_required(['USER'])
+# @role_required(['USER'])
 def user_dash(request):
     return render(request, 'User/user_dash.html')
 
-# def user_landing(request):
-#     return render(request, 'User/user_landing.html')
-
-@role_required(['USER'])
+# @role_required(['USER'])
 def user_appointments(request):
     return render(request, 'User/user_appointments.html')
 
-@role_required(['USER'])
+# @role_required(['USER'])
 def user_analytics(request):
     return render(request, 'User/user_analytics.html')
 
-@role_required(['USER'])
+# @role_required(['USER'])
 def user_notifications(request):
     return render(request, 'User/user_notifications.html')
 
-@role_required(['USER'])
+# @role_required(['USER'])
 def user_prescription(request):
     return render(request, 'User/user_prescription.html')
 
-@role_required(['USER'])
+# @role_required(['USER'])
 def user_health_record(request):
     return render(request, 'User/user_health_record.html')
 
-@role_required(['USER'])
+# @role_required(['USER'])
 def user_emergency(request):
     return render(request, 'User/user_emergency.html')
 
-@role_required(['USER'])
+# @role_required(['USER'])
 def user_faq(request):
     return render(request, 'User/user_faq.html')
 
 
-
-
 # DENTIST
-@role_required(['DENTIST','ADMIN'])
+# @role_required(['DENTIST','ADMIN'])
 def dentist_dash(request):
     return render(request, 'Dentist/dentist_dash.html')
 
+# @role_required(['DENTIST'])
+def dentist_appointments(request):
+    return render(request, 'Dentist/dentist_appointments.html')
+
+# @role_required(['DENTIST'])
+def dentist_patient_info_record(request):
+    return render(request, 'Dentist/dentist_patient_info.html')
+
+# @role_required(['DENTIST'])
+def dentist_patient_health_records(request):
+    return render(request, 'Dentist/dentist_patient_health_records.html')
+
+# @role_required(['DENTIST'])
+def dentist_analytics(request):
+    return render(request, 'Dentist/dentist_analytics.html')
+
+# @role_required(['DENTIST'])
+def dentist_notifications(request):
+    return render(request, 'Dentist/dentist_notifications.html')
+
+# @role_required(['DENTIST'])
+def dentist_give_prescription(request):
+    return render(request, 'Dentist/dentist_give_prescription.html')
+
+# @role_required(['DENTIST'])
+def dentist_emergency(request):
+    return render(request, 'Dentist/dentist_emergency.html')
+
+# @role_required(['DENTIST'])
+def dentist_faq(request):
+    return render(request, 'Dentist/dentist_faq.html')
+
+
 # ADMIN
-@role_required(['DENTIST','ADMIN'])
+# @role_required(['DENTIST','ADMIN'])
 def admin_dash(request):
     return render(request, 'Admin/admin_dash.html')
+
+# @role_required(['DENTIST','ADMIN'])
+def admin_appointments(request):
+    return render(request, 'Admin/admin_appointments.html')
+
+# @role_required(['DENTIST','ADMIN'])
+def admin_patient_info_records(request):
+    return render(request, 'Admin/admin_patient_info_records.html')
+
+# @role_required(['DENTIST','ADMIN'])
+def admin_analytics(request):
+    return render(request, 'Admin/admin_analytics.html')
+
+# @role_required(['DENTIST','ADMIN'])
+def admin_system_logs(request):
+    return render(request, 'Admin/admin_system_logs.html')
+
+# @role_required(['DENTIST','ADMIN'])
+def admin_security_logs(request):
+    return render(request, 'Admin/admin_security_logs.html')
+
+# @role_required(['DENTIST','ADMIN'])
+def admin_event_logs(request):
+    return render(request, 'Admin/admin_event_logs.html')
+
+# @role_required(['DENTIST','ADMIN'])
+def admin_emergency_logs(request):
+    return render(request, 'Admin/admin_emergency_logs.html')
 
 
 

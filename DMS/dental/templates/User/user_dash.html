@@ -102,7 +102,6 @@ body {
                 </div>
                 {% endblock %}
             </div>
-            </div>
         </div>
     </div>
 
@@ -173,15 +172,7 @@ body {
         // Re-run the active class logic to update the sidebar
         window.dispatchEvent(new Event('load'));
     }
-
-
-
-
-
-
-
-
-
+ 
     function navigateToFromData(buttonElement) {
         const url = buttonElement.getAttribute('data-url');  // Get the URL from data-url
         const bannerTitle = buttonElement.getAttribute('data-banner');  // Get the banner title from data-banner

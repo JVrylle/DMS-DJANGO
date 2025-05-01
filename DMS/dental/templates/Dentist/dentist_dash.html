@@ -33,41 +33,41 @@ body {
 
     <div class="sidebar-scrollable">
         <div class="sidebar-buttons">
-            <div class="buttons active">
+            <div class="buttons active" data-url="{% url 'dentist_dash' %}" data-banner="Dashboard" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-table-columns"></i>
                 <p class="button-title">Dashboard</p>
                 
             </div>
-            <div class="buttons">
+            <div class="buttons" data-url="{% url 'dentist_appointments' %}" data-banner="Appointments" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-calendar-check"></i>
                 <p class="button-title">Appointments</p>
             </div>
-            <div class="buttons">
+            <div class="buttons" data-url="{% url 'dentist_patient_info_record' %}" data-banner="Patient Information Record" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-notes-medical"></i>
                 <p class="button-title">Patient Info Record</p>
             </div>
-            <div class="buttons">
+            <div class="buttons" data-url="{% url 'dentist_patient_health_records' %}" data-banner="Patient Health Record" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-file-medical"></i>
                 <p class="button-title">Health Records</p>
             </div>
-            <div class="buttons">
+            <div class="buttons" data-url="{% url 'dentist_analytics' %}" data-banner="Analytics" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-chart-simple"></i>
                 <p class="button-title">Analytics</p>
             </div>
-            <div class="buttons">
+            <div class="buttons" data-url="{% url 'dentist_notifications' %}" data-banner="Notifications" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-envelope"></i>
                 <p class="button-title">Notifications</p>
             </div>
-            <div class="buttons">
+            <div class="buttons" data-url="{% url 'dentist_give_prescription' %}" data-banner="Give Prescription" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-prescription"></i>
                 <p class="button-title">Give Prescription</p>
             </div>
 
-            <div class="buttons">
+            <div class="buttons" data-url="{% url 'dentist_emergency' %}" data-banner="Emergency Notification" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <p class="button-title" id="Emergency">Emergency Notification</p>
             </div>
-            <div class="buttons">
+            <div class="buttons" data-url="{% url 'dentist_faq' %}" data-banner="F.A.Q." onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-question"></i>
                 <p class="button-title">F.A.Q.</p>
             </div>
@@ -94,22 +94,140 @@ body {
     </div>
 
     <div class="main-content">
-        <div class="main-content-spacing">
+        <div class="main-content-spacing">  
             <div class="banner">
-                <p>Dentist Dashboard</p>
+                <p id="banner-title">Dashboard</p>
             </div>
-            <div class="main-container">
-                <div class="main-containers first"></div>
-                <div class="main-containers second"></div>
-                <div class="main-containers third"></div>
-                <div class="main-containers fourth"></div>
-
-
-
+            <div id="dynamic-main-content">
+                {% block dentistcontent %}
+                <div class="main-container">
+                    <div class="main-containers first">Dashboard</div>
+                    <div class="main-containers second">Dashboard</div>
+                    <div class="main-containers third">Dashboard</div>
+                    <div class="main-containers fourth">Dashboard</div>
+                </div>
+                {% endblock %}
             </div>
         </div>
     </div>
 
 </div>
+
+
+<script>
+    // Wait for the page to load
+    window.addEventListener('load', function() {
+        // Get the current page's URL path
+        const currentPath = window.location.pathname;
+        
+        // Select all the buttons in the sidebar
+        const buttons = document.querySelectorAll('.buttons');
+        
+        // First, remove the 'active' class from all buttons
+        buttons.forEach(button => {
+            button.classList.remove('active');
+        });
+
+        // Add the 'active' class to the button that matches the current URL
+        if (currentPath.includes('dashboard')) {
+            document.querySelector('.buttons i.fa-table-columns').parentElement.classList.add('active');
+        } else if (currentPath.includes('appointments')) {
+            document.querySelector('.buttons i.fa-calendar-check').parentElement.classList.add('active');
+        } else if (currentPath.includes('analytics')) {
+            document.querySelector('.buttons i.fa-chart-simple').parentElement.classList.add('active');
+        }
+    });
+
+    // Function to add the active class based on the current URL
+    window.addEventListener('load', function() {
+        // Get the current page's URL
+        const currentPath = window.location.pathname;
+        
+        // Select all the sidebar buttons
+        const buttons = document.querySelectorAll('.sidebar-buttons .buttons');
+        
+        // Remove the 'active' class from all buttons
+        buttons.forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        // Loop through all buttons and find the one matching the current URL
+        buttons.forEach(button => {
+            const buttonUrl = button.getAttribute('data-url');
+            // Check if the current page's URL matches the button's URL
+            if (currentPath === buttonUrl) {
+                button.classList.add('active'); // Add 'active' class to the matching button
+            }
+        });
+    });
+
+    // Optional: Update active class when navigating via AJAX (if applicable)
+    function navigateToFromData(element) {
+        // Get the URL and banner text from the clicked button
+        const url = element.getAttribute('data-url');
+        const bannerText = element.getAttribute('data-banner');
+        
+        // Update the banner title (assuming you have an element with id "banner-title")
+        document.getElementById('banner-title').innerText = bannerText;
+        
+        // Navigate to the URL (this will change the URL without reloading the page)
+        window.history.pushState(null, null, url);
+        
+        // Optionally, load new content (e.g., via AJAX)
+        // Your AJAX logic will go here...
+        
+        // Re-run the active class logic to update the sidebar
+        window.dispatchEvent(new Event('load'));
+    }
+ 
+    function navigateToFromData(buttonElement) {
+        const url = buttonElement.getAttribute('data-url');  // Get the URL from data-url
+        const bannerTitle = buttonElement.getAttribute('data-banner');  // Get the banner title from data-banner
+
+        // Use Fetch API to get the HTML content of the page
+        fetch(url)
+            .then(response => response.text())  // Parse the HTML
+            .then(html => {
+                // Create a temporary div to hold the fetched content
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+
+                // Extract the new content for dynamic-main-content
+                const newContent = tempDiv.querySelector('#dynamic-main-content') || tempDiv;
+                document.getElementById('dynamic-main-content').innerHTML = newContent.innerHTML;
+
+                // Update the banner title
+                document.getElementById('banner-title').innerText = bannerTitle;
+
+                // Change the URL in the browser without reloading the page
+                window.history.pushState({ path: url }, '', url);
+            })
+            .catch(error => console.error('Error loading content:', error));
+    }
+
+    // Listen for back/forward navigation (e.g., manually entered URL or back button pressed)
+    window.onpopstate = function(event) {
+        const path = event.state ? event.state.path : window.location.pathname;
+        fetchPage(path);
+    }
+
+    // Function to fetch and update the page content
+    function fetchPage(url) {
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                const newContent = tempDiv.querySelector('#dynamic-main-content') || tempDiv;
+                document.getElementById('dynamic-main-content').innerHTML = newContent.innerHTML;
+
+                const bannerTitle = tempDiv.querySelector('#banner-title').innerText;
+                document.getElementById('banner-title').innerText = bannerTitle;
+            })
+            .catch(error => console.error('Error loading page on back/forward navigation:', error));
+    }
+</script>
+
+
 
 {% endblock %}
