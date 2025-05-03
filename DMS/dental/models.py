@@ -39,3 +39,38 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.email} ({self.role})"
+    
+# ADMIN 
+class AdminProfile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    can_add_patients = models.BooleanField(default=True)
+    # more admin-specific fields if needed
+
+
+# DENTIST
+class DentistProfile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    license_number = models.CharField(max_length=100)
+    specialization = models.CharField(max_length=100)
+
+# PATIENT
+class Patient(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    birth_date = models.DateField()
+    synced_user = models.OneToOneField(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)  # For syncing with user login
+
+# INTRAORAL EXAMINATION
+class IntraoralExamination(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    dentist = models.ForeignKey(DentistProfile, on_delete=models.SET_NULL, null=True)
+    exam_date = models.DateField(auto_now_add=True)
+    notes = models.TextField()
+
+
+# TREATMENT RECORDS
+class TreatmentRecord(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    treatment_details = models.TextField()
+    date_updated = models.DateTimeField(auto_now=True)
+

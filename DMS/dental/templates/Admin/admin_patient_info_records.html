@@ -3,35 +3,107 @@
 <div class="main-container">
     <div class="main-containers first">
         <!-- THIS IS SUPPOSED TO BE A FORM WIZARD/ MULTI STEP FORM -->
-        <form action="">
-            <div class="tab">
-                <h1>Patient Information Record</h1>
-                <label for="">Name:</label>
-                <input type="text" placeholder="Last name">
-                <input type="text" placeholder="First name">
-                <input type="text" placeholder="Middle name">
-                <br>
-                <label for="">Birthdate(mm/dd/yy) </label>
-                <input type="text" placeholder="month">
-                <input type="text" placeholder="day">
-                <input type="text" placeholder="year">
-                <br>
-                <label for="">Religion:</label>
-                <input type="text" placeholder="ex. Roman Catholic">
-                <label for="">Nationality</label>
-                <input type="text" placeholder="ex. Filipino">
-            </div>
-            <div class="tab">
+        <div class="tab">
+            <h2>Register New Patient</h2>
 
-            </div>
-            <div class="tab">
+            <form method="POST">
+                {% csrf_token %}
 
-            </div>
-            <div class="tab">
+                <fieldset>
+                    <legend>Patient Information</legend>
+                    {{ patient_form.as_p }}
+                </fieldset>
 
-            </div>
+                <fieldset>
+                    <legend>Informed Consent</legend>
+                    {{ consent_form.as_p }}
+                </fieldset>
 
-        </form>
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if patient_form.errors %}
+            <div class="error">
+                {{ patient_form.errors }}
+            </div>
+            {% endif %}
+
+
+
+            <!-- <h1>Patient Information Record</h1>
+            <label for="">Name:</label>
+            <input type="text" placeholder="Last name">
+            <input type="text" placeholder="First name">
+            <input type="text" placeholder="Middle name">
+            <br>
+            <label for="">Birthdate(mm/dd/yy): </label>
+            <input type="text" placeholder="month">
+            <input type="text" placeholder="day">
+            <input type="text" placeholder="year">
+            <br>
+            <label for="">Religion:</label>
+            <input type="text" placeholder="ex. Roman Catholic">
+            <label for="">Nationality</label>
+            <input type="text" placeholder="ex. Filipino">
+            <br>
+            <label for="">Home Address:</label>
+            <input type="text">
+            <label for="">Occupation:</label>
+            <input type="text">
+            <br>
+            <label for="">Dental Insurance:</label>
+            <input type="text">
+            <label for="">Effective Date:</label>
+            <input type="text">
+            <br>
+            <br>
+            <label for="">Sex:</label>
+            <input type="text" placeholder="M/F">
+            <br>
+            <label for="">Nickname:</label>
+            <input type="text">
+            <br>
+            <label for="">Home No. :</label>
+            <input type="text">
+            <br>
+            <label for="">Office No. :</label>
+            <input type="text">
+            <br>
+            <label for="">Fax No. : </label>
+            <input type="text">
+            <br>
+            <label for="">Cel/Mobile No. : </label>
+            <input type="text">
+            <br>
+            <label for="">Email Address: </label>
+            <input type="text">
+            <br>
+            <h4>For Minors:</h4>
+            <label for="">Parent/ Guardian's name:</label>
+            <input type="text">
+            <br>
+            <label for="">Occupation</label>
+            <input type="text">
+            <br>
+            <label for="">Whom may we thank for reffering you?</label>
+            <input type="text">
+            <br>
+            <label for="">What is your reason for dental consultation?</label>
+            <input type="text"> -->
+
+
+
+
+        </div>
+        <div class="tab">
+            
+        </div>
+        <div class="tab">
+
+        </div>
+        <div class="tab">
+
+        </div>
 
     </div>
 

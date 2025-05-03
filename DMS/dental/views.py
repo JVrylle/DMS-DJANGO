@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from .decorators import role_required
+from .forms import PatientForm, ConsentForm
+from .models import AdminProfile
 
 # NOTICE IMPOTANT
 # Decorators are temporarily disabled for faster development
@@ -96,7 +98,41 @@ def admin_appointments(request):
 
 # @role_required(['DENTIST','ADMIN'])
 def admin_patient_info_records(request):
-    return render(request, 'Admin/admin_patient_info_records.html')
+    # ADD PATIENT INFORMATION TO DATABASE
+    if request.user.role != 'ADMIN':
+        return redirect('forbidden')  # Optional: Handle forbidden access
+
+    if request.method == 'POST':
+        patient_form = PatientForm(request.POST)
+        consent_form = ConsentForm(request.POST)
+
+        if patient_form.is_valid() and consent_form.is_valid():
+            print("Both Forms are Valid.")
+            if consent_form.cleaned_data['consent_signed']:
+                print("Consent is signed.")
+                patient = patient_form.save()
+                print(f"Saved patient: {patient.first_name} {patient.last_name}")
+                return redirect('admin_dash')  # Redirect to dashboard or success page
+            else:
+                print("Concent not signed.")
+                consent_form.add_error('consent_signed', 'Consent must be signed before submission.')
+        else: 
+            print("Form errors:")
+            print(patient_form.errors)
+            print(consent_form.errors)
+
+    else:
+        patient_form = PatientForm()
+        consent_form = ConsentForm()
+
+    context = {
+        'patient_form': patient_form,
+        'consent_form': consent_form,
+    }
+    return render(request, 'Admin/admin_patient_info_records.html', context)
+
+
+
 
 # @role_required(['DENTIST','ADMIN'])
 def admin_analytics(request):
@@ -132,9 +168,12 @@ def testing(request):
 
     return render(request, 'testing.html', context)
 
+# FORBIDDEN 
+def forbidden(request):
+    return render(request, 'forbidden.html')
+
 
 # THIS IS TESTING 
-
 @role_required(['ADMIN'])
 def phase1_input_view(request):
     # Admin or assistant can input patient info

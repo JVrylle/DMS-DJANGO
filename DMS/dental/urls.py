@@ -39,4 +39,5 @@ urlpatterns = [
 
     # TESTING
     path('testing/',views.testing, name='testing'),    
+    path('forbidden/',views.forbidden, name='forbidden')
 ]

@@ -107,12 +107,12 @@
 
 .main-containers {
     background-color: #ffffff;
-    height: 300px;
+    height: auto;
     flex: 1 0 300px;
     border-radius: 15px;
 }
 
-.main-containers .first{
+/* .main-containers .first{
     background-color:  #1E3A8A;
 }
 
@@ -126,7 +126,7 @@
 
 .main-containers .fourth{
     background-color: #1E3A8A;
-}
+} */
 
 
 /* MOBILE */
