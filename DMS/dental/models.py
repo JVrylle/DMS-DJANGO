@@ -55,10 +55,43 @@ class DentistProfile(models.Model):
 
 # PATIENT
 class Patient(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    birth_date = models.DateField()
+    first_name = models.CharField(max_length=100, null=False)
+    middle_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=False)
+    birth_date = models.DateField( null=False)
+    age = models.PositiveIntegerField(default=0,null=False)
+    religion = models.CharField(max_length=100, null=True)
+    nationality = models.CharField(max_length=100, null=True)
+    home_address = models.CharField(max_length=255, null=True)
+    occupation = models.CharField(max_length=100, null=True)
+    dental_insurance = models.CharField(max_length=254, null=True, blank=True)
+    dental_insurance_effective_date = models.DateField(null=True, blank=True)
+
+    sex_choices = [
+        ('M','Male'),
+        ('F','Female'),
+    ]
+
+    sex = models.CharField(max_length=1, choices=sex_choices, null=True)
+
+
+
+
+    # For Minors
+    # parent_or_guardian_name = models.CharField(max_length=255)
+    # parent_or_guardian_occupation = models.CharField(max_length=100)
+    # referral_thanks = models.CharField(max_length=255)
+    # dental_consultation_reason = models.CharField(max_length=255)
+
+
+
     synced_user = models.OneToOneField(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)  # For syncing with user login
+
+    def __str__(self):
+        return f'{self.last_name}, {self.first_name} {self.middle_name}'
+
+
+
 
 # INTRAORAL EXAMINATION
 class IntraoralExamination(models.Model):

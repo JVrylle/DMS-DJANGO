@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .decorators import role_required
 from .forms import PatientForm, ConsentForm
-from .models import AdminProfile
+from .models import AdminProfile, Patient
 
 # NOTICE IMPOTANT
 # Decorators are temporarily disabled for faster development
@@ -64,7 +64,13 @@ def dentist_patient_info_record(request):
 
 # @role_required(['DENTIST'])
 def dentist_patient_health_records(request):
-    return render(request, 'Dentist/dentist_patient_health_records.html')
+    patients = Patient.objects.all()
+    context = {
+        'patients': patients,
+    }
+
+
+    return render(request, 'Dentist/dentist_patient_health_records.html', context)
 
 # @role_required(['DENTIST'])
 def dentist_analytics(request):
@@ -98,7 +104,8 @@ def admin_appointments(request):
 
 # @role_required(['DENTIST','ADMIN'])
 def admin_patient_info_records(request):
-    # ADD PATIENT INFORMATION TO DATABASE
+
+    ### ADD PATIENT INFORMATION TO DATABASE
     if request.user.role != 'ADMIN':
         return redirect('forbidden')  # Optional: Handle forbidden access
 
@@ -107,19 +114,12 @@ def admin_patient_info_records(request):
         consent_form = ConsentForm(request.POST)
 
         if patient_form.is_valid() and consent_form.is_valid():
-            print("Both Forms are Valid.")
             if consent_form.cleaned_data['consent_signed']:
-                print("Consent is signed.")
                 patient = patient_form.save()
                 print(f"Saved patient: {patient.first_name} {patient.last_name}")
                 return redirect('admin_dash')  # Redirect to dashboard or success page
             else:
-                print("Concent not signed.")
                 consent_form.add_error('consent_signed', 'Consent must be signed before submission.')
-        else: 
-            print("Form errors:")
-            print(patient_form.errors)
-            print(consent_form.errors)
 
     else:
         patient_form = PatientForm()
