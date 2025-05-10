@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from django.template import loader
 from .decorators import role_required
 from .forms import PatientForm, ConsentForm
-from .models import AdminProfile, Patient
+from .models import Patient
+# from .models import AdminProfile, Patient
 
 # NOTICE IMPOTANT
 # Decorators are temporarily disabled for faster development

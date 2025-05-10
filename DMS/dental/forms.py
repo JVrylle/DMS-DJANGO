@@ -50,24 +50,82 @@ class PatientForm(forms.ModelForm):
                   'mi_is_birth_control',
                   'mi_bloodtype',
                   'mi_bloodpressure',
-                  'email',
-
+                  'mi_select_disease',
+                  'mi_select_disease_others',
                   ]
+
+        sex_choices = [
+            ('M','Male'),
+            ('F','Female'),
+        ]
+
+        allergies = [
+            ('LOCAL ANESTHETIC','Local Anesthetic (ex. Lidocaine)'),
+            ('PENICILIN, ANTIBIOTICS','Penicilin, Antibiotics'),
+            ('SULFA DRUGS','Sulfa Drugs'),
+            ('ASPIRIN','Aspirin'),
+            ('LATEX','Latex'),
+            ('OTHERS','Others')
+        ]
+
+        yes_no = [
+            ('YES','Yes'),
+            ('NO','No'),
+        ]
+
+        diseases = [
+            ('HIGH BLOOD PRESSURE','High Blood Pressure'),
+            ('LOW BLOOD PRESSURE','Low Blood Pressure'),
+            ('EPILEPSY/CONVULSIONS','Epilepsy / Conculsions'),
+            ('AIDS OR HIV INFECTION','AIDS or HIV Infection'),
+            ('SEXUALLY TRANSMITTED DISEASE','Sexually Transmitted Disease'),
+            ('STOMACH TROUBLES / ULCERS','Stomach Troubles / Ulcers'),
+            ('FAINTING SEIZURES','Fainting Seizures'),
+            ('RAPID WEIGHT LOSS','Rapid Weight Loss'),
+            ('RADIATION THERAPY','Radiation Therapy'),
+            ('JOINT REPLACEMENT / IMPLANT','Joint Replacement / Implant'),
+            ('HEART SURGERY','Heart Surgery'),
+            ('HEART ATTACK','Heart Attack'),
+            ('THYROID PROBLEM','Thyroid Problem'),
+            ('HEART DISEASE','Heart Disease'),
+            ('HEART MURMUR','Heart Murmur'),
+            ('HEPATITIS / LIVER DISEASE','Hepatitis / Liver Disease'),
+            ('RHEUMATIC FEVER','Rheumatic Fever'),
+            ('HAY FEVER / ALLERGIES','Hay Fever / Allergies'),
+            ('RESPIRATORY PROBLEMS','Respiratory Problems'),
+            ('HEPATITIS / JAUNDICE','Hepatitis / Jaundice'),
+            ('TUBERCULOSIS','Tuberculosis'),
+            ('SWOLLEN ANKLES','Swollen Ankles'),
+            ('KIDNEY DISEASE','Kidney Disease'),
+            ('DIABETES','Diabetes'),
+            ('CHEST PAIN','Chest Pain'),
+            ('STROKE','Stroke'),
+            ('CANCER / TUMORS','Cancer / Trumors'),
+            ('ANEMIA','Anemia'),
+            ('ANGINA','Angina'),
+            ('ASTHMA','Asthma'),
+            ('EMPHYSEMA','Empysema'),
+            ('BLEEDING PROBLEMS','Bleeding Problems'),
+            ('BLOOD DISEASES','Blood Diseases'),
+            ('HEAD INJURIES','Head Injuries'),
+            ('ARTHRITIS / RHEUMATISM','Arthritis / Rheumatism'),
+        ]
 
         widgets = {
             'birthdate': forms.DateInput(attrs={'type': 'date'}),
             'dental_insurance_effective_date': forms.DateInput(attrs={'type': 'date'}),
-            'sex': forms.RadioSelect(),
-            'mi_isgoodhealth': forms.RadioSelect(),
-            'mi_is_under_medical_treatment': forms.RadioSelect(),
-            'mi_is_serious_illness': forms.RadioSelect(),   
-            'mi_is_hospitalized': forms.RadioSelect(),
-            'mi_is_taking_prescription': forms.RadioSelect(),
-            'mi_is_using_tobacco': forms.RadioSelect(),
-            'mi_is_allergic': forms.CheckboxSelectMultiple(),
-            'mi_is_pregnant': forms.RadioSelect(),
-            'mi_is_nursing': forms.RadioSelect(),
-            'mi_is_birth_control': forms.RadioSelect(),
+            'sex': forms.RadioSelect(choices=sex_choices),
+            'mi_isgoodhealth': forms.RadioSelect(choices=yes_no),
+            'mi_is_under_medical_treatment': forms.RadioSelect(choices=yes_no),
+            'mi_is_serious_illness': forms.RadioSelect(choices=yes_no),   
+            'mi_is_hospitalized': forms.RadioSelect(choices=yes_no),
+            'mi_is_taking_prescription': forms.RadioSelect(choices=yes_no),
+            'mi_is_using_tobacco': forms.RadioSelect(choices=yes_no),
+            'mi_is_allergic': forms.CheckboxSelectMultiple(choices=allergies),
+            'mi_is_pregnant': forms.RadioSelect(choices=yes_no),
+            'mi_is_nursing': forms.RadioSelect(choices=yes_no),
+            'mi_is_birth_control': forms.RadioSelect(choices=yes_no),
+            'mi_select_disease':forms.CheckboxSelectMultiple(choices=diseases),
         }
 
     def __init__(self, *args, **kwargs):
@@ -88,8 +146,8 @@ class PatientForm(forms.ModelForm):
             'occupation': 'Occupation',
             'dental_insurance': 'Dental Insurance Provider',
             'dental_insurance_effective_date': 'Insurance Effective Date',
-            'for_minors_parent_or_guardian_name': 'Parent/Guardian Name',
-            'for_minors_parent_or_guardian_occupation': 'Parent/Guardian Occupation',
+            'for_minors_parent_or_guardian_name': 'For Minors: Parent/Guardian Name',
+            'for_minors_parent_or_guardian_occupation': 'For Minors: Parent/Guardian Occupation',
             'home_no': 'Home Phone Number',
             'office_no': 'Office Phone Number',
             'fax_no': 'Fax Number',
@@ -115,11 +173,13 @@ class PatientForm(forms.ModelForm):
             'mi_is_allergic': 'Allergies (Check all that apply)',
             'mi_is_allergic_others': 'Other allergies (if any)',
             'mi_bleeding_time': 'Bleeding Time',
-            'mi_is_pregnant': 'Are you pregnant?',
+            'mi_is_pregnant': 'For Women: Are you pregnant?',
             'mi_is_nursing': 'Are you nursing?',
             'mi_is_birth_control': 'Using birth control?',
             'mi_bloodtype': 'Blood Type',
             'mi_bloodpressure': 'Blood Pressure',
+            'mi_select_disease':'Do you have or have you had any of the following? Check which apply.' ,
+            'mi_select_disease_others':'Other Disease:', 
         }
 
         #  Apply the custom labels

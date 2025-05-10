@@ -4,15 +4,19 @@
     <div class="main-containers first">
         <!-- THIS IS SUPPOSED TO BE A FORM WIZARD/ MULTI STEP FORM -->
         <div class="tab">
-            <h2>Register New Patient</h2>
+            
 
             <form method="POST">
                 {% csrf_token %}
+
+                <h2>STEP 1: REGISTER NEW PATIENT</h2>
 
                 <fieldset>
                     <legend>Patient Information</legend>
                     {{ patient_form.as_p }}
                 </fieldset>
+
+                <h2>STEP 2: NEW PATIENT CONCENT FORM</h2>
 
                 <fieldset>
                     <legend>Informed Consent</legend>
@@ -30,16 +34,6 @@
 
 
         </div>
-        <div class="tab">
-            
-        </div>
-        <div class="tab">
-
-        </div>
-        <div class="tab">
-
-        </div>
-
     </div>
 
 </div>

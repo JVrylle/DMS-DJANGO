@@ -1,8 +1,32 @@
 {% extends "Dentist/dentist_dash.html" %}
 {% block dentistcontent %}
+
+<style>
+.main-container {
+    height: auto;
+    width: 100%;    
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+
+.main-containers {
+    background-color: #ffffff;
+    height: auto;
+    flex: 1 0 ;
+    border-radius: 15px;
+}
+
+    
+</style>
+
 <div class="main-container">
-    <div class="main-containers first">
-        <h2>Registered Patients</h2>
+
+    <div class="main-containers">
+        <h2>STEP 3: CHOOSE PATIENT IN PATIENT RECORD DATABASE</h2>
 
 
 
@@ -48,6 +72,32 @@
           </table>
 
 
+    </div>
+    <div class="main-containers">
+        <h2>STEP 4: INTRAORAL EXAMINATION</h2>
+
+        <p>place the chart here</p>
+
+        <p>Xray taken : checkbox</p>
+        <p>periodontal screening: checkbox</p>
+        <p>occusion : checkbox</p>
+        <p>appliances: checkbox</p>
+        <p>TMD: checkbox</p>
+
+
+    </div>
+
+    <div class="main-containers">
+        <h2>STEP 5: TREATMENT RECORD</h2>
+        
+        <p>Date</p>
+        <p>Tooth Number/s</p>
+        <p>Procedure</p>
+        <p>Dentist/s</p>
+        <p>Amount Charged</p>
+        <p>Amount Paid</p>
+        <p>Balance</p>
+        <p>NExt Appointment</p>
     </div>
 
 </div>
