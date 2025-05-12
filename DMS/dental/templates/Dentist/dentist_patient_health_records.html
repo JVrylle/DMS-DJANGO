@@ -42,6 +42,7 @@
               <th>Nationality</th>
               <th>Home Address</th>
               <th>Occupation</th>
+              <th>ADD / UPDATE INTRAORAL</th>
             </tr>
             
             {% for patient in patients %}
@@ -57,6 +58,13 @@
                 <td>{{patient.nationality}}</td>
                 <td>{{patient.home_address}}</td>
                 <td>{{patient.occupation}}</td>
+                <td>
+                    <form method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                        <button type="submit">Fill Intraoral Exam</button>
+                    </form>
+                </td>
             </tr>
 
             {% empty %}
@@ -73,10 +81,59 @@
 
 
     </div>
+    <!-- <div class="main-containers">
+        <h2>STEP 4: INTRAORAL EXAMINATION</h2>
+
+        <p>place the chart here</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <fieldset>
+                <legend>Intraoral Examinations</legend>
+                {{ intraoralexaminations_form.as_p }}
+            </fieldset>
+
+
+            <button type="submit">Submit</button>
+        </form>
+
+
+        <p>Xray taken : checkbox</p>
+        <p>periodontal screening: checkbox</p>
+        <p>occusion : checkbox</p>
+        <p>appliances: checkbox</p>
+        <p>TMD: checkbox</p>
+
+
+    </div> -->
+
+
     <div class="main-containers">
         <h2>STEP 4: INTRAORAL EXAMINATION</h2>
 
         <p>place the chart here</p>
+
+        {% if selected_patient %}
+        <div class="main-containers">
+            <h2>STEP 4: INTRAORAL EXAMINATION</h2>
+            <h3>Patient: {{ selected_patient.first_name }} {{ selected_patient.last_name }}</h3>
+
+            {% if message %}
+                <p style="color:green;">{{ message }}</p>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="patient_id" value="{{ selected_patient.id }}">
+                {{ intraoralexamination_form.as_p }}
+                <button type="submit">Submit Exam</button>
+            </form>
+        </div>
+        {% endif %}
+
+
+
 
         <p>Xray taken : checkbox</p>
         <p>periodontal screening: checkbox</p>
@@ -97,7 +154,7 @@
         <p>Amount Charged</p>
         <p>Amount Paid</p>
         <p>Balance</p>
-        <p>NExt Appointment</p>
+        <p>Next Appointment</p>
     </div>
 
 </div>

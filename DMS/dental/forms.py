@@ -1,5 +1,5 @@
 from django import forms
-from .models import Patient
+from .models import Patient, IntraoralExamination
 
 class PatientForm(forms.ModelForm):
     class Meta:
@@ -190,3 +190,82 @@ class PatientForm(forms.ModelForm):
 
 class ConsentForm(forms.Form):
     consent_signed = forms.BooleanField(label="Patient has signed digital informed consent.")
+
+
+
+class IntraoralExaminationForm(forms.ModelForm):
+    class Meta:
+        model = IntraoralExamination
+        fields = [
+            'xray_taken',
+            'xray_periapical',
+            'xray_taken_others',
+            'periodontal_screening',
+            'occlusion',
+            'appliances',
+            'appliances_others',
+            'tmd',
+                  ]
+
+        xray_choices = [
+            ('PERIAPICAL','Periapical'),
+            ('PANORAMIC','Panoramic'),
+            ('CEPHALOMETRIC','Cephalometric'),
+            ('OCCLUSAL (UPPER/LOWER)','Occlusal (Upper/Lower)'),
+        ]
+
+        periodontal_choices = [
+            ('GINGIVITIS','Gingivitis'),
+            ('EARLY PERIODONTITIS','Early Periodontitis'),
+            ('MODERATE PERIODONTITIS','Moderate Periodontitis'),
+            ('ADVANCED PERIODONTITIS','Advanced Periodontitis'),
+        ]
+
+        occlusion_choices = [
+            ('CLASS (MOLAR)','Class (Molar)'),
+            ('OVERJET','Overjet'),
+            ('OVERBITE','Overbite'),
+            ('MIDLINE DEVIATION','Midline Deviation'),
+            ('CROSSBITE','Crossbite'),
+        ]
+
+
+        appliances_choices = [
+            ('ORTHODONTIC','Orthodontic'),
+            ('STAYPLATE','Stayplate'),
+        ]
+
+        tmd_choices = [
+            ('CLENCHING','Clenching'),
+            ('CLICKING','Clicking'),
+            ('TRISMUS','Trismus'),
+            ('MUSCLE SPASM','Muscle Spasm'),
+        ]
+
+        widgets = {
+            'xray_taken': forms.CheckboxSelectMultiple(choices=xray_choices),
+            'periodontal_screening' : forms.CheckboxSelectMultiple(choices=periodontal_choices),
+            'occlusion' : forms.CheckboxSelectMultiple(choices=occlusion_choices),
+            'applicances' : forms.CheckboxSelectMultiple(choices=appliances_choices),
+            'tmd' : forms.CheckboxSelectMultiple(choices=tmd_choices),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(IntraoralExaminationForm, self).__init__(*args, **kwargs)
+        
+        # Define custom labels for your fields
+        custom_labels = {
+            'xray_taken':'X-ray Taken: ',
+            'xray_periapical':'Periapical (Tth Number:)',
+            'xray_taken_others':'Other X-rays: ',
+            'periodontal_screening':'Periodontal Screening: ',
+            'occlusion':'Occlusion: ',
+            'appliances':'Applicances: ',
+            'appliances_others':'Other Appliances: ',
+            'tmd':'TMD: ',
+        }
+
+        #  Apply the custom labels
+        for field_name, label in custom_labels.items():
+            if field_name in self.fields:
+                self.fields[field_name].label = label
