@@ -62,36 +62,16 @@
     <div class="contact"></div>
 
     <!-- Login Modal -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span id="closeModalBtn" class="close">&times;</span>
-            <h2>Welcome Back</h2>
-            <p>Doesn't have an account yet?<a href="">Sign Up</a></p>
-            <form action="">
-                <!-- Email Address -->
-                <label for="fname"><i class="fa-regular fa-envelope"></i>Email Address</label><br>
-                <input type="text" id="fname" name="fname" value="" placeholder="  You@example.com" class="text"><br>
-                <!-- Password -->
-                <label for="lname"><i class="fa-solid fa-lock"></i>Password</label><br>
-                <input type="text" id="lname" name="lname" value="" placeholder="  Enter 10 characters or more" class="text"><br> 
-                <div class="remember-me-box">
-                <!-- Remember Me -->
-                <input type="checkbox" class="checkbox" >    
-                <label for="remember-me">Remember Me</label>
-                <!-- Forgot Password -->
-                <a href="#" class="forgot-password">Forgot Password?</a>
-                </div>
-                <input type="submit" value="Login" class="login-button">
-                
-            </form> 
-        </div>
-    </div>
+    {% include 'website/login_modal.html' %}
+
+    <!-- Register Modal -->
+    {% include 'website/register_modal.html' %}
 
 
     <!-- Footer -->
     <div class="footer"></div>
     
     <script src="https://kit.fontawesome.com/603a80fa25.js" crossorigin="anonymous"></script>
-    <script src="{% static 'website/login_modal.js' %}"></script>
+    <script src="{% static 'website/modal.js' %}"></script>
 </body>
 </html>

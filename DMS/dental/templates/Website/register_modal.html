@@ -1,0 +1,18 @@
+<!-- REGISTER MODAL -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span id="closeRegisterModalBtn" class="close">&times;</span>
+        <h2>Register For Free!</h2>
+        <p>Already have an account? <a href="{% url 'login' %}" id="showLoginModal">Log in</a></p>
+        <form method="POST" action="{% url 'register' %}">
+            {% csrf_token %}
+            {{ register_form.email.label_tag }}
+            {{ register_form.email }}
+            {{ register_form.password1.label_tag }}
+            {{ register_form.password1 }}
+            {{ register_form.password2.label_tag }}
+            {{ register_form.password2 }}
+            <input type="submit" value="Sign Up" class="login-button">
+        </form>
+    </div>
+</div>

@@ -60,7 +60,26 @@ xray = [
 
 
 
+#  CLASS THAT IS BETTER FOR COUPLING WITH DJANGO AND JSON
+# class Tooth:
+#     def __init__(self, tooth_number, toothcolors, status1, status2):
+#         self.tooth_number = tooth_number
+#         self.toothcolors = toothcolors
+#         self.status1 = status1
+#         self.status2 = status2
+
+#     def __str__(self):
+#         return f"Tooth {self.tooth_number} with colors {self.toothcolors} and status1: {self.status1}, status2: {self.status2}"
 
 
 
+# Example of creating an IntraoralExamination with teeth: THIS IS WRONG SINCE THERE ARE NO SPECIFIC COLORS FOR TOP LEFT MIDDLE RIGHT BOTTOM teeth sections 
 
+# exam = IntraoralExamination.objects.create(
+#     patient=patient_instance,
+#     teeth=[
+#         {"tooth": "11", "color": ["white"], "status1": "Healthy", "status2": "No issues"},
+#         {"tooth": "12", "color": ["red"], "status1": "Cavity", "status2": "Requires filling"},
+#         {"tooth": "13", "color": ["blue"], "status1": "Healthy", "status2": "No issues"},
+#     ]
+# )

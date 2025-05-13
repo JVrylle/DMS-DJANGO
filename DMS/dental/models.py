@@ -141,19 +141,30 @@ class Patient(models.Model):
 class IntraoralExamination(models.Model):
     patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
 
+    teeth = models.JSONField(default=list, null=True, blank=True)
+    
+#  THIS IS A JSON FIELD
+# [
+#   {"tooth": "11", "color": ["white"], "status1": "legend1", "status2": "legend2"},
+#   {"tooth": "12", "color": ["red"], "status1": "legend3", "status2": "legend4"},
+#   {"tooth": "13", "color": ["blue"], "status1": "legend5", "status2": "legend6"}
+# ]
+
+
+
+
     xray_taken = models.JSONField(default=list, null=True, blank=True)
     xray_periapical = models.CharField(max_length=255, null=True, blank=True)
     xray_taken_others = models.CharField(max_length=255, null=True, blank=True)
-
     periodontal_screening = models.JSONField(default=list, null=True,blank=True)
-
     occlusion = models.JSONField(default=list, null=True,blank=True)
-
     appliances = models.JSONField(default=list, null=True,blank=True)
     appliances_others = models.CharField(max_length=255, null=True, blank=True)
 
     tmd = models.JSONField(default=list, null=True,blank=True)
 
+    def __str__(self):
+        return f"Intraoral Examination for {self.patient}"
 
 
 
