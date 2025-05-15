@@ -6,12 +6,14 @@
         <p>Already have an account? <a href="{% url 'login' %}" id="showLoginModal">Log in</a></p>
         <form method="POST" action="{% url 'register' %}">
             {% csrf_token %}
+            {{ register_form.username.label_tag }}
+            {{ register_form.username }}<br>
             {{ register_form.email.label_tag }}
-            {{ register_form.email }}
+            {{ register_form.email }}<br>
             {{ register_form.password1.label_tag }}
-            {{ register_form.password1 }}
+            {{ register_form.password1 }}<br>
             {{ register_form.password2.label_tag }}
-            {{ register_form.password2 }}
+            {{ register_form.password2 }}<br>
             <input type="submit" value="Sign Up" class="login-button">
         </form>
     </div>

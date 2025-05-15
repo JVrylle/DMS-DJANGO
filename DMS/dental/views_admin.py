@@ -9,7 +9,13 @@ from .models import Patient, IntraoralExamination
 # ADMIN
 @role_required(['DENTIST','ADMIN'])
 def admin_dash(request):
-    return render(request, 'Admin/admin_dash.html')
+    #SIDEBAR
+    username = request.user.username
+    context = {
+        'username':username,
+    }
+
+    return render(request, 'Admin/admin_dash.html', context)
 
 @role_required(['DENTIST','ADMIN'])
 def admin_appointments(request):
