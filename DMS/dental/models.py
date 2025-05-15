@@ -62,7 +62,11 @@ class Patient(models.Model):
     nickname = models.CharField(max_length=100,null=True, blank=True)
     birthdate = models.DateField( null=False)
     age = models.PositiveIntegerField(default=0,null=False)
-    sex = models.CharField(max_length=10,  null=False, default=None)
+    sex_choices = [
+            ('Male','Male'),
+            ('Female','Female'),
+        ]
+    sex = models.CharField(max_length=10,  null=False, default=None, choices=sex_choices)
     religion = models.CharField(max_length=100, null=False)
     nationality = models.CharField(max_length=100, null=False)
     home_address = models.CharField(max_length=255, null=False)
@@ -92,26 +96,35 @@ class Patient(models.Model):
     # Medical History 
     physician_name = models.CharField(max_length=255, null=True, blank=True)
     physician_specialty = models.CharField(max_length=255, null=True, blank=True)
-    office_address = models.CharField(max_length=255, null=True, blank=True)
-    office_no = models.CharField(max_length=255, null=True, blank=True)
+    physician_office_address = models.CharField(max_length=255, null=True, blank=True)
+    physician_office_no = models.CharField(max_length=255, null=True, blank=True)
     
     # Medical Information
 
-    mi_isgoodhealth = models.CharField(max_length=255, default=None, null=False)
+    yes_no = [
+            ('Yes','Yes'),
+            ('Yes','No'),
+        ]
+    
 
-    mi_is_under_medical_treatment = models.CharField(max_length=255, default=None, null=False)
+
+    mi_isgoodhealth = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
+
+    mi_is_under_medical_treatment = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
     mi_is_under_medical_treatment_followup = models.CharField(max_length=255, null=True, blank=True)
 
-    mi_is_serious_illness = models.CharField(max_length=255 ,  default=None, null=False)
+    mi_is_serious_illness = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
     mi_is_serious_illness_followup = models.CharField(max_length=255, null=True, blank=True)
 
-    mi_is_hospitalized = models.CharField(max_length=255,  default=None, null=False)
+    mi_is_hospitalized = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
     mi_is_hospitalized_folloup = models.CharField(max_length=255, null=True, blank=True)
 
-    mi_is_taking_prescription = models.CharField(max_length=255, default=None, null=False)
+    mi_is_taking_prescription = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
     mi_is_taking_prescription_followup = models.CharField(max_length=255, null=True, blank=True)
 
-    mi_is_using_tobacco = models.CharField(max_length=255,  default=None, null=False)
+    mi_is_using_tobacco = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
+
+    mi_is_using_dangerous_drugs = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
 
     mi_is_allergic = models.JSONField(default=list, null=True, blank=True)
     mi_is_allergic_others = models.CharField(max_length=255, null=True, blank=True)
@@ -119,9 +132,9 @@ class Patient(models.Model):
     mi_bleeding_time = models.CharField(max_length=255, blank=True, null=True)
 
     # MI For Women Only
-    mi_is_pregnant = models.CharField(max_length=255, default=None, null=True,blank=True)
-    mi_is_nursing = models.CharField(max_length=255, default=None, null=True, blank=True)
-    mi_is_birth_control = models.CharField(max_length=255,  default=None, null=True, blank=True)
+    mi_is_pregnant = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_nursing = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_birth_control = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     
     mi_bloodtype = models.CharField(max_length=255, null=False)
     mi_bloodpressure = models.CharField(max_length=255, null=False)
@@ -167,9 +180,6 @@ class IntraoralExamination(models.Model):
         return f"Intraoral Examination for {self.patient}"
 
 
-
-
-
 # TREATMENT RECORDS
 class TreatmentRecord(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
@@ -183,4 +193,72 @@ class TreatmentRecord(models.Model):
     balance = models.IntegerField(null=True)
     next_appointment = models.DateField(max_length=255,null=True)
 
+# APPOINTMENTS
+class Appointment(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    dentist = models.ForeignKey(CustomUser, limit_choices_to={'role': 'DENTIST'}, on_delete=models.SET_NULL, null=True)
+    date = models.DateField()
+    time = models.TimeField()
+    status = models.CharField(max_length=50, choices=[
+        ('Scheduled', 'Scheduled'),
+        ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
+        ('No Show', 'No Show'),
+    ], default='Scheduled')
+    purpose = models.TextField(null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.patient} appointment on {self.date} at {self.time}"
+
+
+# NOTIFICATIONS
+class Notification(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notification for {self.user.email}"
+
+
+# PRESCRIPTIONS
+class Prescription(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    prescribed_by = models.ForeignKey(CustomUser, limit_choices_to={'role': 'DENTIST'}, on_delete=models.SET_NULL, null=True)
+    medication = models.TextField()
+    dosage = models.TextField()
+    instructions = models.TextField()
+    issued_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Prescription for {self.patient} on {self.issued_date}"
+
+
+# Admin Logs
+class AdminLog(models.Model):
+    LOG_TYPE_CHOICES = [
+        ('SYSTEM', 'System'),
+        ('SECURITY', 'Security'),
+        ('EVENT', 'Event'),
+        ('EMERGENCY', 'Emergency'),
+    ]
+    admin = models.ForeignKey(CustomUser, limit_choices_to={'role': 'ADMIN'}, on_delete=models.CASCADE)
+    log_type = models.CharField(max_length=10, choices=LOG_TYPE_CHOICES)
+    action = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.log_type} log by {self.admin.email} at {self.timestamp}"
+
+# Emergency Alerts
+class EmergencyAlert(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    dentist = models.ForeignKey(CustomUser, limit_choices_to={'role': 'DENTIST'}, on_delete=models.SET_NULL, null=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Emergency for {self.patient} to {self.dentist.email} at {self.created_at}"

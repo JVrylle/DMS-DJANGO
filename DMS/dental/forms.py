@@ -30,8 +30,8 @@ class PatientForm(forms.ModelForm):
                   'last_dental_visit',
                   'physician_name',
                   'physician_specialty',
-                  'office_address',
-                  'office_no',
+                  'physician_office_address',
+                  'physician_office_no',
                   'mi_isgoodhealth',
                   'mi_is_under_medical_treatment',
                   'mi_is_under_medical_treatment_followup',
@@ -42,6 +42,7 @@ class PatientForm(forms.ModelForm):
                   'mi_is_taking_prescription',
                   'mi_is_taking_prescription_followup',
                   'mi_is_using_tobacco',
+                  'mi_is_using_dangerous_drugs',
                   'mi_is_allergic',
                   'mi_is_allergic_others',
                   'mi_bleeding_time',
@@ -55,8 +56,8 @@ class PatientForm(forms.ModelForm):
                   ]
 
         sex_choices = [
-            ('M','Male'),
-            ('F','Female'),
+            ('Male','Male'),
+            ('Female','Female'),
         ]
 
         allergies = [
@@ -69,8 +70,8 @@ class PatientForm(forms.ModelForm):
         ]
 
         yes_no = [
-            ('YES','Yes'),
-            ('NO','No'),
+            ('Yes','Yes'),
+            ('Yes','No'),
         ]
 
         diseases = [
@@ -121,6 +122,7 @@ class PatientForm(forms.ModelForm):
             'mi_is_hospitalized': forms.RadioSelect(choices=yes_no),
             'mi_is_taking_prescription': forms.RadioSelect(choices=yes_no),
             'mi_is_using_tobacco': forms.RadioSelect(choices=yes_no),
+            'mi_is_using_dangerous_drugs': forms.RadioSelect(choices=yes_no),
             'mi_is_allergic': forms.CheckboxSelectMultiple(choices=allergies),
             'mi_is_pregnant': forms.RadioSelect(choices=yes_no),
             'mi_is_nursing': forms.RadioSelect(choices=yes_no),
@@ -159,7 +161,8 @@ class PatientForm(forms.ModelForm):
             'last_dental_visit': 'Last Dental visit',
             'physician_name': 'Physician Name',
             'physician_specialty': 'Physician Specialty',
-            'office_address': 'Physician Office Address',
+            'physician_office_address': 'Physician Office Address:',
+            'physician_office_no':'Physician Office Number:',
             'mi_isgoodhealth': 'Are you in good health?',
             'mi_is_under_medical_treatment': 'Under medical treatment?',
             'mi_is_under_medical_treatment_followup': 'If yes, explain',
@@ -169,7 +172,8 @@ class PatientForm(forms.ModelForm):
             'mi_is_hospitalized_folloup': 'If yes, explain',
             'mi_is_taking_prescription': 'Taking any prescriptions?',
             'mi_is_taking_prescription_followup': 'If yes, explain',
-            'mi_is_using_tobacco': 'Do you use tobacco?',
+            'mi_is_using_tobacco': 'Do you use tobacco products?',
+            'mi_is_using_dangerous_drugs': 'Do you use alcohol, cocaine, or other dangerous drugs?',
             'mi_is_allergic': 'Allergies (Check all that apply)',
             'mi_is_allergic_others': 'Other allergies (if any)',
             'mi_bleeding_time': 'Bleeding Time',
