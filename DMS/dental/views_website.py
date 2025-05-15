@@ -24,7 +24,9 @@ def register(request):
         if form.is_valid():
             user = form.save()
             auth_login(request, user)  # Auto login after registration
-            return redirect('website')
+
+
+            return redirect_user_by_role(user)
         else:
             login_form = AuthenticationForm()
             return render(request, 'Website/website.html', {
@@ -39,8 +41,9 @@ def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
+            user = form.get_user()
             auth_login(request, form.get_user())
-            return redirect('website')
+            return redirect_user_by_role(user)
         else:
             register_form = CustomUserCreationForm()
             return render(request, 'Website/website.html', {
@@ -49,4 +52,12 @@ def login(request):
                 'show_login': True  # Optional: used to open modal via JS
             })
     return redirect('website')
+
+
+def redirect_user_by_role(user):
+    if user.role == 'ADMIN':
+        return redirect('admin_dash')
+    elif user.role == 'DENTIST':
+        return redirect('dentist_dash')
+    return redirect('user_dash')
 
