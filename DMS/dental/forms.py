@@ -282,7 +282,16 @@ class CustomUserCreationForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email',)
+        fields = ('email','username')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        role = 'USER'  # Because you're registering regular users here
+        username = cleaned_data.get('username')
+
+        if role == 'USER' and not username:
+            raise forms.ValidationError("Username is required for Users.")
+        return cleaned_data
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
