@@ -88,9 +88,19 @@ body {
             </div>
         </div>
         <div class="main-header-container">
-            <i class="fa-solid fa-gear" class="main-settings"></i>
-            <i class="fa-solid fa-user" class="main-profile"></i> 
+            <!-- <i class="fa-solid fa-gear" class="main-settings"></i> -->
+            <div class="profile-dropdown">
+                
+                <i class="fa-solid fa-user profile-icon" class="main-profile"></i>
+                <div class="dropdown-content">
+                    <form id="logout-form" method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <a href="{% url 'logout' %}"><button type="submit" class="dropdown-item">Logout</button></a>
+                    </form>
+                </div>
+            </div>
         </div>
+        
     </div>
 
     <div class="main-content">

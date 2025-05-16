@@ -46,3 +46,12 @@ def user_emergency(request):
 @role_required(['USER'])
 def user_faq(request):
     return render(request, 'User/user_faq.html')
+
+
+
+
+
+
+
+
+

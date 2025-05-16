@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views, views_website, views_user, views_dentist, views_admin
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # WEBSITE
@@ -39,7 +40,8 @@ urlpatterns = [
     path('Admin/emergency-logs/',views_admin.admin_emergency_logs,name='admin_emergency_logs'),
     
 
-    # TESTING
+    # TESTING   
     path('testing/',views.testing, name='testing'),    
-    path('forbidden/',views.forbidden, name='forbidden')
+    path('forbidden/',views.forbidden, name='forbidden'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
 ]
