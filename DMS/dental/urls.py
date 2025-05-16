@@ -43,5 +43,5 @@ urlpatterns = [
     # TESTING   
     path('testing/',views.testing, name='testing'),    
     path('forbidden/',views.forbidden, name='forbidden'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='website'), name='logout'),
 ]

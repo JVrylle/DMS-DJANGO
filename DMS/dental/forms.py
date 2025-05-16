@@ -1,5 +1,5 @@
 from django import forms
-from .models import Patient, IntraoralExamination, CustomUser
+from .models import Patient, IntraoralExamination, TreatmentRecord, CustomUser
 
 class PatientForm(forms.ModelForm):
     class Meta:
@@ -250,7 +250,7 @@ class IntraoralExaminationForm(forms.ModelForm):
             'xray_taken': forms.CheckboxSelectMultiple(choices=xray_choices),
             'periodontal_screening' : forms.CheckboxSelectMultiple(choices=periodontal_choices),
             'occlusion' : forms.CheckboxSelectMultiple(choices=occlusion_choices),
-            'applicances' : forms.CheckboxSelectMultiple(choices=appliances_choices),
+            'appliances' : forms.CheckboxSelectMultiple(choices=appliances_choices),
             'tmd' : forms.CheckboxSelectMultiple(choices=tmd_choices),
         }
 
@@ -273,6 +273,40 @@ class IntraoralExaminationForm(forms.ModelForm):
         for field_name, label in custom_labels.items():
             if field_name in self.fields:
                 self.fields[field_name].label = label
+
+class TreatmentRecordForm(forms.ModelForm):
+    class Meta:
+        model = TreatmentRecord
+        fields = [
+            'treatment_date',
+            'tooth_number',
+            'treatment_procedure',
+            'treatment_dentist',
+            'amount_charged',
+            'amount_paid',
+            'balance',
+            'next_appointment'
+        ]
+        widgets = {
+            'treatment_date': forms.DateInput(attrs={'type': 'date'}),
+            'next_appointment': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class CustomUserCreationForm(forms.ModelForm):

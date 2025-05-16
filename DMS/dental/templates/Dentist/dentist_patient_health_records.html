@@ -43,6 +43,7 @@
               <th>Home Address</th>
               <th>Occupation</th>
               <th>ADD / UPDATE INTRAORAL</th>
+              <th>Update Treatment Record</th>
             </tr>
             
             {% for patient in patients %}
@@ -62,7 +63,14 @@
                     <form method="POST" style="display:inline;">
                         {% csrf_token %}
                         <input type="hidden" name="patient_id" value="{{ patient.id }}">
-                        <button type="submit">Fill Intraoral Exam</button>
+                        <button type="submit" name="select_patient">Fill Intraoral Exam</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="POST" style="display:inline; margin-left: 5px;">
+                        {% csrf_token %}
+                        <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                        <button type="submit" name="update_treatment">Update Treatment Record</button>
                     </form>
                 </td>
             </tr>
@@ -109,53 +117,37 @@
     </div> -->
 
 
+    {% if selected_patient and intraoralexamination_form %}
     <div class="main-containers">
         <h2>STEP 4: INTRAORAL EXAMINATION</h2>
+        <h3>Patient: {{ selected_patient.first_name }} {{ selected_patient.last_name }}</h3>
 
-        <p>place the chart here</p>
-
-        {% if selected_patient %}
-        <div class="main-containers">
-            <h2>STEP 4: INTRAORAL EXAMINATION</h2>
-            <h3>Patient: {{ selected_patient.first_name }} {{ selected_patient.last_name }}</h3>
-
-            {% if message %}
-                <p style="color:green;">{{ message }}</p>
-            {% endif %}
-
-            <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="patient_id" value="{{ selected_patient.id }}">
-                {{ intraoralexamination_form.as_p }}
-                <button type="submit">Submit Exam</button>
-            </form>
-        </div>
+        {% if message %}
+            <p style="color:green;">{{ message }}</p>
         {% endif %}
 
-
-
-
-        <p>Xray taken : checkbox</p>
-        <p>periodontal screening: checkbox</p>
-        <p>occusion : checkbox</p>
-        <p>appliances: checkbox</p>
-        <p>TMD: checkbox</p>
-
-
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="patient_id" value="{{ selected_patient.id }}">
+            {{ intraoralexamination_form.as_p }}
+            <button type="submit" name="submit_exam">Submit Exam</button>
+        </form>
     </div>
+    {% endif %}
 
+    {% if selected_patient and treatment_form %}
     <div class="main-containers">
         <h2>STEP 5: TREATMENT RECORD</h2>
-        
-        <p>Date</p>
-        <p>Tooth Number/s</p>
-        <p>Procedure</p>
-        <p>Dentist/s</p>
-        <p>Amount Charged</p>
-        <p>Amount Paid</p>
-        <p>Balance</p>
-        <p>Next Appointment</p>
+        <h3>Patient: {{ selected_patient.first_name }} {{ selected_patient.last_name }}</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="patient_id" value="{{ selected_patient.id }}">
+            {{ treatment_form.as_p }}
+            <button type="submit" name="submit_treatment">Submit Treatment Record</button>
+        </form>
     </div>
+    {% endif %}
 
 </div>
 
