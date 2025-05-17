@@ -89,7 +89,7 @@ body {
                 <div class="dropdown-content">
                     <form id="logout-form" method="POST" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <a href="{% url 'logout' %}"><button type="submit" class="dropdown-item">Logout</button></a>
+                        <button type="submit" class="dropdown-item">Logout</button>
                     </form>
                 </div>
             </div>

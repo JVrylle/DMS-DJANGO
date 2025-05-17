@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .decorators import role_required
 from .forms import  IntraoralExaminationForm, TreatmentRecordForm
-from .models import Patient, IntraoralExamination
+from .models import Patient, IntraoralExamination, TreatmentRecord
 
 
 # DENTIST
@@ -25,55 +25,6 @@ def dentist_appointments(request):
 def dentist_patient_info_record(request):
     return render(request, 'Dentist/dentist_patient_info.html')
 
-
-# @role_required(['DENTIST'])
-# def dentist_patient_health_records(request):
-#     if request.user.role != 'DENTIST':
-#         return redirect('forbidden')
-
-#     patients = Patient.objects.all()
-#     selected_patient = None
-#     intraoral_form = IntraoralExaminationForm()
-#     treatment_form = None
-#     message = None
-
-#     if request.method == 'POST':
-#         patient_id = request.POST.get('patient_id')
-#         selected_patient = get_object_or_404(Patient, id=patient_id)
-
-#         if 'submit_exam' in request.POST:
-
-#             # Check if this patient already has an intraoral exam
-#             existing_exam = IntraoralExamination.objects.filter(patient=selected_patient).first()
-
-#             if existing_exam:
-#                 intraoral_form = IntraoralExaminationForm(request.POST, instance=existing_exam)
-#             else:
-#                 intraoral_form = IntraoralExaminationForm(request.POST)
-
-#             if intraoral_form.is_valid():
-#                 exam = intraoral_form.save(commit=False)
-#                 exam.patient = selected_patient
-#                 exam.save()
-#                 message = "Intraoral examination submitted successfully."
-#                 intraoral_form = IntraoralExaminationForm()  # Clear form after submission
-#                 selected_patient = None  # Reset after save
-#             else:
-#                 message = "Please correct the form."
-#         else: 
-#             # Just selecting patient — do not submit form
-#             existing_exam = IntraoralExamination.objects.filter(patient=selected_patient).first()
-#             if existing_exam:
-#                 intraoral_form = IntraoralExaminationForm(instance=existing_exam)
-
-#     context = {
-#         'patients': patients,
-#         'selected_patient': selected_patient,
-#         'intraoralexamination_form': intraoral_form,
-#         'message': message,
-#     }
-#     return render(request, 'Dentist/dentist_patient_health_records.html', context)
-
 @role_required(['DENTIST'])
 def dentist_patient_health_records(request):
     if request.user.role != 'DENTIST':
@@ -83,14 +34,24 @@ def dentist_patient_health_records(request):
     selected_patient = None
     intraoral_form = None
     treatment_form = None
+    treatment_records = None
     message = None
+    show_patient_details = False  # Default
+    show_treatment_table = False
 
     if request.method == 'POST':
         patient_id = request.POST.get('patient_id')
         selected_patient = get_object_or_404(Patient, id=patient_id)
 
+
+        # Button clicked: View Record
+        if 'view_record' in request.POST:
+            selected_patient = get_object_or_404(Patient, id=patient_id)
+            show_patient_details = True  # Only show details when View Record is clicked
+            
+
         # Button clicked: Fill Intraoral Exam
-        if 'select_patient' in request.POST:
+        elif 'select_patient' in request.POST:
             existing_exam = IntraoralExamination.objects.filter(patient=selected_patient).first()
             if existing_exam:
                 intraoral_form = IntraoralExaminationForm(instance=existing_exam)
@@ -113,6 +74,16 @@ def dentist_patient_health_records(request):
                 intraoral_form = None
                 selected_patient = None
 
+
+        # Button clicked: View Intraoral
+        elif 'view_intraoral' in request.POST:
+            selected_patient = get_object_or_404(Patient, id=patient_id)
+
+        # Button clicked: View Treatment    
+        elif 'view_treatment' in request.POST:
+            treatment_records = TreatmentRecord.objects.filter(patient=selected_patient)
+            show_treatment_table = True  
+
         # Button clicked: Show Treatment Form
         elif 'update_treatment' in request.POST:
             treatment_form = TreatmentRecordForm()
@@ -133,7 +104,10 @@ def dentist_patient_health_records(request):
         'selected_patient': selected_patient,
         'intraoralexamination_form': intraoral_form,
         'treatment_form': treatment_form,
+        'treatment_records': treatment_records,
         'message': message,
+        'show_patient_details': show_patient_details, 
+        'show_treatment_table': show_treatment_table,
     }
     return render(request, 'Dentist/dentist_patient_health_records.html', context)
 

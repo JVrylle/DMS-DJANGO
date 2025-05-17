@@ -20,101 +20,243 @@
     border-radius: 15px;
 }
 
-    
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.action-buttons form {
+  margin: 0;
+}
+
+.action-buttons button {
+  background-color: #1E3A8A;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.action-buttons button:hover {
+  background-color: #2c4dab;
+}
+
+ .patient-record {
+  max-width: 800px;
+  margin: 2rem auto;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+.record-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1E3A8A;
+}
+
+.section-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.section-card h3 {
+  font-size: 1.2rem;
+  color: #1E3A8A;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #6e6e6e;
+  padding-bottom: 0.5rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 0.75rem;
+  column-gap: 2rem;
+}
+
+.info-grid p {
+  margin: 0;
+} 
+
+@media (max-width: 600px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
 
 <div class="main-container">
 
+
     <div class="main-containers">
-        <h2>STEP 3: CHOOSE PATIENT IN PATIENT RECORD DATABASE</h2>
-
-
-
         <table>
+            <thead>
             <tr>
-              <th>ID</th>
-              <th>Last Name</th>
-              <th>Middle Name</th>
-              <th>First Name</th>
-              <th>Birthdate</th>
-              <th>Sex</th>
-              <th>Religion</th>
-              <th>Nationality</th>
-              <th>Home Address</th>
-              <th>Occupation</th>
-              <th>ADD / UPDATE INTRAORAL</th>
-              <th>Update Treatment Record</th>
+                <th>ID</th>
+                <th>Last Name</th>
+                <th>Middle Name</th>
+                <th>First Name</th>
+                <th>Birthdate</th>
+                <th>Sex</th>
+                <th>Actions</th>
             </tr>
-            
+            </thead>
+            <tbody>
             {% for patient in patients %}
-            
             <tr>
-                <td>{{forloop.counter}}</td>
-                <td>{{patient.last_name}}</td>
-                <td>{{patient.middle_name}}</td>
-                <td>{{patient.first_name}}</td>
-                <td>{{patient.birth_date}}</td>
-                <td>{{patient.sex}}</td>
-                <td>{{patient.religion}}</td>
-                <td>{{patient.nationality}}</td>
-                <td>{{patient.home_address}}</td>
-                <td>{{patient.occupation}}</td>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ patient.last_name }}</td>
+                <td>{{ patient.middle_name }}</td>
+                <td>{{ patient.first_name }}</td>
+                <td>{{ patient.birthdate }}</td>
+                <td>{{ patient.sex }}</td>
                 <td>
-                    <form method="POST" style="display:inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="patient_id" value="{{ patient.id }}">
-                        <button type="submit" name="select_patient">Fill Intraoral Exam</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="POST" style="display:inline; margin-left: 5px;">
-                        {% csrf_token %}
-                        <input type="hidden" name="patient_id" value="{{ patient.id }}">
-                        <button type="submit" name="update_treatment">Update Treatment Record</button>
-                    </form>
+                    <div class="action-buttons">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="view_record">View Record</button>
+                        </form>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="view_intraoral">View Intraoral Exam</button>
+                        </form>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="select_patient">Update Intraoral Exam</button>
+                        </form>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="view_treatment">View Treatment Record</button>
+                        </form>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="update_treatment">Update Treatment Record</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
-
             {% empty %}
-            
             <tr>
-                There is no data yet.
+                <td colspan="7">There is no data yet.</td>
             </tr>
-                
             {% endfor %}
-
-            
-
-          </table>
-
+            </tbody>
+        </table>
 
     </div>
-    <!-- <div class="main-containers">
-        <h2>STEP 4: INTRAORAL EXAMINATION</h2>
-
-        <p>place the chart here</p>
-
-        <form method="POST">
-            {% csrf_token %}
-
-            <fieldset>
-                <legend>Intraoral Examinations</legend>
-                {{ intraoralexaminations_form.as_p }}
-            </fieldset>
 
 
-            <button type="submit">Submit</button>
-        </form>
+    {% if selected_patient and show_patient_details %}
+    <div class="main-containers">
+        <div class="patient-details">
+
+        <h2 class="record-title">Patient Full Information</h2>
+
+        <section class="section-card">
+            <h3>Personal Information</h3>
+            <div class="info-grid">
+            <p><strong>Full Name:</strong> {{ selected_patient.last_name }}, {{ selected_patient.first_name }} {{ selected_patient.middle_name }}</p>
+            <p><strong>Nickname:</strong> {{ selected_patient.nickname }}</p>
+            <p><strong>Birthdate:</strong> {{ selected_patient.birthdate }}</p>
+            <p><strong>Age:</strong> {{ selected_patient.age }}</p>
+            <p><strong>Sex:</strong> {{ selected_patient.sex }}</p>
+            <p><strong>Religion:</strong> {{ selected_patient.religion }}</p>
+            <p><strong>Nationality:</strong> {{ selected_patient.nationality }}</p>
+            <p><strong>Home Address:</strong> {{ selected_patient.home_address }}</p>
+            <p><strong>Occupation:</strong> {{ selected_patient.occupation }}</p>
+            <p><strong>Phone:</strong> {{ selected_patient.cel_mobile_no }}</p>
+            <p><strong>Email:</strong> {{ selected_patient.email }}</p>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h3>Dental History</h3>
+            <div class="info-grid">
+            <p><strong>Previous Dentist:</strong> {{ selected_patient.prev_dentist }}</p>
+            <p><strong>Last Dental Visit:</strong> {{ selected_patient.last_dental_visit }}</p>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h3>Medical History</h3>
+            <div class="info-grid">
+            <p><strong>Good Health:</strong> {{ selected_patient.mi_isgoodhealth }}</p>
+            <p><strong>Serious Illness:</strong> {{ selected_patient.mi_is_serious_illness }} - {{ selected_patient.mi_is_serious_illness_followup }}</p>
+            <p><strong>Using Tobacco:</strong> {{ selected_patient.mi_is_using_tobacco }}</p>
+            <p><strong>Blood Type:</strong> {{ selected_patient.mi_bloodtype }}</p>
+            <p><strong>Blood Pressure:</strong> {{ selected_patient.mi_bloodpressure }}</p>
+            </div>
+        </section>
+
+        </div>
+    </div>
+    {% endif %}
 
 
-        <p>Xray taken : checkbox</p>
-        <p>periodontal screening: checkbox</p>
-        <p>occusion : checkbox</p>
-        <p>appliances: checkbox</p>
-        <p>TMD: checkbox</p>
+    {% if selected_patient and show_treatment_table %}
+    <div class="main-containers">
+        <div class="treatment-records-section">
+
+            <h2 class="record-title">Treatment Records for {{ selected_patient.first_name }} {{ selected_patient.last_name }}</h2>
+
+            {% if treatment_records %}
+                <table class="treatment-table">
+                    <thead>
+                        <tr>
+                            <th>Treatment Date</th>
+                            <th>Tooth Number</th>
+                            <th>Procedure</th>
+                            <th>Dentist</th>
+                            <th>Amount Charged</th>
+                            <th>Amount Paid</th>
+                            <th>Balance</th>
+                            <th>Next Appointment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in treatment_records %}
+                        <tr>
+                            <td>{{ record.treatment_date }}</td>
+                            <td>{{ record.tooth_number }}</td>
+                            <td>{{ record.treatment_procedure }}</td>
+                            <td>{{ record.treatment_dentist }}</td>
+                            <td>{{ record.amount_charged }}</td>
+                            <td>{{ record.amount_paid }}</td>
+                            <td>{{ record.balance }}</td>
+                            <td>{{ record.next_appointment }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="no-record-message">
+                    <p><strong>There are currently no treatment records available for {{ selected_patient.first_name }} {{ selected_patient.last_name }}.</strong></p>
+                    <p>Please fill out a treatment record to view it here.</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+    {% endif %}
 
 
-    </div> -->
+
+
 
 
     {% if selected_patient and intraoralexamination_form %}
@@ -151,8 +293,8 @@
 
 </div>
 
-<script>
-    document.getElementById('banner-title').innerText = 'Patient Health Records';
-</script>
+
+
+
 
 {% endblock %}

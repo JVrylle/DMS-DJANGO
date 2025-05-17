@@ -159,9 +159,11 @@
     background-color: white;
     min-width: 100px;
     box-shadow: 0px 8px 16px rgba(78, 53, 53, 0.2);
-    z-index: 1;
+    z-index: 999;
     border-radius: 6px;
     overflow: hidden;
+    max-height: 250px;
+    overflow-y: auto;
 }
 
 /* Show dropdown on hover */
@@ -182,11 +184,96 @@
     background-color: #f1f1f1;
 }
 
+/* FOR DROP DOWNS */
 
+h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
 
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
+th {
+    background-color: #1E3A8A;
+    color: white;
+    padding: 14px;
+    text-align: left;
+}
 
+td {
+    padding: 14px;
+    color: #333;
+}
 
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    background-color: #1E3A8A;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.dropdown-content form {
+    display: block;
+    margin: 0;
+}
+
+.dropdown-content button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    text-align: left;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #eee;
+}
+
+.dropdown-content button:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.table-wrapper, .main-containers {
+  position: relative;
+  overflow: visible !important; /* allow dropdowns to overflow */
+  z-index: 0;
+}
 
 
 
