@@ -13,7 +13,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, **extra_fields):   
         extra_fields.setdefault('role', 'ADMIN')
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -41,19 +41,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.email} ({self.role})"
     
-# ADMIN 
-# class AdminProfile(models.Model):
-#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-#     can_add_patients = models.BooleanField(default=True)
-#     # more admin-specific fields if needed
-
-
-# DENTIST
-# class DentistProfile(models.Model):
-#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-#     license_number = models.CharField(max_length=100)
-#     specialization = models.CharField(max_length=100)
-
 # PATIENT
 class Patient(models.Model):
     # Patient Information Record
@@ -197,7 +184,6 @@ class TreatmentRecord(models.Model):
 # APPOINTMENTS
 class Appointment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    dentist = models.ForeignKey(CustomUser, limit_choices_to={'role': 'DENTIST'}, on_delete=models.SET_NULL, null=True)
     date = models.DateField()
     time = models.TimeField()
     status = models.CharField(max_length=50, choices=[
@@ -215,7 +201,7 @@ class Appointment(models.Model):
 
 # NOTIFICATIONS
 class Notification(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    patient = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     message = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -227,7 +213,6 @@ class Notification(models.Model):
 # PRESCRIPTIONS
 class Prescription(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    prescribed_by = models.ForeignKey(CustomUser, limit_choices_to={'role': 'DENTIST'}, on_delete=models.SET_NULL, null=True)
     medication = models.TextField()
     dosage = models.TextField()
     instructions = models.TextField()
@@ -245,21 +230,19 @@ class AdminLog(models.Model):
         ('EVENT', 'Event'),
         ('EMERGENCY', 'Emergency'),
     ]
-    admin = models.ForeignKey(CustomUser, limit_choices_to={'role': 'ADMIN'}, on_delete=models.CASCADE)
     log_type = models.CharField(max_length=10, choices=LOG_TYPE_CHOICES)
     action = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.log_type} log by {self.admin.email} at {self.timestamp}"
+        return f"{self.log_type} log at {self.timestamp}"
 
 # Emergency Alerts
 class EmergencyAlert(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    dentist = models.ForeignKey(CustomUser, limit_choices_to={'role': 'DENTIST'}, on_delete=models.SET_NULL, null=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_resolved = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Emergency for {self.patient} to {self.dentist.email} at {self.created_at}"
+        return f"Emergency for {self.patient} at {self.created_at}"

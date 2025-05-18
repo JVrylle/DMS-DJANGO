@@ -38,6 +38,7 @@ def dentist_patient_health_records(request):
     message = None
     show_patient_details = False  # Default
     show_treatment_table = False
+    viewing_intraoral = False
 
     if request.method == 'POST':
         patient_id = request.POST.get('patient_id')
@@ -78,6 +79,13 @@ def dentist_patient_health_records(request):
         # Button clicked: View Intraoral
         elif 'view_intraoral' in request.POST:
             selected_patient = get_object_or_404(Patient, id=patient_id)
+            existing_exam = IntraoralExamination.objects.filter(patient=selected_patient).first()
+            if existing_exam:
+                intraoral_form = IntraoralExaminationForm(instance=existing_exam)
+            else:
+                intraoral_form = IntraoralExaminationForm()
+            
+            viewing_intraoral = True  # New flag
 
         # Button clicked: View Treatment    
         elif 'view_treatment' in request.POST:
@@ -108,6 +116,7 @@ def dentist_patient_health_records(request):
         'message': message,
         'show_patient_details': show_patient_details, 
         'show_treatment_table': show_treatment_table,
+        'viewing_intraoral': viewing_intraoral,
     }
     return render(request, 'Dentist/dentist_patient_health_records.html', context)
 

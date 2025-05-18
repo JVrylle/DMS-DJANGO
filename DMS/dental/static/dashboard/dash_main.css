@@ -271,7 +271,7 @@ tr:nth-child(even) {
 
 .table-wrapper, .main-containers {
   position: relative;
-  overflow: visible !important; /* allow dropdowns to overflow */
+  overflow: visible ; 
   z-index: 0;
 }
 
