@@ -1,4 +1,6 @@
 from .models import AdminLog
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
 
 def log_admin_action(
     log_type,
@@ -53,3 +55,11 @@ def log_admin_action(
 #     description="Repeated failed login attempts for user john_doe",
 #     metadata={"ip": "192.168.0.1", "attempts": 5}
 # )
+
+
+# EMAIL VERIFICATION FOR USERS
+class EmailVerificationTokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return f"{user.pk}{timestamp}{user.is_active}"
+
+email_verification_token = EmailVerificationTokenGenerator()

@@ -128,3 +128,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CUSTOMIZED ROLE BASED ACCESS CONTROL 
 AUTH_USER_MODEL = 'dental.CustomUser'
+
+
+# For development (shows email in console)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# For production (real emails using Gmail SMTP)
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your_email@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your_email_app_password'

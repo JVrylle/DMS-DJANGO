@@ -8,6 +8,9 @@ urlpatterns = [
     path('register/',views_website.register,name='register'),
     path('login/',views_website.login,name='login'),
 
+    # EMAIL VERIFICATION
+    path('activate/<uidb64>/<token>/', views_website.activate, name='activate'),
+
     # USER DASHBOARD
     path('User/',views_user.user_dash, name='user_dash'),
     path('User/appointments/',views_user.user_appointments, name='user_appointments'),
