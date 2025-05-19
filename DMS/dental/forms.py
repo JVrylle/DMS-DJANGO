@@ -38,7 +38,7 @@ class PatientForm(forms.ModelForm):
                   'mi_is_serious_illness',
                   'mi_is_serious_illness_followup',
                   'mi_is_hospitalized',
-                  'mi_is_hospitalized_folloup',
+                  'mi_is_hospitalized_followup',
                   'mi_is_taking_prescription',
                   'mi_is_taking_prescription_followup',
                   'mi_is_using_tobacco',
@@ -169,7 +169,7 @@ class PatientForm(forms.ModelForm):
             'mi_is_serious_illness': 'Any serious illness?',
             'mi_is_serious_illness_followup': 'If yes, explain',
             'mi_is_hospitalized': 'Have you been hospitalized?',
-            'mi_is_hospitalized_folloup': 'If yes, explain',
+            'mi_is_hospitalized_followup': 'If yes, explain',
             'mi_is_taking_prescription': 'Taking any prescriptions?',
             'mi_is_taking_prescription_followup': 'If yes, explain',
             'mi_is_using_tobacco': 'Do you use tobacco products?',
@@ -278,7 +278,7 @@ class TreatmentRecordForm(forms.ModelForm):
     class Meta:
         model = TreatmentRecord
         fields = [
-            'treatment_date',
+            # 'treatment_date',
             'tooth_number',
             'treatment_procedure',
             'treatment_dentist',
@@ -288,7 +288,7 @@ class TreatmentRecordForm(forms.ModelForm):
             'next_appointment'
         ]
         widgets = {
-            'treatment_date': forms.DateInput(attrs={'type': 'date'}),
+            # 'treatment_date': forms.DateInput(attrs={'type': 'date'}),
             'next_appointment': forms.DateInput(attrs={'type': 'date'}),
         }
 

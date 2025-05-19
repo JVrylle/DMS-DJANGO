@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth import get_user_model
+
 
 #Create a manager to help us create users
 class CustomUserManager(BaseUserManager):
@@ -70,7 +72,7 @@ class Patient(models.Model):
     home_no = models.CharField(max_length=255, null=True, blank=True)
     office_no = models.CharField(max_length=255, null=True, blank=True)
     fax_no = models.CharField(max_length=255, null=True, blank=True)
-    cel_mobile_no = models.IntegerField(null=False)
+    cel_mobile_no = models.CharField(max_length=20,null=False)
     email = models.CharField(max_length=100, null=False)
 
     # Referral Thanks
@@ -91,7 +93,7 @@ class Patient(models.Model):
 
     yes_no = [
             ('Yes','Yes'),
-            ('Yes','No'),
+            ('No','No'),
         ]
     
 
@@ -105,7 +107,7 @@ class Patient(models.Model):
     mi_is_serious_illness_followup = models.CharField(max_length=255, null=True, blank=True)
 
     mi_is_hospitalized = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
-    mi_is_hospitalized_folloup = models.CharField(max_length=255, null=True, blank=True)
+    mi_is_hospitalized_followup = models.CharField(max_length=255, null=True, blank=True)
 
     mi_is_taking_prescription = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
     mi_is_taking_prescription_followup = models.CharField(max_length=255, null=True, blank=True)
@@ -170,9 +172,9 @@ class IntraoralExamination(models.Model):
 
 # TREATMENT RECORDS
 class TreatmentRecord(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='treatment_records')
 
-    treatment_date = models.DateField(null=True)
+    treatment_date = models.DateField(auto_now_add=True, null=True)
     tooth_number = models.IntegerField(null=True)
     treatment_procedure = models.TextField(null=True)
     treatment_dentist = models.CharField(max_length=255,null=True)
@@ -183,7 +185,7 @@ class TreatmentRecord(models.Model):
 
 # APPOINTMENTS
 class Appointment(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
     date = models.DateField()
     time = models.TimeField()
     status = models.CharField(max_length=50, choices=[
@@ -201,7 +203,7 @@ class Appointment(models.Model):
 
 # NOTIFICATIONS
 class Notification(models.Model):
-    patient = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
     message = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -212,7 +214,7 @@ class Notification(models.Model):
 
 # PRESCRIPTIONS
 class Prescription(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='prescriptions')
     medication = models.TextField()
     dosage = models.TextField()
     instructions = models.TextField()
@@ -222,7 +224,10 @@ class Prescription(models.Model):
         return f"Prescription for {self.patient} on {self.issued_date}"
 
 
-# Admin Logs
+
+# ADMINLOGS
+User = get_user_model()
+
 class AdminLog(models.Model):
     LOG_TYPE_CHOICES = [
         ('SYSTEM', 'System'),
@@ -230,16 +235,24 @@ class AdminLog(models.Model):
         ('EVENT', 'Event'),
         ('EMERGENCY', 'Emergency'),
     ]
+
+    admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='admin_logs')
     log_type = models.CharField(max_length=10, choices=LOG_TYPE_CHOICES)
-    action = models.TextField()
+    action_description = models.TextField()
+    affected_model = models.CharField(max_length=100, null=True, blank=True)
+    affected_object_id = models.PositiveIntegerField(null=True, blank=True)
+    metadata = models.JSONField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.log_type} log at {self.timestamp}"
+        return f"[{self.log_type}] at {self.timestamp} — {self.action_description[:50]}"
+
+
+
 
 # Emergency Alerts
 class EmergencyAlert(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='emergency_alerts')
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_resolved = models.BooleanField(default=False)
