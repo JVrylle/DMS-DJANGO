@@ -49,3 +49,5 @@ showLoginBtn.onclick = (e) => {
     registerModal.style.display = 'none';
     loginModal.style.display = 'block';
 };
+
+

@@ -67,12 +67,38 @@
 
     <!-- Register Modal -->
     {% include 'Website/register_modal.html' %}
+            
+    <div id="modal-data"
+     data-show-register="{{ show_register|yesno:'true,false' }}"
+     data-show-login="{{ show_login|yesno:'true,false' }}"
+     hidden></div>
+
+
 
 
     <!-- Footer -->
     <div class="footer"></div>
     
+    
     <script src="https://kit.fontawesome.com/603a80fa25.js" crossorigin="anonymous"></script>
     <script src="{% static 'website/modal.js' %}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const modalData = document.getElementById("modal-data");
+
+            const showRegister = modalData.dataset.showRegister === "true";
+            const showLogin = modalData.dataset.showLogin === "true";
+
+            if (showRegister) {
+                document.getElementById("registerModal").style.display = "block";
+            } else if (showLogin) {
+                document.getElementById("loginModal").style.display = "block";
+            }
+        });
+    </script>
+
+
+
 </body>
 </html>

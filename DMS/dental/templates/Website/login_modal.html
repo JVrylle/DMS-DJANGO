@@ -1,24 +1,8 @@
 <!-- LOGIN MODAL -->
 
 
-
-
-<!-- <div id="loginModal" class="modal">
-    <div class="modal-content">
-        <span id="closeLoginModalBtn" class="close">&times;</span>
-        <h2>Welcome Back</h2>
-        <p>Doesn't have an account yet? <a href="{% url 'register' %}" id="showRegisterModal">Sign Up</a></p>
-        <form method="POST" action="{% url 'login' %}">
-            {% csrf_token %}
-            {{ login_form.as_p }}
-            <button type="submit">Login</button>
-        </form>
-    </div>
-</div> -->
-
-
 <!-- LOGIN MODAL -->
-<div id="loginModal" class="modal">
+<!-- <div id="loginModal" class="modal">
   <div class="modal-content login-content">
     <span id="closeLoginModalBtn" class="close">&times;</span>
     <h2>Welcome Back</h2>
@@ -33,6 +17,38 @@
       <button type="submit" class="primary-btn">Login</button>
     </form>
   </div>
+</div> -->
+
+<div id="loginModal" class="modal">
+  <div class="modal-content login-content">
+    <span id="closeLoginModalBtn" class="close">&times;</span>
+    <h2>Welcome Back</h2>
+    <p>Doesn't have an account yet? 
+      <a href="{% url 'register' %}" id="showRegisterModal">Sign Up</a>
+    </p>
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ login_form.non_field_errors }}
+        {{ login_form.username.label_tag }}
+        {{ login_form.username }}
+        {% if login_form.username.errors %}
+          <div class="error">{{ login_form.username.errors }}</div>
+        {% endif %}
+        {{ login_form.password.label_tag }}
+        {{ login_form.password }}
+        {% if login_form.password.errors %}
+          <div class="error">{{ login_form.password.errors }}</div>
+        {% endif %}
+      </div>
+      <button type="submit" class="primary-btn">Login</button>
+    </form>
+  </div>
 </div>
+
+
+
+
+
 
 

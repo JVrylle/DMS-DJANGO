@@ -134,3 +134,11 @@ input[type="email"] {
   display: block;
   color: #333;
 }
+
+
+/* ERROR IN FORM LOGIN AND REGISTER */
+.error {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 4px;
+}

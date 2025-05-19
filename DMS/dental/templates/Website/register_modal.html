@@ -1,30 +1,9 @@
 <!-- REGISTER MODAL -->
 
-<!-- 
-<div id="registerModal" class="modal">
-    <div class="modal-content">
-        <span id="closeRegisterModalBtn" class="close">&times;</span>
-        <h2>Register For Free!</h2>
-        <p>Already have an account? <a href="{% url 'login' %}" id="showLoginModal">Log in</a></p>
-        <form method="POST" action="{% url 'register' %}">
-            {% csrf_token %}
-            {{ register_form.username.label_tag }}
-            {{ register_form.username }}<br>
-            {{ register_form.email.label_tag }}
-            {{ register_form.email }}<br>
-            {{ register_form.password1.label_tag }}
-            {{ register_form.password1 }}<br>
-            {{ register_form.password2.label_tag }}
-            {{ register_form.password2 }}<br>
-            <input type="submit" value="Sign Up" class="login-button">
-        </form>
-    </div>
-</div> -->
-
 
 
 <!-- REGISTER MODAL -->
-<div id="registerModal" class="modal">
+<!-- <div id="registerModal" class="modal">
   <div class="modal-content register-content">
     <span id="closeRegisterModalBtn" class="close">&times;</span>
     <h2>Register For Free!</h2>
@@ -43,5 +22,39 @@
       {{ register_form.password2 }}
       <input type="submit" value="Sign Up" class="primary-btn">
     </form>
+  </div>
+</div> -->
+
+
+
+<div id="registerModal" class="modal">
+  <div class="modal-content register-content">
+    <span id="closeRegisterModalBtn" class="close">&times;</span>
+    <h2>Register For Free!</h2>
+    <p>Already have an account? 
+      <a href="{% url 'login' %}" id="showLoginModal">Log in</a>
+    </p>
+    <form method="POST" action="{% url 'register' %}">
+      {% csrf_token %}
+      {{ register_form.non_field_errors }}
+      <label>{{ register_form.username.label_tag }}</label>
+      {{ register_form.username.errors }}
+      {{ register_form.username }}
+
+      <label>{{ register_form.email.label_tag }}</label>
+      {{ register_form.email.errors }}
+      {{ register_form.email }}
+
+      <label>{{ register_form.password1.label_tag }}</label>
+      {{ register_form.password1.errors }}
+      {{ register_form.password1 }}
+
+      <label>{{ register_form.password2.label_tag }}</label>
+      {{ register_form.password2.errors }}
+      {{ register_form.password2 }}
+
+      <input type="submit" value="Sign Up" class="primary-btn">
+    </form>
+
   </div>
 </div>
