@@ -38,6 +38,7 @@ urlpatterns = [
     path('Admin/patient-information-record/',views_admin.admin_patient_info_records,name='admin_patient_info_records'),
     path('Admin/analytics/',views_admin.admin_analytics,name='admin_analytics'),
     path('Admin/system-logs/',views_admin.admin_system_logs,name='admin_system_logs'),
+    path('admin/system-logs/verify/<int:user_id>/', views_admin.verify_patient_from_log, name='verify_patient_from_log'),
     path('Admin/security-logs/',views_admin.admin_security_logs,name='admin_security_logs'),
     path('Admin/event-logs/',views_admin.admin_event_logs,name='admin_event_logs'),
     path('Admin/emergency-logs/',views_admin.admin_emergency_logs,name='admin_emergency_logs'),

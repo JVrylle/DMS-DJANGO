@@ -1,9 +1,16 @@
-
-
 {% extends "User/user_dash.html" %}
 {% block usercontent %}
+
+<style>
+    h3 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+</style>
+
 <div class="main-container">
     <div class="main-containers first">
+        <h3>Please Fill Up the Patient Information Record Form to Access the Doc2Ne Dental Management System</h3>
         <h2>Patient Information Record (PIR)</h2>
 
         {% if patient %}
@@ -17,7 +24,10 @@
             <!-- Add more fields as needed -->
 
             <div style="margin-top: 20px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba;">
-                <strong>Note:</strong> Your data is being reviewed by the admin.
+                <strong>Note:</strong><br><br>
+                Your data is being reviewed by the admin.<br>
+                If you are an existing patient of Doc2Ne Clinic, please wait for the admin to verify your account.<br>
+                If you are a new patient and has no existing records in Doc2Ne Clinic, kindly proceed to the clinic for official admission.
             </div>
 
         {% else %}

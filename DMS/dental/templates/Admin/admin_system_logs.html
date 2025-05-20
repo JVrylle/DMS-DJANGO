@@ -1,14 +1,54 @@
 {% extends "Admin/admin_dash.html" %}
+
+{% load custom_filters %}
+
 {% block admincontent %}
 <div class="main-container">
-    <div class="main-containers first">System Logs</div>
-    <div class="main-containers second">System Logs</div>
-    <div class="main-containers third">System Logs</div>
-    <div class="main-containers fourth">System Logs</div>
+
+    <div class="main-containers ">
+        {% if system_logs %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in system_logs %}
+                    <tr>
+                        <td>{{ log.timestamp|date:"Y-m-d H:i" }}</td>
+                        <td>{{ log.action_description }}</td>
+                        <td>
+                            {% with user_id=log.metadata.user_id %}
+                                {% if user_id %}
+                                    {% with patient=patients|get_item:user_id %}
+                                        {% if patient and patient.is_verified != None %}
+                                            <form action="{% url 'verify_patient_from_log' user_id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit">Verify User</button>
+                                            </form>
+                                        {% else %}
+                                            Verified
+                                        {% endif %}
+                                    {% endwith %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No system logs found.</p>
+        {% endif %}
+    </div>
 </div>
 
 <script>
     document.getElementById('banner-title').innerText = 'System Logs';
 </script>
-
 {% endblock %}
