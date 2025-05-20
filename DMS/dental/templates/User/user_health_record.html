@@ -3,10 +3,31 @@
 {% extends "User/user_dash.html" %}
 {% block usercontent %}
 <div class="main-container">
-    <div class="main-containers first">Health Record</div>
-    <div class="main-containers second">Health Record</div>
-    <div class="main-containers third">Health Record</div>
-    <div class="main-containers fourth">Health Record</div>
+    <div class="main-containers first">
+        <h2>Patient Information Record (PIR)</h2>
+
+        {% if patient %}
+            <p><strong>Full Name:</strong> {{ patient.first_name }} {{ patient.middle_name }} {{ patient.last_name }}</p>
+            <p><strong>Birthdate:</strong> {{ patient.birthdate }}</p>
+            <p><strong>Sex:</strong> {{ patient.sex }}</p>
+            <p><strong>Age:</strong> {{ patient.age }}</p>
+            <p><strong>Address:</strong> {{ patient.home_address }}</p>
+            <p><strong>Phone:</strong> {{ patient.cel_mobile_no }}</p>
+            <p><strong>Email:</strong> {{ patient.email }}</p>
+            <!-- Add more fields as needed -->
+
+            <div style="margin-top: 20px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba;">
+                <strong>Note:</strong> Your data is being reviewed by the admin.
+            </div>
+
+        {% else %}
+            <form method="POST" class="pir-form">
+                {% csrf_token %}
+                {{ form.as_p }} 
+                <button type="submit">Save</button>
+            </form>
+        {% endif %}
+    </div>
 </div>
 
 <script>

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 from .decorators import role_required
-from .forms import PatientForm, ConsentForm, IntraoralExaminationForm
+from .forms import PatientForm, ConsentForm, IntraoralExaminationForm, PatientInformationRecordForm
 from .models import Patient, IntraoralExamination
 
 
@@ -37,7 +37,28 @@ def user_prescription(request):
 
 @role_required(['USER'])
 def user_health_record(request):
-    return render(request, 'User/user_health_record.html')
+    try:
+        patient = Patient.objects.get(synced_user=request.user)
+    except Patient.DoesNotExist:
+        patient = None
+
+    if request.method == 'POST':
+        form = PatientInformationRecordForm(request.POST, instance=patient)
+        if form.is_valid():
+            patient = form.save(commit=False)
+            patient.synced_user = request.user
+            patient.save()
+            return redirect('user_health_record')  # redirect to see submitted data
+
+    else:
+        form = PatientInformationRecordForm(instance=patient)
+
+    return render(request, 'User/user_health_record.html', {
+        'form': form,
+        'patient': patient
+    })
+
+
 
 @role_required(['USER'])
 def user_emergency(request):

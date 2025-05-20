@@ -4,7 +4,8 @@ from django.template import loader
 from .decorators import role_required
 from .forms import PatientForm, ConsentForm, IntraoralExaminationForm
 from .models import Patient, IntraoralExamination
-
+from django.db.models import Q
+from django.contrib import messages
 
 # ADMIN
 @role_required(['DENTIST','ADMIN'])
@@ -21,32 +22,47 @@ def admin_dash(request):
 def admin_appointments(request):
     return render(request, 'Admin/admin_appointments.html')
 
-@role_required(['DENTIST','ADMIN'])
+@role_required(['DENTIST', 'ADMIN'])
 def admin_patient_info_records(request):
-
-    ### ADD PATIENT INFORMATION TO DATABASE
     if request.user.role != 'ADMIN':
-        return redirect('forbidden')  # Optional: Handle forbidden access
+        return redirect('forbidden')
+
+    filter_option = request.GET.get('filter', 'verified')
+
+    if filter_option == 'complete':
+        patients = Patient.objects.filter(is_verified=True, is_complete=True)
+    elif filter_option == 'incomplete':
+        patients = Patient.objects.filter(is_verified=True, is_complete=False)
+    else:  # Default: verified
+        patients = Patient.objects.filter(is_verified=True)
+
+    show_form = False
+    patient_form = PatientForm()        # Initialize by default
+    consent_form = ConsentForm()        # Initialize by default
 
     if request.method == 'POST':
-        patient_form = PatientForm(request.POST)
-        consent_form = ConsentForm(request.POST)
+        if 'add_record' in request.POST:
+            show_form = True  # Only show form
+        else:
+            patient_form = PatientForm(request.POST)
+            consent_form = ConsentForm(request.POST)
 
-        if patient_form.is_valid() and consent_form.is_valid():
-            if consent_form.cleaned_data['consent_signed']:
-                patient = patient_form.save()
-                print(f"Saved patient: {patient.first_name} {patient.last_name}")
-                return redirect('admin_dash')  # Redirect to dashboard or success page
-            else:
-                consent_form.add_error('consent_signed', 'Consent must be signed before submission.')
-
-    else:
-        patient_form = PatientForm()
-        consent_form = ConsentForm()
+            if patient_form.is_valid() and consent_form.is_valid():
+                if consent_form.cleaned_data['consent_signed']:
+                    patient = patient_form.save()
+                    print(f"Saved patient: {patient.first_name} {patient.last_name}")
+                    messages.success(request, "Patient record successfully added.")
+                    return redirect('admin_patient_info_records')
+                else:
+                    consent_form.add_error('consent_signed', 'Consent must be signed before submission.')
+            show_form = True  # Form is invalid, so show again
 
     context = {
+        'patients': patients,
         'patient_form': patient_form,
         'consent_form': consent_form,
+        'show_form': show_form,
+        'filter_option': filter_option,
     }
     return render(request, 'Admin/admin_patient_info_records.html', context)
 

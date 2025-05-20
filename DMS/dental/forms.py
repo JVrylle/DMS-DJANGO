@@ -5,6 +5,34 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 
+class PatientInformationRecordForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        fields = [
+            'last_name', 'first_name', 'middle_name', 'nickname',
+            'birthdate', 'age', 'sex', 'religion', 'nationality',
+            'home_address', 'occupation', 'dental_insurance',
+            'dental_insurance_effective_date',
+            'for_minors_parent_or_guardian_name',
+            'for_minors_parent_or_guardian_occupation',
+            'home_no', 'office_no', 'fax_no', 'cel_mobile_no', 'email',
+            'referral_thanks', 'dental_consultation_reason',
+        ]
+
+
+        sex_choices = [
+            ('Male','Male'),
+            ('Female','Female'),
+        ]     
+
+
+        widgets = {
+            'birthdate': forms.DateInput(attrs={'type': 'date'}),
+            'dental_insurance_effective_date': forms.DateInput(attrs={'type': 'date'}),
+            'sex': forms.RadioSelect(choices=sex_choices),
+        }
+
+
 class PatientForm(forms.ModelForm):
     class Meta:
         model = Patient

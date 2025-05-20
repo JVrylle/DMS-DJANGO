@@ -51,14 +51,15 @@ class Patient(models.Model):
     last_name = models.CharField(max_length=100, null=False)
     first_name = models.CharField(max_length=100, null=False)
     middle_name = models.CharField(max_length=100, null=False)
-    nickname = models.CharField(max_length=100,null=True, blank=True)
-    birthdate = models.DateField( null=False)
-    age = models.PositiveIntegerField(default=0,null=False)
+    nickname = models.CharField(max_length=100, null=True, blank=True)
+    birthdate = models.DateField(null=False)
+    age = models.PositiveIntegerField(default=0, null=False)
+    
     sex_choices = [
-            ('Male','Male'),
-            ('Female','Female'),
-        ]
-    sex = models.CharField(max_length=10,  null=False, default=None, choices=sex_choices)
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+    ]
+    sex = models.CharField(max_length=10, null=False, choices=sex_choices)
     religion = models.CharField(max_length=100, null=False)
     nationality = models.CharField(max_length=100, null=False)
     home_address = models.CharField(max_length=255, null=False)
@@ -74,7 +75,7 @@ class Patient(models.Model):
     home_no = models.CharField(max_length=255, null=True, blank=True)
     office_no = models.CharField(max_length=255, null=True, blank=True)
     fax_no = models.CharField(max_length=255, null=True, blank=True)
-    cel_mobile_no = models.CharField(max_length=20,null=False)
+    cel_mobile_no = models.CharField(max_length=20, null=False)
     email = models.CharField(max_length=100, null=False)
 
     # Referral Thanks
@@ -90,54 +91,47 @@ class Patient(models.Model):
     physician_specialty = models.CharField(max_length=255, null=True, blank=True)
     physician_office_address = models.CharField(max_length=255, null=True, blank=True)
     physician_office_no = models.CharField(max_length=255, null=True, blank=True)
-    
+
     # Medical Information
-
     yes_no = [
-            ('Yes','Yes'),
-            ('No','No'),
-        ]
-    
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+    ]
 
-
-    mi_isgoodhealth = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
-
-    mi_is_under_medical_treatment = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
+    mi_isgoodhealth = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_under_medical_treatment = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_under_medical_treatment_followup = models.CharField(max_length=255, null=True, blank=True)
-
-    mi_is_serious_illness = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
+    mi_is_serious_illness = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_serious_illness_followup = models.CharField(max_length=255, null=True, blank=True)
-
-    mi_is_hospitalized = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
+    mi_is_hospitalized = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_hospitalized_followup = models.CharField(max_length=255, null=True, blank=True)
-
-    mi_is_taking_prescription = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
+    mi_is_taking_prescription = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_taking_prescription_followup = models.CharField(max_length=255, null=True, blank=True)
-
-    mi_is_using_tobacco = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
-
-    mi_is_using_dangerous_drugs = models.CharField(max_length=10, null=False, blank=False, default=None, choices=yes_no)
+    mi_is_using_tobacco = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_using_dangerous_drugs = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
 
     mi_is_allergic = models.JSONField(default=list, null=True, blank=True)
     mi_is_allergic_others = models.CharField(max_length=255, null=True, blank=True)
-
-    mi_bleeding_time = models.CharField(max_length=255, blank=True, null=True)
+    mi_bleeding_time = models.CharField(max_length=255, null=True, blank=True)
 
     # MI For Women Only
     mi_is_pregnant = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_nursing = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_birth_control = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
-    
-    mi_bloodtype = models.CharField(max_length=255, null=False)
-    mi_bloodpressure = models.CharField(max_length=255, null=False)
 
+    mi_bloodtype = models.CharField(max_length=255, null=True, blank=True)
+    mi_bloodpressure = models.CharField(max_length=255, null=True, blank=True)
     mi_select_disease = models.JSONField(default=list, null=True, blank=True)
     mi_select_disease_others = models.CharField(max_length=255, null=True, blank=True)
 
-    synced_user = models.OneToOneField(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)  # For syncing with user login
+    # Sync and Status
+    synced_user = models.OneToOneField(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    is_complete = models.BooleanField(default=False)  # Has medical/dental data been filled?
+    is_verified = models.BooleanField(default=False)  # Has admin verified the record?
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name} {self.middle_name}'
+
 
 
 

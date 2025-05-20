@@ -1,11 +1,135 @@
 {% extends "Admin/admin_dash.html" %}
 {% block admincontent %}
+<style>
+.main-container {
+    height: auto;
+    width: 100%;    
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+
+.main-containers {
+    background-color: #ffffff;
+    height: auto;
+    flex: 1 0 ;
+    border-radius: 15px;
+}
+
+.filter-buttons {
+    display: flex;
+}
+
+.filter-buttons form button {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
+    background-color: #0a74da;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.filter-buttons form button:hover {
+    background-color: #064a9f;
+}
+</style>
 <div class="main-container">
     <div class="main-containers first">
-        <!-- THIS IS SUPPOSED TO BE A FORM WIZARD/ MULTI STEP FORM -->
-        <div class="tab">
-            
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Last Name</th>
+                <th>Middle Name</th>
+                <th>First Name</th>
+                <th>
+                    <div class="filter-buttons">
+                        <form method="GET">
+                            <button type="submit" name="filter" value="verified">Show Verified Records</button>
+                        </form>
+                    </div>
+                </th>
+                <th>
+                    <div class="filter-buttons">
+                        <form method="GET">
+                            <button type="submit" name="filter" value="complete">Show Complete Records</button>
+                        </form>
+                    </div>
+                </th>
+                <th>
+                    <div class="filter-buttons">
+                        <form method="GET">
+                            <button type="submit" name="filter" value="incomplete">Show Incomplete Records</button>
+                        </form>
+                    </div>
+                </th>
+                <th>
+                    <div class="filter-buttons">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" name="add_record">Add Record</button>
+                        </form>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ patient.last_name }}</td>
+                <td>{{ patient.middle_name }}</td>
+                <td>{{ patient.first_name }}</td>
+                <td></td>
+                <td></td>
+                <td>
+                    <div class="action-buttons">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="view_record">View Record</button>
+                        </form>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="view_intraoral">View Intraoral Exam</button>
+                        </form>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="select_patient">Update Intraoral Exam</button>
+                        </form>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="view_treatment">View Treatment Record</button>
+                        </form>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                            <button type="submit" name="update_treatment">Update Treatment Record</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">There is no data yet.</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
+    </div>
+
+    <!-- <div class="main-containers"> -->
+        <!-- THIS IS SUPPOSED TO BE A FORM WIZARD/ MULTI STEP FORM -->
+        <!-- <div class="tab">
+        
             <form method="POST">
                 {% csrf_token %}
 
@@ -34,7 +158,35 @@
 
 
         </div>
+    </div> -->
+{% if show_form %}
+    <div class="main-containers">
+        <div class="tab">
+            <form method="POST">
+                {% csrf_token %}
+                <h2>STEP 1: REGISTER NEW PATIENT</h2>
+                <fieldset>
+                    <legend>Patient Information</legend>
+                    {{ patient_form.as_p }}
+                </fieldset>
+
+                <h2>STEP 2: NEW PATIENT CONSENT FORM</h2>
+                <fieldset>
+                    <legend>Informed Consent</legend>
+                    {{ consent_form.as_p }}
+                </fieldset>
+
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if patient_form.errors %}
+            <div class="error">
+                {{ patient_form.errors }}
+            </div>
+            {% endif %}
+        </div>
     </div>
+{% endif %}
 
 </div>
 
