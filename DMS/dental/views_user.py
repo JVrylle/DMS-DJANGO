@@ -54,20 +54,41 @@ def user_health_record(request):
 
         if form.is_valid():
             new_data = form.save(commit=False)
-            new_data.synced_user = request.user
-            new_data.is_complete = False
-            new_data.is_verified = False
 
-            # Check for existing patient record with the same identity (excluding self)
+            # Check for existing patient record (excluding self)
             matched_patient = Patient.objects.filter(
                 first_name__iexact=new_data.first_name.strip(),
                 middle_name__iexact=new_data.middle_name.strip(),
                 last_name__iexact=new_data.last_name.strip(),
-                birthdate=new_data.birthdate
+                # birthdate=new_data.birthdate
+                # PLACE EXTRA INFORMATION HERE
             ).exclude(synced_user=request.user).first()
 
             if matched_patient:
-                # ✅ Category 1: Existing patient requesting verification
+                # ✅ Existing patient — update that record
+                matched_patient.synced_user = request.user
+                matched_patient.is_complete = True
+                matched_patient.is_verified = False
+
+                # Optional: update with submitted form fields
+                valid_fields = [
+                    'sex',
+                    # 'home_address',
+                    # 'cel_mobile_no',
+                    'email',
+                    # 'occupation',
+                    'religion', 
+                    'nationality',
+                    # 'nickname', 'dental_insurance', 'dental_insurance_effective_date',
+                    # 'home_no', 'office_no', 'fax_no'
+                    # Add more fields as appropriate
+                ]
+
+                for field in valid_fields:
+                    setattr(matched_patient, field, getattr(new_data, field))
+
+                matched_patient.save()
+
                 AdminLog.objects.create(
                     log_type='SYSTEM',
                     action_description=f"Existing patient '{request.user.username} ({request.user.email})' is requesting account verification.",
@@ -83,7 +104,12 @@ def user_health_record(request):
                 messages.info(request, "Your request is submitted. Admin will verify your account soon.")
 
             else:
-                # ✅ Category 2: New patient — visit clinic
+                # ✅ New patient — save new record
+                new_data.synced_user = request.user
+                new_data.is_complete = False
+                new_data.is_verified = False
+                new_data.save()
+
                 AdminLog.objects.create(
                     log_type='SYSTEM',
                     action_description=f"New user '{request.user.username} ({request.user.email})' submitted PIR. No existing match found.",
@@ -96,7 +122,6 @@ def user_health_record(request):
                 )
                 messages.info(request, "Thank you. Please visit the clinic to complete your registration and verification.")
 
-            new_data.save()
             return redirect('user_health_record')
 
     else:
@@ -106,7 +131,6 @@ def user_health_record(request):
         'form': form,
         'patient': patient
     })
-
 
 
 @role_required(['USER'])

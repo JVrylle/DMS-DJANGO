@@ -18,6 +18,8 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login as auth_login
 
+from .models import CustomUser
+
 
 # WEBSITE
 def website(request):
@@ -115,7 +117,7 @@ def activate(request, uidb64, token):
 
     if user and email_verification_token.check_token(user, token):
         user.is_active = True
-        # Optionally also set user.is_email_verified = True
+        user.is_email_verified = True
         user.save()
         auth_login(request, user)
         return redirect_user_by_role(user)
