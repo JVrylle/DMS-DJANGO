@@ -24,7 +24,7 @@
                             {% with user_id=log.metadata.user_id %}
                                 {% if user_id %}
                                     {% with patient=patients|get_item:user_id %}
-                                        {% if patient and patient.is_verified != None %}
+                                        {% if patient and not patient.is_verified %}
                                             <form action="{% url 'verify_patient_from_log' user_id %}" method="post">
                                                 {% csrf_token %}
                                                 <button type="submit">Verify User</button>

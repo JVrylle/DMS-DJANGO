@@ -23,12 +23,20 @@
             <p><strong>Email:</strong> {{ patient.email }}</p>
             <!-- Add more fields as needed -->
 
-            <div style="margin-top: 20px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba;">
-                <strong>Note:</strong><br><br>
-                Your data is being reviewed by the admin.<br>
-                If you are an existing patient of Doc2Ne Clinic, please wait for the admin to verify your account.<br>
-                If you are a new patient and has no existing records in Doc2Ne Clinic, kindly proceed to the clinic for official admission.
-            </div>
+            {% if patient.is_verified %}
+                <div style="margin-top: 20px; padding: 10px; background: #d4edda; border: 1px solid #c3e6cb;">
+                    <strong>Note:</strong><br><br>
+                    Your account has been successfully verified by the administrator.<br>
+                    You now have full access to the Doc2Ne Dental Management System.
+                </div>
+            {% else %}
+                <div style="margin-top: 20px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba;">
+                    <strong>Note:</strong><br><br>
+                    Your submitted information is currently under review.<br>
+                    If you are an existing patient of Doc2Ne Dental Clinic, please wait for the administrator to verify your account.<br>
+                    If you are a new patient without prior records at Doc2Ne Clinic, kindly visit the clinic to complete your official registration.
+                </div>
+            {% endif %}
 
         {% else %}
             <form method="POST" class="pir-form">
