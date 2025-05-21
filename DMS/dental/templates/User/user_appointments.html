@@ -1,15 +1,106 @@
-
 {% extends "User/user_dash.html" %}
 {% block usercontent %}
+<style>
+table.appointments-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table.appointments-table th,
+table.appointments-table td {
+    padding: 8px;
+    text-align: left;
+}
+
+table.appointments-table th {
+    background-color: #1E3A8A;
+}
+
+.appointment-actions a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.appointment-actions a:hover {
+    text-decoration: underline;
+}
+
+</style>
+
+
+
+
 <div class="main-container">
-    <div class="main-containers first">appointments</div>
-    <div class="main-containers second">appointments</div>
-    <div class="main-containers third">appointments</div>
-    <div class="main-containers fourth">appointments</div>
+    <div class="main-containers">
+        <h2>{% if edit_id %}Edit Appointment{% else %}New Appointment{% endif %}</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if edit_id %}Update{% else %}Add{% endif %}</button>
+        </form>        
+    </div>
+
+    <div class="main-containers">
+        <h2>Your Appointments</h2>
+        {% if appointments %}
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Purpose</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.time }}</td>
+                        <td>{{ appointment.status }}</td>
+                        <td>{{ appointment.purpose|default:"No purpose stated" }}</td>
+                        <td class="appointment-actions">
+                            <a href="?edit={{ appointment.id }}">Edit</a>
+                            <a href="?delete={{ appointment.id }}" onclick="return confirm('Are you sure you want to delete this appointment?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No appointments found.</p>
+        {% endif %}
+    </div>
+
+{% if show_walkin_modal %}
+<div id="walkinModal" style="display:block; position:fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); z-index:1000;">
+    <div style="background:#fff; padding:20px; margin:15% auto; width:90%; max-width:400px; border-radius:8px; text-align:center;">
+        <h3>Schedule Full</h3>
+        <p>Scheduled patients are priority. Would you like to proceed as a <strong>Walk-in</strong>?</p>
+        <small>Note: Walk-in patients may be accommodated after all scheduled patients.</small>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="walkin_confirm" value="1">
+            <input type="hidden" name="date" value="{{ appointment_date }}">
+            <input type="hidden" name="purpose" value="{{ appointment_purpose }}">
+            <br><br>
+            <button type="submit">Add as Walk-in</button>
+            <button type="button" onclick="document.getElementById('walkinModal').style.display='none'">Cancel</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+
 </div>
 
 <script>
     document.getElementById('banner-title').innerText = 'Appointments';
 </script>
-
 {% endblock %}

@@ -14,6 +14,7 @@ urlpatterns = [
     # USER DASHBOARD
     path('User/',views_user.user_dash, name='user_dash'),
     path('User/appointments/',views_user.user_appointments, name='user_appointments'),
+
     path('User/analytics/',views_user.user_analytics, name='user_analytics'),
     path('User/notifications/',views_user.user_notifications, name='user_notifications'),
     path('User/prescription/',views_user.user_prescription, name='user_prescription'),

@@ -3,6 +3,12 @@ from .models import Patient, IntraoralExamination, TreatmentRecord, CustomUser
 from django import forms
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django import forms
+from .models import Appointment
+from django.core.exceptions import ValidationError
+from datetime import datetime, date, time as time_obj
+from django.core.exceptions import ValidationError
+
 
 
 class PatientInformationRecordForm(forms.ModelForm):
@@ -381,3 +387,36 @@ class CustomUserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class AppointmentForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['date', 'purpose']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.patient = kwargs.pop('patient', None)
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        date_ = cleaned_data.get('date')
+
+        if date_:
+            if date_ < date.today():
+                raise ValidationError("Appointment date cannot be in the past.")
+            if date_.weekday() == 6:
+                raise ValidationError("The clinic is closed on Sundays.")
+
+            # Prevent duplicate booking by same patient on same date
+            conflict = Appointment.objects.filter(
+                patient=self.patient,
+                date=date_
+            )
+            if self.instance.pk:
+                conflict = conflict.exclude(pk=self.instance.pk)
+
+            if conflict.exists():
+                raise ValidationError("You already have an appointment on this day.")

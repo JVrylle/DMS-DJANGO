@@ -65,7 +65,7 @@ def register(request):
             verification_url = f"http://{current_site.domain}/activate/{uid}/{token}/"
 
             # Show the verification template directly in browser
-            return render(request, 'email/verify_email.html', {
+            return render(request, 'Email/verify_email.html', {
                 'user': user,
                 'verification_url': verification_url,
             })

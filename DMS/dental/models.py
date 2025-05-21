@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 
 #Create a manager to help us create users
@@ -31,7 +32,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
-    username = models.CharField(max_length=150, blank=True, null=False)
+    username = models.CharField(max_length=150, blank=False, null=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
@@ -179,22 +180,61 @@ class TreatmentRecord(models.Model):
     balance = models.IntegerField(null=True)
     next_appointment = models.DateField(max_length=255,null=True)
 
-# APPOINTMENTS
+# Appointments
 class Appointment(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
-    date = models.DateField()
-    time = models.TimeField()
-    status = models.CharField(max_length=50, choices=[
+    PURPOSE_CHOICES = [
+        ('Checkup', 'Checkup'),
+        ('Cleaning', 'Cleaning'),
+        ('Filling', 'Filling'),
+        ('Extraction', 'Extraction'),
+        ('Crown', 'Crown'),
+        ('Root Canal', 'Root Canal'),
+        ('Adjust', 'Adjust'),
+        ('Whitening', 'Whitening'),
+        ('Bonding (Braces)', 'Bonding (Braces)'),
+        ('Others','Others'),
+    ]
+
+    STATUS_CHOICES = [
         ('Scheduled', 'Scheduled'),
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
         ('No Show', 'No Show'),
-    ], default='Scheduled')
-    purpose = models.TextField(null=True, blank=True)
+    ]
+
+    patient = models.ForeignKey(
+        Patient,
+        on_delete=models.CASCADE,
+        related_name='appointments',
+        db_index=True
+    )
+    date = models.DateField(db_index=True)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='Scheduled',
+        db_index=True
+    )
+    purpose = models.CharField(max_length=50, choices=PURPOSE_CHOICES, )
     address = models.CharField(max_length=255, null=True, blank=True)
 
+    # New fields
+    is_first_time_visit = models.BooleanField(default=False)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='created_appointments'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Appointments"
+        ordering = ['-date',]
+
     def __str__(self):
-        return f"{self.patient} appointment on {self.date} at {self.time}"
+        return f"{self.patient} appointment on {self.date}"
 
 
 # NOTIFICATIONS
