@@ -10,8 +10,12 @@
     <link rel="stylesheet" href="{% static 'dashboard/dash_main.css' %}">
     <link rel="stylesheet" href="{% static 'dashboard/dash_overlay.css' %}">
     <link rel="stylesheet" href="{% static 'dashboard/intraoralexam.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% comment %} <!-- FullCalendar CSS from CDN -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css' rel='stylesheet' /> {% endcomment %}
 
-
+    <!-- FullCalendar JS from CDN -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
 </head>
 <body>
 
@@ -21,5 +25,7 @@
     <script src="https://kit.fontawesome.com/603a80fa25.js" crossorigin="anonymous"></script>
     <script src="{% static 'dashboard/dash_sidebar.js' %}"></script>
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+
+
 </body>
 </html>

@@ -77,7 +77,7 @@ def user_appointments(request):
             purpose=purpose,
             address=patient.home_address,
             created_by=request.user,
-            status='Pending'
+            status='Pending-Walk-in'
         )
         messages.success(request, "Walk-in appointment added.")
         return redirect('user_appointments')

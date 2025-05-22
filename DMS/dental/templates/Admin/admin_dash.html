@@ -183,26 +183,25 @@ body {
     }
  
     function navigateToFromData(buttonElement) {
-        const url = buttonElement.getAttribute('data-url');  // Get the URL from data-url
-        const bannerTitle = buttonElement.getAttribute('data-banner');  // Get the banner title from data-banner
+        const url = buttonElement.getAttribute('data-url');
+        const bannerTitle = buttonElement.getAttribute('data-banner');
 
-        // Use Fetch API to get the HTML content of the page
         fetch(url)
-            .then(response => response.text())  // Parse the HTML
+            .then(response => response.text())
             .then(html => {
-                // Create a temporary div to hold the fetched content
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
 
-                // Extract the new content for dynamic-main-content
                 const newContent = tempDiv.querySelector('#dynamic-main-content') || tempDiv;
                 document.getElementById('dynamic-main-content').innerHTML = newContent.innerHTML;
 
-                // Update the banner title
                 document.getElementById('banner-title').innerText = bannerTitle;
-
-                // Change the URL in the browser without reloading the page
                 window.history.pushState({ path: url }, '', url);
+
+                // ✅ RE-INITIALIZE CALENDAR IF IT EXISTS
+                if (typeof initializeCalendar === 'function') {
+                    initializeCalendar();
+                }
             })
             .catch(error => console.error('Error loading content:', error));
     }
@@ -228,6 +227,32 @@ body {
             })
             .catch(error => console.error('Error loading page on back/forward navigation:', error));
     }
+
+    function initializeCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        if (!calendarEl) return;
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: {
+            url: "{% url 'admin_appointments' %}?fetch=calendar",
+            method: 'GET',
+            failure: function() {
+                alert('There was an error while fetching events.');
+            }
+            }
+        });
+
+        calendar.render();
+        }
+
+
+    
 </script>
 
 

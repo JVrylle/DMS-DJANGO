@@ -201,6 +201,7 @@ class Appointment(models.Model):
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
         ('No Show', 'No Show'),
+        ('Pending-Walk-in', 'Pending-Walk-in'),
 ]
 
     patient = models.ForeignKey(

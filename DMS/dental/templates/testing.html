@@ -1,17 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset='utf-8' />
+  <title>FullCalendar CDN Example</title>
+
+  <!-- FullCalendar Core CSS -->
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css' rel='stylesheet' />
+
+  <!-- FullCalendar Core JS -->
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+
+  <style>
+    body {
+      margin: 40px 10px;
+      padding: 0;
+      font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+      font-size: 14px;
+    }
+    #calendar {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
-    {% if request.user.role == "ADMIN" %}
-        YOU ARE ADMIN!!!!!!!!
-    {% endif %}
-  
-    {% if request.user.role == "DENTIST" %}
-        BROOO YOU ARE DENTIST 
-    {% endif %}
+
+  <div id='calendar'></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: [
+          {
+            title: 'Event 1',
+            start: '2025-05-22'
+          },
+          {
+            title: 'Event 2',
+            start: '2025-05-25',
+            end: '2025-05-27'
+          }
+        ]
+      });
+
+      calendar.render();
+    });
+  </script>
+
 </body>
 </html>

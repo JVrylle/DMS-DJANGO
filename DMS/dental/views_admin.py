@@ -2,18 +2,25 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 from .decorators import role_required
-from .forms import PatientForm, ConsentForm, IntraoralExaminationForm
+from .forms import PatientForm, ConsentForm,AppointmentForm  
 from .models import Patient, IntraoralExamination, AdminLog, CustomUser
 from django.db.models import Q
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
 from .models import Appointment
+from django.core.paginator import Paginator
+from django.utils import timezone
+from datetime import datetime 
+from django.http import JsonResponse
+from django.utils.dateparse import parse_datetime
+
+
 
 User = get_user_model()
 
 # ADMIN
-@role_required(['DENTIST','ADMIN'])
+@role_required(['ADMIN'])
 def admin_dash(request):
     #SIDEBAR
     username = request.user.username
@@ -23,46 +30,97 @@ def admin_dash(request):
 
     return render(request, 'Admin/admin_dash.html', context)
 
-@role_required(['DENTIST','ADMIN'])
+@role_required(['ADMIN'])
 def admin_appointments(request):
-    from .models import Appointment
-    from .forms import AppointmentForm  # You already use this for users
+    if request.GET.get('fetch') == 'calendar':
+        # Unified calendar event logic
+        appointments = Appointment.objects.select_related('patient').all()
 
-    filter_date = request.GET.get('date')
-    edit_id = request.GET.get('edit')
-    delete_id = request.GET.get('delete')
+        events = []
+        for appt in appointments:
+            start_datetime = f"{appt.date}T17:00:00"  # Assuming 5PM default
 
-    appointments = Appointment.objects.select_related('patient').order_by('-date')
-    if filter_date:
-        appointments = appointments.filter(date=filter_date)
+            events.append({
+                "title": f"{appt.patient.first_name} {appt.patient.last_name} - {appt.purpose}",
+                "start": start_datetime,
+                "color": (
+                    "#22c55e" if appt.status == "Approved" else
+                    "#facc15" if appt.status.startswith("Pending") else
+                    "#ef4444" if appt.status == "Rejected" else
+                    "#007bff"  # Default blue for Scheduled
+                )
+            })
 
-    # Handle Delete
-    if delete_id:
-        appt = get_object_or_404(Appointment, id=delete_id)
-        appt.delete()
-        messages.success(request, "Appointment deleted successfully.")
-        return redirect('admin_appointments')
+        return JsonResponse(events, safe=False)
 
-    # Handle Edit
+    # Below: rest of the logic (pagination, filtering, etc.)
     edit_appt = None
     form = None
-    if edit_id:
-        edit_appt = get_object_or_404(Appointment, id=edit_id)
-        form = AppointmentForm(request.POST or None, instance=edit_appt)
+    status_filter = request.GET.get('status')
+    date_str = request.GET.get('date')
+    date_filter = None
 
-        if request.method == 'POST' and form.is_valid():
-            form.save()
-            messages.success(request, "Appointment updated successfully.")
+    if date_str:
+        try:
+            date_filter = datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            pass
+
+    appointments_qs = Appointment.objects.select_related('patient').all().order_by('-date')
+
+    if status_filter:
+        appointments_qs = appointments_qs.filter(status=status_filter)
+
+    if date_filter:
+        appointments_qs = appointments_qs.filter(date=date_filter)
+
+    paginator = Paginator(appointments_qs, 10)
+    page_number = request.GET.get('page')
+    appointments = paginator.get_page(page_number)
+
+    today_appointments = Appointment.objects.select_related('patient')\
+        .filter(date=timezone.localdate())\
+        .order_by('date')
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        appt_id = request.POST.get('appointment_id')
+
+        if appt_id and action:
+            appointment = get_object_or_404(Appointment, id=appt_id)
+
+            if action == 'approve' and appointment.status in ['Pending', 'Pending-Walk-in']:
+                appointment.status = 'Approved'
+                appointment.save()
+            elif action == 'reject' and appointment.status in ['Pending', 'Pending-Walk-in']:
+                appointment.status = 'Rejected'
+                appointment.save()
+            elif action == 'save':
+                form = AppointmentForm(request.POST, instance=appointment)
+                if form.is_valid():
+                    form.save()
+
             return redirect('admin_appointments')
+
+    if 'edit' in request.GET:
+        edit_appt = get_object_or_404(Appointment, id=request.GET.get('edit'))
+        form = AppointmentForm(instance=edit_appt)
+    elif 'delete' in request.GET:
+        appt = get_object_or_404(Appointment, id=request.GET.get('delete'))
+        appt.delete()
+        return redirect('admin_appointments')
 
     return render(request, 'Admin/admin_appointments.html', {
         'appointments': appointments,
-        'filter_date': filter_date,
         'edit_appt': edit_appt,
-        'form': form
+        'form': form,
+        'status_filter': status_filter,
+        'date_filter': date_filter,
+        'today_appointments': today_appointments,
     })
 
-@role_required(['DENTIST', 'ADMIN'])
+
+@role_required([ 'ADMIN'])
 def admin_patient_info_records(request):
     if request.user.role != 'ADMIN':
         return redirect('forbidden')
@@ -112,11 +170,11 @@ def admin_patient_info_records(request):
 
 
 
-@role_required(['DENTIST','ADMIN'])
+@role_required(['ADMIN'])
 def admin_analytics(request):
     return render(request, 'Admin/admin_analytics.html')
 
-@role_required(['DENTIST','ADMIN'])
+@role_required(['ADMIN'])
 def admin_system_logs(request):
     system_logs = AdminLog.objects.filter(log_type='SYSTEM').order_by('-timestamp')
     verified_patients = Patient.objects.select_related('synced_user')
@@ -156,14 +214,14 @@ def verify_patient_from_log(request, user_id):
 
 
 
-@role_required(['DENTIST','ADMIN'])
+@role_required(['ADMIN'])
 def admin_security_logs(request):
     return render(request, 'Admin/admin_security_logs.html')
 
-@role_required(['DENTIST','ADMIN'])
+@role_required(['ADMIN'])
 def admin_event_logs(request):
     return render(request, 'Admin/admin_event_logs.html')
 
-@role_required(['DENTIST','ADMIN'])
+@role_required(['ADMIN'])
 def admin_emergency_logs(request):
     return render(request, 'Admin/admin_emergency_logs.html')
