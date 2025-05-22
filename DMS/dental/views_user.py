@@ -38,21 +38,38 @@ def user_appointments(request):
     appointment_date = None
     appointment_purpose = None
 
-    # Delete Mode
+    # ------------------------
+    # Handle Delete Appointment
+    # ------------------------
     if delete_id:
         appointment = get_object_or_404(Appointment, id=delete_id, patient=patient)
         appointment.delete()
         messages.success(request, 'Appointment deleted successfully.')
         return redirect('user_appointments')
 
-    # Handle Walk-in Submission
+    # -------------------------------
+    # Handle Walk-in Appointment Form
+    # -------------------------------
     if request.method == 'POST' and 'walkin_confirm' in request.POST:
         date_str = request.POST.get('date')
         purpose = request.POST.get('purpose')
+
         try:
             appointment_date = datetime.strptime(date_str, '%Y-%m-%d').date()
         except ValueError:
-            appointment_date = datetime.strptime(date_str, '%B %d, %Y').date()
+            try:
+                appointment_date = datetime.strptime(date_str, '%B %d, %Y').date()
+            except ValueError:
+                messages.error(request, "Invalid date format.")
+                return redirect('user_appointments')
+
+        if appointment_date < datetime.today().date():
+            messages.error(request, "You cannot book a walk-in appointment in the past.")
+            return redirect('user_appointments')
+
+        if Appointment.objects.filter(patient=patient, date=appointment_date).exists():
+            messages.error(request, "You already have an appointment booked on this date.")
+            return redirect('user_appointments')
 
         Appointment.objects.create(
             patient=patient,
@@ -60,41 +77,65 @@ def user_appointments(request):
             purpose=purpose,
             address=patient.home_address,
             created_by=request.user,
-            status='Scheduled'  # Optionally change to 'Walk-in'
+            status='Pending'
         )
         messages.success(request, "Walk-in appointment added.")
         return redirect('user_appointments')
 
-    # Add or Edit Mode
+    # -------------------------------
+    # Handle New or Edit Appointment
+    # -------------------------------
     if edit_id:
+        # Edit Mode
         appointment = get_object_or_404(Appointment, id=edit_id, patient=patient)
         form = AppointmentForm(request.POST or None, instance=appointment, patient=patient)
+
         if request.method == 'POST' and form.is_valid():
-            form.save()
-            messages.success(request, 'Appointment updated successfully.')
-            return redirect('user_appointments')
-    else:
-        form = AppointmentForm(request.POST or None, patient=patient)
-        if request.method == 'POST' and form.is_valid():
-            new_appointment = form.save(commit=False)
-            new_appointment.patient = patient
-            new_appointment.created_by = request.user
-            new_appointment.address = patient.home_address
-
-            appointment_date = new_appointment.date
-            appointment_purpose = new_appointment.purpose
-            weekday = appointment_date.weekday()
-            max_patients = 18 if weekday == 5 else 6
-
-            existing_appts_count = Appointment.objects.filter(date=appointment_date).count()
-
-            if existing_appts_count >= max_patients:
-                show_walkin_modal = True
+            new_date = form.cleaned_data['date']
+            if new_date < datetime.today().date():
+                messages.error(request, "You cannot schedule an appointment in the past.")
+            elif Appointment.objects.filter(patient=patient, date=new_date).exclude(id=appointment.id).exists():
+                messages.error(request, "You already have an appointment on this date.")
             else:
-                new_appointment.save()
-                messages.success(request, f"Appointment created successfully for {appointment_date.strftime('%B %d, %Y')}.")
+                form.save()
+                messages.success(request, 'Appointment updated successfully.')
                 return redirect('user_appointments')
+    else:
+        # Add Mode
+        form = AppointmentForm(request.POST or None, patient=patient)
 
+        if request.method == 'POST':
+            if form.is_valid():
+                new_appointment = form.save(commit=False)
+                new_appointment.patient = patient
+                new_appointment.created_by = request.user
+                new_appointment.address = patient.home_address
+
+                appointment_date = new_appointment.date
+                appointment_purpose = new_appointment.purpose
+
+                if appointment_date < datetime.today().date():
+                    messages.error(request, "You cannot schedule an appointment in the past.")
+                elif Appointment.objects.filter(patient=patient, date=appointment_date).exists():
+                    messages.error(request, "You already have an appointment on this date.")
+                else:
+                    weekday = appointment_date.weekday()
+                    max_patients = 18 if weekday == 5 else 6
+                    existing_appt_count = Appointment.objects.filter(date=appointment_date).count()
+
+                    if existing_appt_count >= max_patients:
+                        show_walkin_modal = True
+                    else:
+                        new_appointment.status = 'Pending'
+                        new_appointment.save()
+                        messages.success(request, f"Appointment created successfully for {appointment_date.strftime('%B %d, %Y')}.")
+                        return redirect('user_appointments')
+            else:
+                messages.error(request, "Please correct the errors in the form.")
+
+    # ------------------------
+    # Load Existing Appointments
+    # ------------------------
     appointments = Appointment.objects.filter(patient=patient).order_by('-date')
 
     return render(request, 'User/user_appointments.html', {
@@ -130,6 +171,15 @@ def user_health_record(request):
 
     if request.method == 'POST':
         form = PatientInformationRecordForm(request.POST, instance=patient)
+
+        if form.errors:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            for error in form.non_field_errors():
+                messages.error(request, error)
+
+
 
         if form.is_valid():
             new_data = form.save(commit=False)

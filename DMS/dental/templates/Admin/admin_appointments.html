@@ -1,10 +1,75 @@
 {% extends "Admin/admin_dash.html" %}
 {% block admincontent %}
+<style>
+ .admin-appointments-actions a:hover {
+    text-decoration: underline;
+}
+
+.admin-appointments button {
+    background-color: #1E3A8A;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.admin-appointments button:hover {
+    background-color: #374fcf;
+}
+</style>
+
+
 <div class="main-container">
-    <div class="main-containers first">Appointments</div>
-    <div class="main-containers second">Appointments</div>
-    <div class="main-containers third">Appointments</div>
-    <div class="main-containers fourth">Appointments</div>
+    <div class="main-containers admin-appointments">
+        <h2 class="text-xl font-semibold mb-4">Appointments</h2>
+
+        <div class="overflow-x-auto ">
+            <table class="min-w-full table-auto border-collapse border border-gray-300">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="border px-4 py-2">Patient</th>
+                        <th class="border px-4 py-2">Date</th>
+                        <th class="border px-4 py-2">Purpose</th>
+                        <th class="border px-4 py-2">Status</th>
+                        <th class="border px-4 py-2">First Visit?</th>
+                        <th class="border px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+    {% for appt in appointments %}
+        <tr class="hover:bg-gray-50">
+            <td class="border px-4 py-2">{{ appt.patient.first_name }} {{ appt.patient.last_name }}</td>
+            <td class="border px-4 py-2">{{ appt.date|date:"M d, Y" }}</td>
+            <td class="border px-4 py-2">{{ appt.purpose }}</td>
+            <td class="border px-4 py-2">{{ appt.status }}</td>
+            <td class="border px-4 py-2">
+                {% if appt.is_first_time_visit %}✅{% else %}❌{% endif %}
+            </td>
+            <td class="border px-4 py-2 space-x-2">
+                {% if edit_appt and edit_appt.id == appt.id %}
+                    <form method="post" class="flex gap-2">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="bg-green-500 text-white px-2 rounded">Save</button>
+                        <a href="{% url 'admin_appointments' %}" class="text-gray-500">Cancel</a>
+                    </form>
+                {% else %}
+                    <a href="?edit={{ appt.id }}" class="text-blue-500 hover:underline"><button>Edit</button></a>
+                    <a href="?delete={{ appt.id }}" class="text-red-500 hover:underline" onclick="return confirm('Are you sure?')"><button>Delete</button></a>
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="6" class="text-center border px-4 py-2">No appointments found.</td>
+        </tr>
+    {% endfor %}
+</tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 <script>

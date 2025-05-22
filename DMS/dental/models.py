@@ -196,11 +196,12 @@ class Appointment(models.Model):
     ]
 
     STATUS_CHOICES = [
+        ('Pending', 'Pending'),
         ('Scheduled', 'Scheduled'),
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
         ('No Show', 'No Show'),
-    ]
+]
 
     patient = models.ForeignKey(
         Patient,

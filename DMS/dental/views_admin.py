@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
+from .models import Appointment
 
 User = get_user_model()
 
@@ -24,7 +25,42 @@ def admin_dash(request):
 
 @role_required(['DENTIST','ADMIN'])
 def admin_appointments(request):
-    return render(request, 'Admin/admin_appointments.html')
+    from .models import Appointment
+    from .forms import AppointmentForm  # You already use this for users
+
+    filter_date = request.GET.get('date')
+    edit_id = request.GET.get('edit')
+    delete_id = request.GET.get('delete')
+
+    appointments = Appointment.objects.select_related('patient').order_by('-date')
+    if filter_date:
+        appointments = appointments.filter(date=filter_date)
+
+    # Handle Delete
+    if delete_id:
+        appt = get_object_or_404(Appointment, id=delete_id)
+        appt.delete()
+        messages.success(request, "Appointment deleted successfully.")
+        return redirect('admin_appointments')
+
+    # Handle Edit
+    edit_appt = None
+    form = None
+    if edit_id:
+        edit_appt = get_object_or_404(Appointment, id=edit_id)
+        form = AppointmentForm(request.POST or None, instance=edit_appt)
+
+        if request.method == 'POST' and form.is_valid():
+            form.save()
+            messages.success(request, "Appointment updated successfully.")
+            return redirect('admin_appointments')
+
+    return render(request, 'Admin/admin_appointments.html', {
+        'appointments': appointments,
+        'filter_date': filter_date,
+        'edit_appt': edit_appt,
+        'form': form
+    })
 
 @role_required(['DENTIST', 'ADMIN'])
 def admin_patient_info_records(request):
