@@ -9,6 +9,8 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.utils.timezone import now
 from datetime import datetime, date, time as time_obj, timedelta
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 
 User = get_user_model()
@@ -29,6 +31,7 @@ def user_dash(request):
 
 @role_required(['USER'])
 def user_appointments(request):
+
     patient = get_object_or_404(Patient, synced_user=request.user)
 
     edit_id = request.GET.get('edit')
@@ -38,6 +41,39 @@ def user_appointments(request):
     appointment_date = None
     appointment_purpose = None
 
+    # if request.GET.get('fetch') == 'calendar':
+    #     # Return appointment events for FullCalendar
+    #     events = [
+    #     {
+    #         "title": "John Doe",
+    #         "start": "2025-05-25T17:00:00",
+    #         "end": "2025-05-25T17:30:00",
+    #     },
+    #     # Add more events here
+    #     ]
+    #     return JsonResponse(events, safe=False)
+
+    if request.GET.get('fetch') == 'calendar':
+        appointments = Appointment.objects.filter(patient=patient)
+
+        events = []
+        for appt in appointments:
+            start_datetime = f"{appt.date}T17:00:00"  # adjust time if needed
+            end_datetime = f"{appt.date}T17:30:00"    # simple 30 min duration
+
+            events.append({
+                "title": f"{appt.purpose} ({appt.status})",
+                "start": start_datetime,
+                "end": end_datetime,
+                "color": (
+                    "#22c55e" if appt.status == "Approved" else
+                    "#facc15" if appt.status.startswith("Pending") else
+                    "#ef4444" if appt.status == "Rejected" else
+                    "#3b82f6"  # default blue
+                )
+            })
+
+        return JsonResponse(events, safe=False)
     # ------------------------
     # Handle Delete Appointment
     # ------------------------
@@ -138,14 +174,20 @@ def user_appointments(request):
     # ------------------------
     appointments = Appointment.objects.filter(patient=patient).order_by('-date')
 
-    return render(request, 'User/user_appointments.html', {
+    context = {
         'appointments': appointments,
         'form': form,
         'edit_id': edit_id,
         'show_walkin_modal': show_walkin_modal,
         'appointment_date': appointment_date,
         'appointment_purpose': appointment_purpose,
-    })
+    }
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        html = render_to_string('User/user_appointments.html', context, request=request)
+        return JsonResponse({'html': html, 'banner_title': 'Appointments'})
+
+    return render(request, 'User/user_appointments.html', context)
 
 
 

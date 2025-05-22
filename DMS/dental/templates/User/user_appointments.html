@@ -60,7 +60,9 @@ table.appointments-table th {
     background-color: #374fcf;
 }
 
-
+#calendar {
+    max-width: 600px;
+}
 
 </style>
 
@@ -131,6 +133,10 @@ table.appointments-table th {
 {% endif %}
 
 <div class="main-container">
+    <div class="main-containers">
+        <div id="calendar" style="padding: 20px;"></div>
+    </div>
+    
 
     <!-- Appointment List -->
     <div class="main-containers">
@@ -238,5 +244,32 @@ table.appointments-table th {
     }
 
     document.getElementById('banner-title').innerText = 'Appointments';
+</script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+        },
+        events: [
+            {% for appointment in appointments %}
+            {
+                title: '{{ appointment.purpose|default:"Appointment" }}',
+                start: '{{ appointment.date }}',
+            },
+            {% endfor %}
+        ]
+    });
+
+    calendar.render();
+});
 </script>
 {% endblock %}

@@ -218,6 +218,13 @@ body {
 
                 // Change the URL in the browser without reloading the page
                 window.history.pushState({ path: url }, '', url);
+
+                // ✅ RE-INITIALIZE CALENDAR IF IT EXISTS
+                if (typeof initializeCalendar === 'function') {
+                    initializeCalendar();
+                }
+
+
             })
             .catch(error => console.error('Error loading content:', error));
     }
@@ -243,7 +250,35 @@ body {
             })
             .catch(error => console.error('Error loading page on back/forward navigation:', error));
     }
+
+    function initializeCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        if (!calendarEl) return;
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: {
+            url: "{% url 'user_appointments' %}?fetch=calendar",
+            method: 'GET',
+            failure: function() {
+                alert('There was an error while fetching events.');
+            }
+            }
+        });
+
+        calendar.render();
+        }
+
+
+
 </script>
+
+
 
 
 {% endblock %}

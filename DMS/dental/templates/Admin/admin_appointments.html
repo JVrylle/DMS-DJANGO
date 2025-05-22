@@ -1,6 +1,26 @@
 {% extends "Admin/admin_dash.html" %}
 {% block admincontent %}
 <style>
+
+.main-container {
+    height: auto;
+    width: 100%;    
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+
+.main-containers {
+    background-color: #ffffff;
+    height: auto;
+    flex: 1 0 ;
+    border-radius: 15px;
+}
+
+
  .admin-appointments-actions a:hover {
     text-decoration: underline;
 }
@@ -26,6 +46,10 @@
 .appointment-filters div{
     margin-left: 5px;
     margin-right: 20px;
+}
+
+#calendar {
+    max-width: 600px;
 }
 
 
@@ -208,33 +232,7 @@
 <script>
     document.getElementById('banner-title').innerText = 'Appointments';
 </script>
-{% comment %} <script>
-function initializeCalendar() {
-  const calendarEl = document.getElementById('calendar');
-  if (!calendarEl) return;
 
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
-    events: {
-    url: "{% url 'admin_appointments' %}?fetch=calendar",
-    method: 'GET',
-    failure: function() {
-        alert('There was an error while fetching events.');
-    }
-    }
-  });
-
-  calendar.render();
-}
-</script> {% endcomment %}
-
-
-  
 
 
 {% endblock %}
