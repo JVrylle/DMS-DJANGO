@@ -129,6 +129,11 @@ class Patient(models.Model):
     synced_user = models.OneToOneField(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     is_complete = models.BooleanField(default=False)  # Has medical/dental data been filled?
     is_verified = models.BooleanField(default=False)  # Has admin verified the record?
+    claimed_existing_patient = models.BooleanField(null=True, blank=True)  # True = claims existing, False = claims new
+    has_answered_existing_patient = models.BooleanField(default=False)    # They have answered the modal question
+
+
+
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name} {self.middle_name}'

@@ -4,6 +4,21 @@
 
 {% block admincontent %}
 <div class="main-container">
+{% if hir_form and selected_patient %}
+    <div class="main-containers">
+    <!-- HIR FORM -->
+    
+        <h3>Fill Out Health Information Record for {{ selected_patient.synced_user.username }}</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ hir_form.as_p }}
+            <input type="hidden" name="user_id" value="{{ selected_patient.synced_user.id }}">
+            <button type="submit" name="submit_hir">Submit & Verify</button>
+        </form>
+    
+    </div>
+{% endif %}
+
 
     <div class="main-containers ">
         {% if system_logs %}
@@ -24,19 +39,35 @@
                             {% with user_id=log.metadata.user_id %}
                                 {% if user_id %}
                                     {% with patient=patients|get_item:user_id %}
-                                        {% if patient and not patient.is_verified %}
-                                            <form action="{% url 'verify_patient_from_log' user_id %}" method="post">
-                                                {% csrf_token %}
-                                                <button type="submit">Verify User</button>
-                                            </form>
+                                        {% if patient %}
+                                            {% if not patient.is_verified and patient.is_complete %}
+                                                <!-- Case 1: Has full records but not verified -->
+                                                <form action="{% url 'verify_patient_from_log' user_id %}" method="post" style="display:inline;">
+                                                    {% csrf_token %}
+                                                    <button type="submit">Verify User</button>
+                                                </form>
+
+                                            {% elif not patient.is_verified and not patient.is_complete %}
+                                                <!-- Case 2: Incomplete records — show Fill HIR -->
+                                                <form method="post" style="display:inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="user_id" value="{{ user_id }}">
+                                                    <button type="submit" name="fill_hir">Fill Up HIR</button>
+                                                </form>
+
+                                            {% else %}
+                                                <!-- Already verified -->
+                                                Verified
+                                            {% endif %}
                                         {% else %}
-                                            Verified
+                                            -
                                         {% endif %}
                                     {% endwith %}
                                 {% else %}
                                     -
                                 {% endif %}
                             {% endwith %}
+
                         </td>
                     </tr>
                     {% endfor %}

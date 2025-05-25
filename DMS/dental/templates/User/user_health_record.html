@@ -8,12 +8,52 @@
     }
 </style>
 
+
+{% if show_existing_patient_modal %}
+<!-- Modal Structure -->
+<div class="modal fade" id="existingPatientModal" tabindex="-1" aria-labelledby="existingPatientModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="existingPatientModalLabel">Have you been a patient at Doc2Ne Dental Clinic before?</h5>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="d-flex justify-content-around">
+            <button name="existing_status" value="yes" type="submit" class="btn btn-primary">Yes, I’ve been a patient before</button>
+            <button name="existing_status" value="no" type="submit" class="btn btn-secondary">No, this is my first time</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script to trigger modal -->
+<script>
+  var modal = new bootstrap.Modal(document.getElementById('existingPatientModal'));
+  modal.show();
+
+  setTimeout(function() {
+    var modal = new bootstrap.Modal(document.getElementById('existingPatientModal'));
+    modal.show();
+    }, 500);
+
+
+
+
+</script>
+{% endif %}
+
 <div class="main-container">
+    
     <div class="main-containers first">
+        {% if patient %}
         <h3>Please Fill Up the Patient Information Record Form to Access the Doc2Ne Dental Management System</h3>
         <h2>Patient Information Record (PIR)</h2>
 
-        {% if patient %}
+        
             <p><strong>Full Name:</strong> {{ patient.first_name }} {{ patient.middle_name }} {{ patient.last_name }}</p>
             <p><strong>Birthdate:</strong> {{ patient.birthdate }}</p>
             <p><strong>Sex:</strong> {{ patient.sex }}</p>
@@ -22,6 +62,10 @@
             <p><strong>Phone:</strong> {{ patient.cel_mobile_no }}</p>
             <p><strong>Email:</strong> {{ patient.email }}</p>
             <!-- Add more fields as needed -->
+
+            
+
+
 
             {% if patient.is_verified %}
                 <div style="margin-top: 20px; padding: 10px; background: #d4edda; border: 1px solid #c3e6cb;">
@@ -44,9 +88,17 @@
                 {{ form.as_p }} 
                 <button type="submit">Save</button>
             </form>
-        {% endif %}
+        
     </div>
+    {% endif %}
 </div>
+
+
+
+
+
+
+
 
 <script>
     document.getElementById('banner-title').innerText = 'Health Record';

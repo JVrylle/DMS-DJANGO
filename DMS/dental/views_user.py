@@ -203,7 +203,6 @@ def user_notifications(request):
 @role_required(['USER'])
 def user_prescription(request):
     return render(request, 'User/user_prescription.html')
-
 @role_required(['USER'])
 def user_health_record(request):
     try:
@@ -221,18 +220,28 @@ def user_health_record(request):
             for error in form.non_field_errors():
                 messages.error(request, error)
 
-
-
         if form.is_valid():
             new_data = form.save(commit=False)
 
-            # Check for existing patient record (excluding self)
+            # ✅ Sanitize and check required fields
+            first_name = new_data.first_name.strip()
+            middle_name = new_data.middle_name.strip()
+            last_name = new_data.last_name.strip()
+            birthdate = new_data.birthdate
+
+            if not all([first_name, last_name, birthdate]):
+                messages.error(request, "First name, Last name, and Birthdate are required.")
+                return render(request, 'User/user_health_record.html', {
+                    'form': form,
+                    'patient': patient
+                })
+
+            # ✅ Check for existing patient record (excluding self)
             matched_patient = Patient.objects.filter(
-                first_name__iexact=new_data.first_name.strip(),
-                middle_name__iexact=new_data.middle_name.strip(),
-                last_name__iexact=new_data.last_name.strip(),
-                # birthdate=new_data.birthdate
-                # PLACE EXTRA INFORMATION HERE
+                first_name__iexact=first_name,
+                middle_name__iexact=middle_name,
+                last_name__iexact=last_name,
+                birthdate=birthdate
             ).exclude(synced_user=request.user).first()
 
             if matched_patient:
@@ -244,15 +253,9 @@ def user_health_record(request):
                 # Optional: update with submitted form fields
                 valid_fields = [
                     'sex',
-                    # 'home_address',
-                    # 'cel_mobile_no',
                     'email',
-                    # 'occupation',
                     'religion', 
                     'nationality',
-                    # 'nickname', 'dental_insurance', 'dental_insurance_effective_date',
-                    # 'home_no', 'office_no', 'fax_no'
-                    # Add more fields as appropriate
                 ]
 
                 for field in valid_fields:
@@ -283,15 +286,17 @@ def user_health_record(request):
 
                 AdminLog.objects.create(
                     log_type='SYSTEM',
-                    action_description=f"New user '{request.user.username} ({request.user.email})' submitted PIR. No existing match found.",
+                    action_description=f"New patient '{request.user.username} ({request.user.email})' registered but requires in-clinic verification.",
                     affected_model='Patient',
+                    affected_object_id=new_data.id,
                     metadata={
-                        'request_user_id': request.user.id,
-                        'status': 'New patient — in-clinic verification required',
+                        'user_id': request.user.id,
+                        'new_patient_id': new_data.id,
+                        'status': 'Pending clinic visit',
                         'submitted_at': str(now())
                     }
                 )
-                messages.info(request, "Thank you. Please visit the clinic to complete your registration and verification.")
+                messages.info(request, "You have been registered. Please visit the clinic to complete your verification.")
 
             return redirect('user_health_record')
 
@@ -300,8 +305,11 @@ def user_health_record(request):
 
     return render(request, 'User/user_health_record.html', {
         'form': form,
-        'patient': patient
+        'patient': patient,
+        'show_existing_patient_modal': not patient
     })
+
+
 
 
 @role_required(['USER'])

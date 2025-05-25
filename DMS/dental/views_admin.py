@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 from .decorators import role_required
-from .forms import PatientForm, ConsentForm,AppointmentForm  
+from .forms import PatientForm, ConsentForm,AppointmentForm, HealthInformationRecordForm
 from .models import Patient, IntraoralExamination, AdminLog, CustomUser
 from django.db.models import Q
 from django.contrib import messages
@@ -178,14 +178,50 @@ def admin_analytics(request):
 def admin_system_logs(request):
     system_logs = AdminLog.objects.filter(log_type='SYSTEM').order_by('-timestamp')
     verified_patients = Patient.objects.select_related('synced_user')
-
-    # Dictionary for easy lookup in template
     patient_map = {p.synced_user.id: p for p in verified_patients if p.synced_user}
+
+    hir_form = None
+    selected_patient = None
+
+    # 1. Admin clicks "Fill Up HIR"
+    if request.method == 'POST' and 'fill_hir' in request.POST:
+        user_id = request.POST.get('user_id')
+        user = get_object_or_404(CustomUser, id=user_id)
+        selected_patient = get_object_or_404(Patient, synced_user=user)
+        hir_form = HealthInformationRecordForm(instance=selected_patient)
+
+    # 2. Admin submits filled-out HIR
+    elif request.method == 'POST' and 'submit_hir' in request.POST:
+        user_id = request.POST.get('user_id')
+        user = get_object_or_404(CustomUser, id=user_id)
+        selected_patient = get_object_or_404(Patient, synced_user=user)
+        hir_form = HealthInformationRecordForm(request.POST, instance=selected_patient)
+
+        if hir_form.is_valid():
+            hir_form.save()
+            selected_patient.is_verified = True
+            selected_patient.is_complete = True
+            selected_patient.save()
+
+            AdminLog.objects.create(
+                admin=request.user,
+                log_type='SYSTEM',
+                action_description=f"Admin '{request.user.username}' filled out HIR and verified patient '{user.username}'.",
+                affected_model='Patient',
+                affected_object_id=selected_patient.id,
+                metadata={"user_id": user.id}
+            )
+
+            messages.success(request, f"HIR completed and patient '{user.username}' verified.")
+            return redirect('admin_system_logs')
 
     return render(request, 'Admin/admin_system_logs.html', {
         'system_logs': system_logs,
         'patients': patient_map,
+        'hir_form': hir_form,
+        'selected_patient': selected_patient,
     })
+
 
 @require_POST
 @role_required(['ADMIN'])
