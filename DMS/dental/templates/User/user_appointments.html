@@ -1,4 +1,5 @@
 {% extends "User/user_dash.html" %}
+{% load dict_extras %}
 {% block usercontent %}
 <style>
 
@@ -62,6 +63,35 @@ table.appointments-table th {
 
 #calendar {
     max-width: 600px;
+}
+
+/* Tooltip */
+.floating-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+
+.floating-tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #222;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 13px;
+  z-index: 1000;
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.floating-tooltip::after {
+  opacity: 0;
 }
 
 </style>
@@ -160,7 +190,11 @@ table.appointments-table th {
                         <td>{{ appointment.date }}</td>
                         <td>{{ appointment.time }}</td>
                         <td>{{ appointment.status }}</td>
-                        <td>{{ appointment.purpose|default:"No purpose stated" }}</td>
+                        <td>
+                            <span class="floating-tooltip" data-tooltip="{{ purpose_descriptions|dict_get:appointment.purpose|default:'No description available' }}">
+                                {{ appointment.purpose|default:"No purpose stated" }}
+                            </span>
+                        </td>
                         <td class="appointment-actions">
                             {% if appointment.status == 'Pending' %}
                                 <a href="?edit={{ appointment.id }}" class="button-link"><button>Edit</button></a>

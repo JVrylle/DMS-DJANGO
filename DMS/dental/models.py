@@ -188,16 +188,14 @@ class TreatmentRecord(models.Model):
 # Appointments
 class Appointment(models.Model):
     PURPOSE_CHOICES = [
-        ('Checkup', 'Checkup'),
-        ('Cleaning', 'Cleaning'),
-        ('Filling', 'Filling'),
-        ('Extraction', 'Extraction'),
-        ('Crown', 'Crown'),
-        ('Root Canal', 'Root Canal'),
-        ('Adjust', 'Adjust'),
-        ('Whitening', 'Whitening'),
-        ('Bonding (Braces)', 'Bonding (Braces)'),
-        ('Others','Others'),
+        ('Oral Exam', 'Oral Exam'),
+        ('Oral Propelaxis', 'Oral Propelaxis'),
+        ('Tooth Restoration', 'Tooth Restoration'),
+        ('Tooth Extraction', 'Tooth Extraction'),
+        ('Orthodontic Treatment', 'Orthodontic Treatment'),
+        ('Minor Surgical Treatment', 'Minor Surgical Treatment'),
+        ('Fluoride Application', 'Fluoride Application'),
+        ('Prosthodontic Treatment','Prosthodontic Treatment'),
     ]
 
     STATUS_CHOICES = [
@@ -206,7 +204,6 @@ class Appointment(models.Model):
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
         ('No Show', 'No Show'),
-        ('Pending-Walk-in', 'Pending-Walk-in'),
 ]
 
     patient = models.ForeignKey(

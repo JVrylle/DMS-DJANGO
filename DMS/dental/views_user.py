@@ -29,6 +29,8 @@ def user_dash(request):
 
     return render(request, 'User/user_dash.html', context)
 
+
+
 @role_required(['USER'])
 def user_appointments(request):
 
@@ -174,6 +176,17 @@ def user_appointments(request):
     # ------------------------
     appointments = Appointment.objects.filter(patient=patient).order_by('-date')
 
+    purpose_descriptions = {
+        'Oral Exam': 'Basic dental check-up to assess the patient’s oral health.',
+        'Oral Propelaxis': 'Cleaning and polishing of teeth to remove plaque and tartar.',
+        'Tooth Restoration': 'Filling cavities and restoring damaged teeth.',
+        'Tooth Extraction': 'Removal of decayed or problematic teeth.',
+        'Orthodontic Treatment': 'Braces or other treatments to correct teeth alignment.',
+        'Minor Surgical Treatment': 'Small surgical procedures like gum surgery.',
+        'Fluoride Application': 'Application of fluoride for strengthening enamel.',
+        'Prosthodontic Treatment': 'Dentures, crowns, bridges to replace missing teeth.',
+    }
+
     context = {
         'appointments': appointments,
         'form': form,
@@ -181,6 +194,7 @@ def user_appointments(request):
         'show_walkin_modal': show_walkin_modal,
         'appointment_date': appointment_date,
         'appointment_purpose': appointment_purpose,
+        'purpose_descriptions': purpose_descriptions, 
     }
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
