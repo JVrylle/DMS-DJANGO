@@ -31,14 +31,14 @@ closeRegisterBtn.onclick = () => {
 };
 
 // Close modals when clicking outside
-window.onclick = (e) => {
-    if (e.target === loginModal) {
-        loginModal.style.display = 'none';
-    }
-    if (e.target === registerModal) {
-        registerModal.style.display = 'none';
-    }
-};
+// window.onclick = (e) => {
+//     if (e.target === loginModal) {
+//         loginModal.style.display = 'none';
+//     }
+//     if (e.target === registerModal) {
+//         registerModal.style.display = 'none';
+//     }
+// };
 
 
 // Show login modal from the "Already have an account?" link

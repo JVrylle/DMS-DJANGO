@@ -42,9 +42,9 @@ body {
                 <i class="fa-solid fa-calendar-check"></i>
                 <p class="button-title">Appointments</p>
             </div>
-            <div class="buttons" data-url="{% url 'dentist_patient_info_record' %}" data-banner="Patient Information Record" onclick="navigateToFromData(this)">
+            {% comment %} <div class="buttons" data-url="{% url 'dentist_patient_info_record' %}" data-banner="Patient Information Record" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-notes-medical"></i>
-                <p class="button-title">Patient Info Record</p>
+                <p class="button-title">Patient Info Record</p> {% endcomment %}
             </div>
             <div class="buttons" data-url="{% url 'dentist_patient_health_records' %}" data-banner="Patient Health Records" onclick="navigateToFromData(this)">
                 <i class="fa-solid fa-file-medical"></i>
