@@ -75,9 +75,9 @@ class Patient(models.Model):
     for_minors_parent_or_guardian_occupation = models.CharField(max_length=100, null=True, blank=True)
 
     # Contacts
-    home_no = models.CharField(max_length=255, null=True, blank=True)
-    office_no = models.CharField(max_length=255, null=True, blank=True)
-    fax_no = models.CharField(max_length=255, null=True, blank=True)
+    home_no = models.CharField( max_length=20,null=True, blank=True)
+    office_no = models.CharField( max_length=20,null=True, blank=True)
+    fax_no = models.CharField( max_length=20,null=True, blank=True)
     cel_mobile_no = models.CharField(max_length=20, null=False)
     email = models.CharField(max_length=100, null=False)
 
@@ -86,14 +86,14 @@ class Patient(models.Model):
     dental_consultation_reason = models.CharField(max_length=255, null=True, blank=True)
 
     # Dental History 
-    prev_dentist = models.CharField(max_length=255, null=True, blank=True)
-    last_dental_visit = models.CharField(max_length=255, null=True, blank=True)
+    prev_dentist = models.CharField(max_length=100, null=True, blank=True)
+    last_dental_visit = models.DateField( null=True, blank=True)
 
     # Medical History 
     physician_name = models.CharField(max_length=255, null=True, blank=True)
-    physician_specialty = models.CharField(max_length=255, null=True, blank=True)
+    physician_specialty = models.CharField(max_length=100, null=True, blank=True)
     physician_office_address = models.CharField(max_length=255, null=True, blank=True)
-    physician_office_no = models.CharField(max_length=255, null=True, blank=True)
+    physician_office_no = models.CharField(max_length=100, null=True, blank=True)
 
     # Medical Information
     yes_no = [
@@ -132,7 +132,7 @@ class Patient(models.Model):
     is_complete = models.BooleanField(default=False)  # Has medical/dental data been filled?
     is_verified = models.BooleanField(default=False)  # Has admin verified the record?
     claimed_existing_patient = models.BooleanField(null=True, blank=True)  # True = claims existing, False = claims new
-    has_answered_existing_patient = models.BooleanField(default=False)    # They have answered the modal question
+    has_answered_existing_patient = models.BooleanField(default=False)  # They have answered the modal question
 
     # IMAGE RELATED CREDS FOR PATIENT
     digital_xrays = models.ImageField(upload_to='xrays/', blank=True, null=True)
@@ -225,7 +225,6 @@ class Appointment(models.Model):
     purpose = models.CharField(max_length=50, choices=PURPOSE_CHOICES, )
     address = models.CharField(max_length=255, null=True, blank=True)
 
-    # New fields
     is_first_time_visit = models.BooleanField(default=False)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -257,6 +256,7 @@ class Notification(models.Model):
         ('Reminder', 'Reminder'),
         ('Prescription','Prescription'),
         ('Smart Suggestions','Smart Suggestions'),
+        ('Emergency','Emergency'),
     ]
 
     redirect_url = models.URLField(blank=True, null=True)
@@ -302,8 +302,6 @@ class AdminLog(models.Model):
 
     def __str__(self):
         return f"[{self.log_type}] at {self.timestamp} — {self.action_description[:50]}"
-
-
 
 
 # Emergency Alerts
