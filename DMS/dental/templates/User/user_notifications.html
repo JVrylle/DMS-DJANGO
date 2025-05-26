@@ -4,16 +4,63 @@
 
 
 <div class="main-container">
+{% if verification_status == 'verified' %}    
+
     <div class="main-containers first">
-        {% for note in notifications %}
-            <div class="notification-item {% if not note.is_read %}unread{% endif %}">
-                <strong>[{{ note.type }}]</strong> {{ note.message }} <br>
-                <small>{{ note.created_at }}</small>
-            </div>
-        {% empty %}
+        <h2 class="mb-4">Notifications</h2>
+
+        {% if notifications %}
+            <table class="notification-table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for note in notifications %}
+                        <tr class="{% if not note.is_read %}unread{% endif %}">
+                            <td>
+                                {% if note.is_read %}
+                                    ✅ Read
+                                {% else %}
+                                    🔔 Unread
+                                {% endif %}
+                            </td>
+                            <td>{{ note.type }}</td>
+                            <td>{{ note.message }}</td>
+                            <td>{{ note.created_at|date:"M d, Y H:i" }}</td>
+                            <td>
+                                {% if not note.is_read %}
+                                    <form method="post" class="mark-read-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="notification_id" value="{{ note.id }}">
+                                        <button type="submit" class="mark-read-btn">Mark as Read</button>
+                                    </form>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
             <p>No notifications yet.</p>
-        {% endfor %}
+        {% endif %}
     </div>
+
+    <!-- CONTENT HERE -->
+
+    
+{% else %}
+    {% include 'User/includes/unverified_notice.html' %}
+{% endif %}
+
+
 </div>
 
 <script>

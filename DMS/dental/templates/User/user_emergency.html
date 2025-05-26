@@ -3,10 +3,23 @@
 {% extends "User/user_dash.html" %}
 {% block usercontent %}
 <div class="main-container">
-    <div class="main-containers first">Emergency</div>
-    <div class="main-containers second">Emergency</div>
-    <div class="main-containers third">Emergency</div>
-    <div class="main-containers fourth">Emergency</div>
+{% if verification_status == 'verified' %}
+
+   <div class="main-containers first">Emergency</div> 
+
+
+
+
+
+<!-- CONTENT HERE -->
+
+
+
+
+
+{% else %}
+    {% include 'User/includes/unverified_notice.html' %}
+{% endif %}
 </div>
 
 <script>

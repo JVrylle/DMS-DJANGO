@@ -50,8 +50,7 @@
     
     <div class="main-containers first">
         {% if patient %}
-        <h3>Please Fill Up the Patient Information Record Form to Access the Doc2Ne Dental Management System</h3>
-        <h2>Patient Information Record (PIR)</h2>
+            <h2>Patient Information Record (PIR)</h2>
 
         
             <p><strong>Full Name:</strong> {{ patient.first_name }} {{ patient.middle_name }} {{ patient.last_name }}</p>
@@ -83,12 +82,14 @@
             {% endif %}
 
         {% else %}
+            <h3>Please Fill Up the Patient Information Record Form to Access the Doc2Ne Dental Management System</h3>
+            <h2>Patient Information Record (PIR)</h2>
+
             <form method="POST" class="pir-form">
                 {% csrf_token %}
                 {{ form.as_p }} 
-                <button type="submit">Save</button>
+                <button type="submit">Submit</button>
             </form>
-        
     </div>
     {% endif %}
 </div>

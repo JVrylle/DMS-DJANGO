@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .decorators import role_required
+from .decorators import role_required, patient_verified_required
 from .forms import PatientInformationRecordForm, AppointmentForm
 from .models import Patient,AdminLog, Appointment, Notification
 from django.contrib.auth import get_user_model
@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 User = get_user_model()
 
-
+@patient_verified_required
 @role_required(['USER'])
 def user_dash(request):
     user = request.user
@@ -37,16 +37,20 @@ def user_dash(request):
         'username': user.username,
         'notifications': notifications,
         'unread_notifications': unread_notifications,
+        'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
     }
 
     return render(request, 'User/user_dash.html', context)
 
 
-
+@patient_verified_required
 @role_required(['USER'])
 def user_appointments(request):
 
-    patient = get_object_or_404(Patient, synced_user=request.user)
+    patient = Patient.objects.filter(synced_user=request.user).first()
+    if not patient:
+        messages.error(request, "Your patient profile is not yet verified. Please wait for the admin to sync your data.")
+        # return redirect('user_dashboard')  # or any appropriate fallback
 
     edit_id = request.GET.get('edit')
     delete_id = request.GET.get('delete')
@@ -207,6 +211,7 @@ def user_appointments(request):
         'appointment_date': appointment_date,
         'appointment_purpose': appointment_purpose,
         'purpose_descriptions': purpose_descriptions, 
+        'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
     }
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -217,12 +222,15 @@ def user_appointments(request):
 
 
 
-
+@patient_verified_required
 @role_required(['USER'])
 def user_analytics(request):
-    return render(request, 'User/user_analytics.html')
+    context = {
+        'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+    }
+    return render(request, 'User/user_analytics.html',context)
 
-
+@patient_verified_required
 @role_required(['USER'])
 def user_notifications(request):
     user = request.user
@@ -244,12 +252,18 @@ def user_notifications(request):
 
     return render(request, 'User/user_notifications.html', {
         'notifications': notifications,
-        'unread_notifications': unread_notifications
+        'unread_notifications': unread_notifications,
+        'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
     })
 
+@patient_verified_required
 @role_required(['USER'])
 def user_prescription(request):
-    return render(request, 'User/user_prescription.html')
+    context = {
+        'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+    }
+    return render(request, 'User/user_prescription.html', context)
+
 @role_required(['USER'])
 def user_health_record(request):
     try:
@@ -353,19 +367,27 @@ def user_health_record(request):
     return render(request, 'User/user_health_record.html', {
         'form': form,
         'patient': patient,
+        'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
         'show_existing_patient_modal': not patient
     })
 
 
 
-
+@patient_verified_required
 @role_required(['USER'])
 def user_emergency(request):
-    return render(request, 'User/user_emergency.html')
+    context = {
+        'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+    }
+    return render(request, 'User/user_emergency.html', context)
 
+@patient_verified_required
 @role_required(['USER'])
 def user_faq(request):
-    return render(request, 'User/user_faq.html')
+    context = {
+        'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+    }
+    return render(request, 'User/user_faq.html', context)
 
 
 

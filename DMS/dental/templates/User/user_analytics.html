@@ -2,11 +2,13 @@
 {% block usercontent %}
 
 <div class="main-container">
-    <div class="main-containers first"> 
+{% if verification_status == 'verified' %}
+    <div class="main-containers"> 
         Analytics
-
     </div>
-
+{% else %}
+    {% include 'User/includes/unverified_notice.html' %}
+{% endif %}
 </div>
 
 <script>

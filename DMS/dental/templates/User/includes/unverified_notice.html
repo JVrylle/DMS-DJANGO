@@ -1,0 +1,52 @@
+
+<style>
+.unverified-notice {
+    text-align: center;
+    line-height: 24px;
+}
+
+.unverified-notice i{
+    font-size: 40px;
+    color: rgb(156, 0, 0);
+    margin: 10px;
+}
+
+.unverified-notice h2{
+    font-size: 24px;
+    color: rgb(156, 0, 0);
+    margin-bottom: 40px;
+}
+
+.unverified-notice p{
+    font-size: 16px;
+}
+
+
+.colored {
+    color: rgb(0, 190, 0);
+}
+
+
+
+</style>
+
+
+<div class="main-containers unverified-notice">
+
+    <div>
+        <div class="unverified-notice-container">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <h2 class="">Verification Required</h2>
+        </div>
+        
+        <p>
+            Your account currently has limited access because it has not yet been verified. <br>
+            Please wait for the admin to review and confirm your information. <br><br>
+            Once verified, you’ll unlock full access to all features of the Doc2ne Dental Management System. <br>
+            <colored class="colored">To begin the verification process, please complete the Patient Information Form.</colored>
+        </p>
+
+        <a href="{% url 'user_health_record'  %}">Click here to proceed to Patient Information Record</a>
+
+    </div>
+</div>

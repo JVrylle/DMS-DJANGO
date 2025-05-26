@@ -176,10 +176,15 @@ function markAsRead(notificationId) {
             <div id="dynamic-main-content">
                 {% block usercontent %}
                 <div class="main-container">
-                    <div class="main-containers first">Dashboard</div>
-                    <div class="main-containers second">Dashboard</div>
-                    <div class="main-containers third">Dashboard</div>
-                    <div class="main-containers fourth">Dashboard</div>
+                    {% if verification_status == 'verified' %}
+                        <div class="main-containers first">Dashboard</div>
+                        <div class="main-containers second">Dashboard</div>
+                        <div class="main-containers third">Dashboard</div>
+                        <div class="main-containers fourth">Dashboard</div> 
+                    {% else %}
+                        {% include 'User/includes/unverified_notice.html' %}
+                    {% endif %}
+                    
                 </div>
                 {% endblock %}
             </div>

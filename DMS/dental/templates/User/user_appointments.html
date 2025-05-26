@@ -98,7 +98,7 @@ table.appointments-table th {
 
 
 
-{% if messages %}
+{% comment %} {% if messages %}
 <div id="messageModal" style="
     display: flex;
     position: fixed;
@@ -118,7 +118,7 @@ table.appointments-table th {
     justify-content: space-between;
     align-items: center;
 ">
-    <span>
+ <span>
         
         <div style="color: red; display: flex;">
         {% if form.errors %}
@@ -133,8 +133,7 @@ table.appointments-table th {
                     <p>{{ error }}</p>
                 {% endfor %}
 
-            
-            
+
         {% endif %}
 
         {% for message in messages %}
@@ -160,9 +159,10 @@ table.appointments-table th {
         if (modal) modal.style.display = 'none';
     }, 5000);
 </script>
-{% endif %}
+{% endif %} {% endcomment %}
 
 <div class="main-container">
+{% if verification_status == 'verified' %}
     <div class="main-containers">
         <div id="calendar" style="padding: 20px;"></div>
     </div>
@@ -271,6 +271,15 @@ table.appointments-table th {
         </div>
     </div>
     {% endif %}
+
+
+
+{% else %}
+    {% include 'User/includes/unverified_notice.html' %}
+{% endif %}
+
+
+    
 </div>
 <script>
 
