@@ -188,7 +188,15 @@ table.appointments-table th {
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ appointment.date }}</td>
-                        <td>{{ appointment.time }}</td>
+                        <td>
+                            {% with appointment.date|date:"w" as weekday %}
+                                {% if weekday == '6' %}
+                                    9:00 AM - 4:00 PM
+                                {% else %}
+                                    5:00 PM - 7:00 PM
+                                {% endif %}
+                            {% endwith %}
+                        </td>
                         <td>{{ appointment.status }}</td>
                         <td>
                             <span class="floating-tooltip" data-tooltip="{{ purpose_descriptions|dict_get:appointment.purpose|default:'No description available' }}">
