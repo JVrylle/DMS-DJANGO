@@ -26,7 +26,7 @@ def website(request):
     register_form = CustomUserCreationForm()
     login_form = AuthenticationForm()
 
-    return render(request, 'Website/website.html', {
+    return render(request, 'Website/webs.html', {
         'register_form': register_form,
         'login_form': login_form,
     })

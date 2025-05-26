@@ -1,0 +1,2290 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doc2ne Dental Clinic</title>
+
+  <link rel="stylesheet" href="{% static 'website/login.css' %}">
+  <link rel="stylesheet" href="{% static 'website/login_modal.css' %}">
+  <link rel="stylesheet" href="{% static 'website/signup.css' %}">
+  <link rel="stylesheet" href="{% static 'website/modal.css' %}">
+
+
+
+
+
+</head>
+<style>
+
+.navbar {
+  background-color: #002f6c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+.nav-left,
+.nav-center,
+.nav-right {
+  display: flex;
+  align-items: center;
+  flex: unset;
+}
+
+.nav-center {
+  justify-content: center;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin-left: 460px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.nav-right {
+  justify-content: flex-end;
+}
+
+.nav-right button {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.login-btn {
+  background-color: #002f6c;
+  color: white;
+}
+
+.signup-btn {
+  background-color: #f6a700;
+  color: black;
+}
+
+/* HERO SECTION */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3rem 5%;
+  gap: 2rem;
+  min-height: 100vh;
+}
+
+.hero-left {
+  flex: 1;
+  margin-top: 1px;
+}
+
+.hero-left h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.bold-text {
+  font-weight: 900;
+  color: white;
+  text-shadow: -1.5px -1.5px 0 black, 1.5px -1.5px 0 black, -1.5px 1.5px 0 black, 1.5px 1.5px 0 black;
+}
+
+.clinic {
+  font-weight: bold;
+  color: white;
+  text-shadow: -1.5px -1.5px 0 black, 1.5px -1.5px 0 black, -1.5px 1.5px 0 black, 1.5px 1.5px 0 black;
+}
+
+.quote {
+  font-style: italic;
+  color: #000;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: fit-content;
+}
+
+.services-btn {
+  background-color: #f6a700;
+  color: black;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.contact-btn {
+  background-color: #002f6c;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-bottom: 130px;
+}
+
+.hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-right img {
+  height: 500px;
+  max-width: 100%;
+  border-radius: 10px;
+  border: 2px solid #000;
+  margin-bottom: 10px;
+}
+
+/* CLINIC OVERVIEW */
+.clinic-overview {
+  display: flex;
+  justify-content: space-between;
+  padding: 3rem 5%;
+  gap: 2rem;
+  background-color: #f5f5f5;
+  min-height: 120vh;
+}
+
+.clinic-left {
+  flex: 1;
+  margin-top: 5px;
+}
+
+.clinic-left h2 {
+  padding-top: 30px;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.highlight {
+  font-weight: 900;
+  color: white;
+  text-shadow: -1.5px -1.5px 0 black, 1.5px -1.5px 0 black, -1.5px 1.5px 0 black, 1.5px 1.5px 0 black;
+}
+
+.clinic-left p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.clinic-right {
+  flex: 1;
+  padding-top: 80px;
+}
+
+.clinic-right h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #002f6c;
+}
+
+.timeline {
+  list-style: none;
+  border-left: 4px solid #f6a700;
+  padding-left: 1.4rem;
+  position: relative;
+  padding-top: 1rem;
+  margin-top: 0.6rem;
+}
+
+.timeline li {
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-left: 1rem;
+  font-size: 1rem;
+  padding-top: 2.5rem;
+}
+
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 0.2rem;
+  width: 12px;
+  height: 12px;
+  background-color: #f6a700;
+  border-radius: 50%;
+  margin-top: 2.5rem;
+}
+
+.timeline li span {
+  font-weight: bold;
+  color: #000;
+  margin-top: 0;
+}
+
+/* SERVICE BENEFITS */
+.service-benefits {
+  padding: 3rem 5%;
+  background-color: #fff;
+  min-height: 110vh;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 4px;
+  margin-bottom: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.section-description {
+  font-size: 1rem;
+  color: #333;
+  max-width: 880px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 0.25fr);
+  row-gap: 30px;
+  column-gap: 0px;
+  margin-top: 2.5rem;
+  justify-items: center;
+}
+
+.benefit-box {
+  background-color: #f9f9f9;
+  padding: 2rem 1rem;
+  margin-left: 220px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 210px;
+  min-height: 200px;
+  border: 0.5px solid black;
+  text-align: center;
+  border-color: #000;
+}
+
+.benefit-box:hover {
+  box-shadow: 0 4px 10px rgb(38, 0, 255);
+}
+
+.benefit-box p {
+  margin-top: 128px;
+  font-size: 0.80rem;
+  font-weight: 500;
+  color: #000;
+}
+
+/* DOCTOR SERVICES */
+.doctor-services {
+  display: flex;
+  padding: 4rem 5%;
+  background-color: #f5f5f5;
+  gap: 3rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  min-height: 100vh;
+}
+
+.doctor-left {
+  flex: 1;
+  min-width: 280px;
+}
+
+.doctor-left h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.doctor-left p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.8;
+  max-width: 500px;
+}
+
+.doctor-right {
+  flex: 2;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  justify-items: center;
+}
+
+.service-item {
+  background-color: #fff;
+  border: 0.5px solid black;
+  padding: 20px 15px;
+  border-radius: 8px;
+  text-align: center;
+  display: block;
+  min-height: 200px;
+  width: 300px;
+  flex-shrink: 0;
+  transition: box-shadow 0.3s ease;
+}
+
+.service-item:hover {
+  box-shadow: 0 4px 8px rgb(238, 182, 0);
+}
+
+.service-item p {
+  margin-top: 120px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* WE ALSO PROVIDE */
+.services-section {
+  background-color: #f9f9fb;
+  padding: 60px 20px;
+  font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+  min-height: 120vh;
+}
+
+.services-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.services-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  background-color: #2c4a9a;
+  padding: 20px 15px;
+  border-radius: 10px;
+}
+
+.service-box {
+  background-color: #fff;
+  padding: 20px 15px;
+  border-radius: 8px;
+  display: block;
+  min-height: 200px;
+  width: 300px;
+  flex-shrink: 0;
+  border: 0.5px solid black;
+}
+
+.service-box:hover {
+  box-shadow: 0 4px 8px rgb(238, 182, 0);
+}
+
+.service-box p {
+  margin-top: 120px;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* HOW TO FIND US */
+.find-us-section {
+  background-color: #f5f5f5;
+  padding: 60px 5%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+}
+
+.find-us-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.find-us-left,
+.find-us-right {
+  flex: 1;
+  min-width: 300px;
+}
+
+.find-us-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: 50px;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.find-us-description {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 3.5rem;
+  max-width: 500px;
+}
+
+.location-photo {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 8px;
+  border: 1.5px solid black;
+}
+
+.map-image {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 100px;
+  border: 1.5px solid black;
+  border-radius: 10px;
+}
+
+.map-caption {
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  color: #000;
+}
+
+/* CONTACTS */
+.contact-section {
+  background-color: #0d3694;
+  padding: 60px 5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  min-height: 60vh;
+}
+
+.contact-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contact-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  margin-bottom: 50px;
+  letter-spacing: 1px;
+}
+
+.contact-row {
+  display: flex;
+  gap: 180px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px 8px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  min-width: 300px;
+  max-width: 320px;
+  flex: 1 1 300px;
+}
+
+.icon-box {
+  width: 40px;
+  height: 40px;
+  background-color: #f44336;
+  border-radius: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.contact-info {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  margin: 0;
+  text-align: left;
+}
+
+/* FOOTER */
+.footer {
+  background-color: #0d3694;
+  color: #fff;
+  padding: 2.5rem 5%;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 35vh;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-col {
+  flex: 1;
+  min-width: 250px;
+}
+
+.clinic-info h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.clinic-name {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.clinic-info p {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: #f1f1f1;
+}
+
+.social-boxes {
+  display: flex;
+  gap: 10px;
+}
+
+.social-box {
+  width: 35px;
+  height: 35px;
+  background-color: #ffb800;
+  border-radius: 5px;
+}
+
+.footer .nav-links h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer .nav-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer .nav-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer .nav-links ul li a {
+  color: #f0f0f0;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.footer .nav-links ul li a:hover {
+  text-decoration: underline;
+}
+
+.feedback-box textarea {
+  width: 100%;
+  height: 80px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.9rem;
+  resize: none;
+  background-color: #fff5f5;
+  color: #333;
+  margin-bottom: 0.8rem;
+}
+
+.feedback-btn {
+  background-color: #ffb800;
+  color: #000;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.feedback-btn:hover {
+  background-color: #e5a200;
+}
+
+.footer-bottom {
+  width: 100%;
+  text-align: center;
+  background-color: #eaf7ff;
+  color: #333;
+  padding: 0.8rem 0;
+  font-size: 0.85rem;
+  border-top: 1px solid #ccc;
+}
+
+/* ========== RESPONSIVE STYLES ========== */
+
+/* Tablet: up to 767px */
+@media (max-width: 767px) {
+  .navbar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-left,
+  .nav-center,
+  .nav-right {
+    flex: unset;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-links a {
+    font-size: 1rem;
+    padding: 0.5rem;
+    text-decoration: none;
+  }
+
+  .nav-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  .nav-right button {
+    margin-left: 0;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 4px;
+  }
+
+  .login-btn {
+    font-size: 1rem;
+  }
+
+  .signup-btn {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .hero {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .hero-left h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-buttons {
+    margin: 0 auto;
+  }
+
+  .hero-right img {
+    height: 250px;
+  }
+
+  .clinic-overview {
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+  }
+
+  .clinic-right {
+    padding-top: 30px;
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+    column-gap: 0;
+    margin-left: 0;
+    justify-items: center;
+  }
+
+  .benefit-box {
+    margin-left: 0;
+    max-width: 300px;
+  }
+
+  .doctor-services {
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+  }
+
+  .doctor-right {
+    grid-template-columns: 1fr;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    padding: 20px 15px;
+  }
+
+  .find-us-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .map-image {
+    margin-top: 2rem;
+  }
+
+  .contact-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .footer-container {
+    flex-direction: column;
+  }
+}
+
+/* BODY */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+  background-color: #fff;
+  color: #000;
+  padding: 0;
+  margin: 0;
+}
+
+/* NAVBAR */
+.navbar {
+  background-color: #002f6c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+.nav-left,
+.nav-center,
+.nav-right {
+  display: flex;
+  align-items: center;
+  flex: unset;
+}
+
+.nav-center {
+  justify-content: center;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin-left: 460px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.nav-right {
+  justify-content: flex-end;
+}
+
+.nav-right button {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.login-btn {
+  background-color: #002f6c;
+  color: white;
+}
+
+.signup-btn {
+  background-color: #f6a700;
+  color: black;
+}
+
+/* HERO SECTION */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3rem 5%;
+  gap: 2rem;
+  min-height: 100vh;
+}
+
+.hero-left {
+  flex: 1;
+  margin-top: 1px;
+}
+
+.hero-left h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.bold-text {
+  font-weight: 900;
+  color: white;
+  text-shadow: -1.5px -1.5px 0 black, 1.5px -1.5px 0 black, -1.5px 1.5px 0 black, 1.5px 1.5px 0 black;
+}
+
+.clinic {
+  font-weight: bold;
+  color: white;
+  text-shadow: -1.5px -1.5px 0 black, 1.5px -1.5px 0 black, -1.5px 1.5px 0 black, 1.5px 1.5px 0 black;
+}
+
+.quote {
+  font-style: italic;
+  color: #000;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: fit-content;
+}
+
+.services-btn {
+  background-color: #f6a700;
+  color: black;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.contact-btn {
+  background-color: #002f6c;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-bottom: 130px;
+}
+
+.hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-right img {
+  height: 500px;
+  max-width: 100%;
+  border-radius: 10px;
+  border: 2px solid #000;
+  margin-bottom: 10px;
+}
+
+/* CLINIC OVERVIEW */
+.clinic-overview {
+  display: flex;
+  justify-content: space-between;
+  padding: 3rem 5%;
+  gap: 2rem;
+  background-color: #f5f5f5;
+  min-height: 120vh;
+}
+
+.clinic-left {
+  flex: 1;
+  margin-top: 5px;
+}
+
+.clinic-left h2 {
+  padding-top: 30px;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.highlight {
+  font-weight: 900;
+  color: white;
+  text-shadow: -1.5px -1.5px 0 black, 1.5px -1.5px 0 black, -1.5px 1.5px 0 black, 1.5px 1.5px 0 black;
+}
+
+.clinic-left p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.clinic-right {
+  flex: 1;
+  padding-top: 80px;
+}
+
+.clinic-right h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #002f6c;
+}
+
+.timeline {
+  list-style: none;
+  border-left: 4px solid #f6a700;
+  padding-left: 1.4rem;
+  position: relative;
+  padding-top: 1rem;
+  margin-top: 0.6rem;
+}
+
+.timeline li {
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-left: 1rem;
+  font-size: 1rem;
+  padding-top: 2.5rem;
+}
+
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 0.2rem;
+  width: 12px;
+  height: 12px;
+  background-color: #f6a700;
+  border-radius: 50%;
+  margin-top: 2.5rem;
+}
+
+.timeline li span {
+  font-weight: bold;
+  color: #000;
+  margin-top: 0;
+}
+
+/* SERVICE BENEFITS */
+.service-benefits {
+  padding: 3rem 5%;
+  background-color: #fff;
+  min-height: 110vh;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 4px;
+  margin-bottom: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.section-description {
+  font-size: 1rem;
+  color: #333;
+  max-width: 880px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 0.25fr);
+  row-gap: 30px;
+  column-gap: 0px;
+  margin-top: 2.5rem;
+  justify-items: center;
+}
+
+.benefit-box {
+  background-color: #f9f9f9;
+  padding: 2rem 1rem;
+  margin-left: 220px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 210px;
+  min-height: 200px;
+  border: 0.5px solid black;
+  text-align: center;
+  border-color: #000;
+}
+
+.benefit-box:hover {
+  box-shadow: 0 4px 10px rgb(38, 0, 255);
+}
+
+.benefit-box p {
+  margin-top: 128px;
+  font-size: 0.80rem;
+  font-weight: 500;
+  color: #000;
+}
+
+/* DOCTOR SERVICES */
+.doctor-services {
+  display: flex;
+  padding: 4rem 5%;
+  background-color: #f5f5f5;
+  gap: 3rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  min-height: 100vh;
+  max-height: 120vh;
+}
+
+.doctor-left {
+  flex: 1;
+  min-width: 280px;
+}
+
+.doctor-left h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  margin-top: 70px;
+}
+
+.doctor-left p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.8;
+  max-width: 500px;
+}
+
+.doctor-right {
+  flex: 2;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  justify-items: center;
+  margin-top: 80px;
+}
+
+.service-item {
+  background-color: #fff;
+  border: 0.5px solid black;
+  padding: 20px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  text-align: center;
+  display: block;
+  min-height: 200px;
+  width: 300px;
+  flex-shrink: 0;
+  transition: box-shadow 0.3s ease;
+}
+
+.service-item:hover {
+  box-shadow: 0 4px 8px rgb(238, 182, 0);
+}
+
+.service-item p {
+  margin-top: 120px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* WE ALSO PROVIDE */
+.services-section {
+  background-color: #f9f9fb;
+  padding: 60px 20px;
+  font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+  min-height: 120vh;
+}
+
+.services-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.services-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  background-color: #2c4a9a;
+  padding: 20px 15px;
+  border-radius: 10px;
+}
+
+.service-box {
+  background-color: #fff;
+  padding: 20px 15px;
+  border-radius: 8px;
+  display: block;
+  min-height: 200px;
+  width: 300px;
+  flex-shrink: 0;
+  border: 0.5px solid black;
+}
+
+.service-box:hover {
+  box-shadow: 0 4px 8px rgb(238, 182, 0);
+}
+
+.service-box p {
+  margin-top: 120px;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* HOW TO FIND US */
+.find-us-section {
+  background-color: #f5f5f5;
+  padding: 60px 5%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+}
+
+.find-us-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.find-us-left,
+.find-us-right {
+  flex: 1;
+  min-width: 300px;
+}
+
+.find-us-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: 50px;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.find-us-description {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 3.5rem;
+  max-width: 500px;
+}
+
+.location-photo {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 8px;
+  border: 1.5px solid black;
+}
+
+.map-image {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 100px;
+  border: 1.5px solid black;
+  border-radius: 10px;
+}
+
+.map-caption {
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  color: #000;
+}
+
+/* CONTACTS */
+.contact-section {
+  background-color: #0d3694;
+  padding: 60px 5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  min-height: 60vh;
+}
+
+.contact-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contact-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  margin-bottom: 50px;
+  letter-spacing: 1px;
+}
+
+.contact-row {
+  display: flex;
+  gap: 180px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px 8px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  min-width: 300px;
+  max-width: 320px;
+  flex: 1 1 300px;
+}
+
+.icon-box {
+  width: 40px;
+  height: 40px;
+  background-color: #f44336;
+  border-radius: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.contact-info {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  margin: 0;
+  text-align: left;
+}
+
+/* FOOTER */
+.footer {
+  background-color: #0d3694;
+  color: #fff;
+  padding: 2.5rem 5%;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 35vh;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-col {
+  flex: 1;
+  min-width: 250px;
+}
+
+.clinic-info h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.clinic-name {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.clinic-info p {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: #f1f1f1;
+}
+
+.social-boxes {
+  display: flex;
+  gap: 10px;
+}
+
+.social-box {
+  width: 35px;
+  height: 35px;
+  background-color: #ffb800;
+  border-radius: 5px;
+}
+
+.footer .nav-links h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer .nav-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer .nav-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer .nav-links ul li a {
+  color: #f0f0f0;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.footer .nav-links ul li a:hover {
+  text-decoration: underline;
+}
+
+.feedback-box textarea {
+  width: 100%;
+  height: 80px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.9rem;
+  resize: none;
+  background-color: #fff5f5;
+  color: #333;
+  margin-bottom: 0.8rem;
+}
+
+.feedback-btn {
+  background-color: #ffb800;
+  color: #000;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.feedback-btn:hover {
+  background-color: #e5a200;
+}
+
+.footer-bottom {
+  width: 100%;
+  text-align: center;
+  background-color: #eaf7ff;
+  color: #333;
+  padding: 0.8rem 0;
+  font-size: 0.85rem;
+  border-top: 1px solid #ccc;
+}
+
+/* ========== RESPONSIVE STYLES ========== */
+/* Tablet: up to 768px */
+@media (max-width: 768px) {
+  .navbar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-left,
+  .nav-center,
+  .nav-right {
+    flex: unset;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-links a {
+    font-size: 1rem;
+    padding: 0.5rem;
+    text-decoration: none;
+  }
+
+  .nav-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  .nav-right button {
+    margin-left: 0;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 4px;
+  }
+
+  .login-btn {
+    font-size: 1rem;
+  }
+
+  .signup-btn {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .hero {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1.5rem;
+    text-align: center;
+    min-height: 30vh; 
+    max-height: 60vh;
+  }
+
+  .hero-left h1 {
+    font-size: 2.2rem;
+    margin-top: 30px;
+  }
+
+  .hero-buttons {
+    margin: 0 auto;
+  }
+
+  .hero-right img {
+    display: none;
+  }
+
+  .clinic-overview {
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+  }
+
+  .clinic-right {
+    padding-top: 30px;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    row-gap: 20px;
+    column-gap: 20px;
+    margin-left: 0;
+    justify-items: center;
+  }
+
+  .benefit-box {
+    margin-left: 0;
+    max-width: 200px;
+    min-height: 150px;
+  }
+
+  .doctor-services {
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    min-height: 150vh;
+    max-height: 180vh;
+  }
+
+  .doctor-left h2 {
+    text-align: center;
+    align-items: center;
+    margin-left: 60px;
+  }
+  
+  .doctor-left p{
+    text-align: center;
+    align-items: center;
+    margin-left: 100px;
+    margin-bottom: 0;
+  }
+
+  .doctor-right {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px; 
+  }
+
+  .service-item {
+    width: 300px; 
+    min-height: 200px;
+    margin-left: 35px;
+    margin-bottom: 50px;
+  }
+
+  .service-item p {
+    margin-top: 50px;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px;
+    padding: 20px 15px;
+  }
+
+  .service-box {
+    width: 300px;
+    min-height: 200px;
+  }
+
+  .service-box p {
+    margin-top: 200px;
+  }
+
+  .find-us-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .map-image {
+    margin-top: 2rem;
+  }
+
+  .contact-row {
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .contact-card {
+    padding: 10px 8px;
+    min-width: 280px;
+    max-width: 300px;
+  }
+
+  .icon-box {
+    width: 30px;
+    height: 30px;
+  }
+
+  .contact-info {
+    font-size: 14px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+  }
+}
+
+/* Mobile L: up to 425px */
+@media (max-width: 425px) {
+  .navbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 1rem;
+    align-items: center;
+  }
+
+  .nav-left,
+  .nav-center,
+  .nav-right {
+    flex: unset;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .nav-links a {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .nav-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .nav-right button {
+    margin-left: 0;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+  }
+
+  .login-btn {
+    font-size: 0.7rem;
+  }
+
+  .signup-btn {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .hero {
+    flex-direction: column;
+    padding: 2rem 1rem;
+    text-align: center;
+    min-height: 30vh; 
+    max-height: 90vh;
+  }
+
+  .hero-right {
+    display: none;
+  }
+
+  .hero-buttons {
+    margin: 0 auto;
+  }
+
+  .clinic-overview {
+    flex-direction: column;
+    padding: 2rem 1rem;
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    margin-left: 0;
+  }
+
+  .doctor-services {
+    flex-direction: column;
+    padding: 2rem 1rem;
+    text-align: center;
+    min-height: auto; 
+    max-height: none; 
+  }
+
+  .doctor-left {
+    width: 90%;
+    margin-left: 0; 
+    text-align: left; 
+  }
+
+  .doctor-left h2,
+  .doctor-left p {
+    text-align: left; 
+  }
+
+  .doctor-right {
+    width: 90%;
+    margin: 0 auto;
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .service-item {
+    width: 240px;
+    height: 150px;
+    padding: 10px; 
+    margin: 0 0 15px 0;
+    background-color: #fff;
+    border: 0.5px solid black; 
+    border-radius: 8px; 
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+  }
+
+  .service-item p {
+    margin: 0;
+    padding: 0; 
+    font-size: 14px;
+    width: 100%;
+    text-align: center; 
+  }
+
+  .services-container {
+    width: 100%;
+    overflow-x: visible;
+    max-height: none;
+  }
+
+  .services-grid {
+    width: 80%;
+    margin: 0 auto;
+    padding: 15px;
+    grid-template-columns: 1fr;
+  }
+
+  .service-box {
+    width: 240px;
+    height: 150px;
+    padding: 15px 10px;
+    margin: 0;
+    margin-left: 20px;
+  }
+
+  .service-box p {
+    margin: 0;
+    padding-top: 10px;
+    font-size: 14px;
+  }
+
+  .find-us-container {
+    flex-direction: column;
+  }
+
+  .map-image {
+    margin-top: 2rem;
+  }
+
+  .contact-section {
+    min-height: auto;
+    padding: 20px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .contact-row {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .contact-card {
+    margin-bottom: 8px;
+    height: 25px;
+    width: 8px;
+    padding: 1px 8px;
+  }
+
+  .icon-box {
+    width: 10px;
+    height: 10px;
+  }
+
+  .contact-info {
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .footer-container {
+    flex-direction: column;
+  }
+}
+
+/* Mobile S: up to 320px */
+@media (max-width: 320px) {
+  .navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.3rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-links li {
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.3rem;
+    text-decoration: none;
+  }
+
+  .nav-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.3rem;
+    text-decoration: none;
+  }
+
+  .nav-right button {
+    margin-left: 0;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.6rem;
+    border-radius: 3px;
+    text-decoration: none;
+  }
+
+  .login-btn {
+    font-size: 0.6rem;
+    text-decoration: none;
+  }
+
+  .signup-btn {
+    font-size: 0.6rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .hero {
+    min-height: 30vh; 
+    max-height: 90vh;
+  }
+
+  .hero-buttons {
+    margin: 0 auto;
+  }
+
+  .doctor-services {
+    flex-direction: column; 
+    padding: 2rem 1rem;
+    text-align: center;
+    min-height: auto;
+    max-height: none;
+  }
+
+  .doctor-left {
+    width: 90%; 
+    margin-left: 0; 
+    text-align: left; 
+  }
+
+  .doctor-left h2 {
+    text-align: left;
+    margin-right: 0; 
+    font-size: 1.5rem; 
+  }
+
+  .doctor-left p {
+    text-align: left;
+    margin-right: 0; 
+    font-size: 14px; 
+    margin-bottom: 1rem; 
+  }
+
+  .doctor-right {
+    width: 90%;
+    margin: 0 auto;
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .service-item {
+    width: 230px;
+    height: 150px;
+    padding: 10px;
+    margin: 0 0 15px 0; 
+    background-color: #fff; 
+    border: 0.5px solid black; 
+    border-radius: 8px; 
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+  }
+
+  .service-item p {
+    margin: 0;
+    padding: 0; 
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .services-container {
+    width: 100%;
+    overflow-x: visible;
+    max-height: none;
+  }
+
+  .services-grid {
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px;
+    grid-template-columns: 1fr;
+  }
+
+  .service-box {
+    width: 230px;
+    height: 150px;
+    padding: 10px;
+    margin: 0;
+  }
+
+  .service-box p {
+    margin: 0;
+    padding-top: 10px;
+    font-size: 14px;
+  }
+
+  .contact-section {
+    min-height: auto;
+    padding: 20px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .contact-row {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .contact-card {
+    width: 8px;
+    padding: 10px 8px;
+  }
+
+  .icon-box {
+    width: 10px;
+    height: 10px;
+  }
+
+  .contact-info {
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+</style>
+
+<!-- NEW LATEST JOSH -->
+<style>
+
+
+
+</style>
+
+
+
+
+<body>
+
+    <!-- Navigation Bar
+    <div class="navbar">
+        <i class="fa-solid fa-bars" id="nav-menu-btn"></i>
+        <img hidden src="doc2ne_transparent_logo.png" alt="" class="doc2ne-logo">
+        <strong>Doc2ne Clinic</strong>
+        <button class="nav-login-btn" id="openModalBtn"><p>Log in</p></button>
+    </div> -->
+
+
+  <!-- NAVIGATION SECTION -->
+ <nav class="navbar">
+  <div class="nav-center">
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <!-- <a href="#" class="login-link">Login</a> -->
+    <button class="nav-login-btn" id="openModalBtn"><p>Log in</p></button>
+    <!-- <button class="signup-btn">Signup</button> -->
+  </div>
+</nav>
+
+  <!-- HERO SECTION -->
+  <main class="hero">
+    <div class="hero-left">
+      <h1><span class="bold-text">Doc2ne</span><span class="clinic">Dental Clinic</span></h1>
+      <p class="quote">"Creating smiles with a gentle touch"</p>
+      <p class="description">
+        Experience gentle, expert dental care in a modern and relaxing environment.
+        Our team is dedicated to your comfort, offering personalized treatments
+        designed to keep your smile healthy and bright!
+      </p>
+      <div class="hero-buttons">
+        <button class="services-btn">See our services</button>
+        <button class="contact-btn">Contact Us</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="{% static 'website/dashimg.png' %}" alt="Dentist with patient" />
+    </div>
+  </main>
+
+  <!-- CLINIC OVERVIEW SECTION -->
+  <section class="clinic-overview">
+    <div class="clinic-left">
+      <h2><span class="highlight">Dental Service,</span> <span class="highlight">a Perfect Smile</span></h2>
+
+      <p>
+        Doc2ne Dental Clinic, located in Tayabas, Quezon, was founded with a clear
+        mission—to provide affordable and high-quality dental care to the local
+        community. Starting as a humble one-chair clinic, it has steadily grown through
+        the years thanks to the trust and support of its patients.
+      </p>
+      <p>
+        With a strong focus on patient comfort and updated dental techniques, Doc2ne
+        Dental Clinic has become a trusted name in Tayabas for families seeking both
+        routine and specialized dental care.
+      </p>
+      <p>
+        From its early days up to now, the clinic continues to uphold its promise:
+        delivering beautiful smiles with expert hands and a caring heart.
+      </p>
+    </div>
+    <div class="clinic-right">
+      <h3>Background History</h3>
+      <ul class="timeline">
+        <li><span>2005</span> – Humble Beginnings</li>
+        <li><span>2009</span> – First Major Upgrade</li>
+        <li><span>2013</span> – Modernization & Technology</li>
+        <li><span>2017</span> – Expanding Services</li>
+        <li><span>2021</span> – Community Engagement</li>
+        <li><span>2024</span> – Present – Smiles for the Future</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SERVICE BENEFITS SECTION -->
+  <section class="service-benefits">
+    <h2 class="section-title">Service Benefits</h2>
+    <p class="section-description">
+      At our clinic, we provide personalized dental services for patients of all ages. Whether you need a simple checkup or a
+      more advanced treatment, our team is here to deliver gentle, high-quality care focused on your comfort, health, and smile.
+    </p>
+    <div class="benefits-grid">
+      <div class="benefit-box"><p>Teeth Whitening</p></div>
+      <div class="benefit-box"><p>Teeth Check-up</p></div>
+      <div class="benefit-box"><p>Professional Expertise</p></div>
+      <div class="benefit-box"><p>Comfort and Convenience</p></div>
+      <div class="benefit-box"><p>Confidence Boost</p></div>
+      <div class="benefit-box"><p>Professional Guidance</p></div>
+    </div>
+  </section>
+
+  <!-- DOCTOR SERVICES SECTION -->
+  <section class="doctor-services">
+    <div class="doctor-left">
+      <h2>Doctor Services</h2>
+      <p>
+        From routine cleanings to advanced procedures, our goal is to provide effective, gentle care at every visit. Your comfort and oral health are our top priorities.
+      </p>
+    </div>
+    <div class="doctor-right">
+      <div class="service-item">
+        <p>General Consultation</p>
+      </div>
+      <div class="service-item">
+        <p>Pediatric Dental Care</p>
+      </div>
+      <div class="service-item">
+        <p>Tooth Extraction</p>
+      </div>
+      <div class="service-item">
+        <p>Orthodontic Evaluation</p>
+      </div>
+      <div class="service-item">
+        <p>Intraoral Examination</p>
+      </div>
+      <div class="service-item">
+        <p>Emergency Dental Care</p>
+      </div>
+    </div>
+  </section>
+
+    <!-- WE ASLO PROVIDE -->
+  <section class="services-section">
+  <div class="services-container">
+    <h2 class="services-title">We Also Provide</h2>
+    <div class="services-grid">
+      <div class="service-box">
+        <p>Oral Health Tips</p>
+      </div>
+      <div class="service-box">
+        <p>System User Friendly</p>
+      </div>
+      <div class="service-box">
+        <p>Tooth Sealants</p>
+      </div>
+      <div class="service-box">
+        <p>Online Appointment</p>
+      </div>
+      <div class="service-box">
+        <p>Friendly Assistant</p>
+      </div>
+      <div class="service-box">
+        <p>Robust Security</p>
+      </div>
+    </div>
+  </div>
+  </section>
+
+    <!-- HOW TO FIND US -->
+  <section class="find-us-section">
+  <div class="find-us-container">
+    <div class="find-us-left">
+      <h2 class="find-us-title">How To Find Us</h2>
+      <p class="find-us-description">
+        You can find us at J. Rizal Street, Tayabas City, 4327 Quezon, near Ahchuchu. Look for the building with a gray roll-up door and a concrete fence, as shown in the photo. Use the map to help guide you to our exact location in Tayabas City.
+      </p>
+      <img src="{% static 'website/Base.jpg' %} " alt="Building exterior" class="location-photo">
+    </div>
+    <div class="find-us-right">
+      <img src="{% static 'website/Map1.jpg' %}" alt="Map to location" class="map-image">
+      <p class="map-caption">J. Rizal Street, Tayabas, 4327 Quezon</p>
+    </div>
+  </div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section class="contact-section">
+    <div class="contact-container">
+      <h2 class="contact-title">Contact Us</h2>
+
+      <div class="contact-row">
+        <div class="contact-card">
+          <div class="icon-box"></div>
+          <p class="contact-info">J. Rizal Street, Tayabas, 4327 Quezon</p>
+        </div>
+
+        <div class="contact-card">
+          <div class="icon-box"></div>
+          <p class="contact-info">0xxx-xxx-xxxx</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <!-- Footer Main Section -->
+  <section class="footer">
+    <div class="footer-container">
+      <!-- Left: Clinic Info -->
+      <div class="footer-col clinic-info">
+        <h2><span class="clinic-name">Dental</span>CLINIC</h2>
+        <p>
+          Have questions or need to book an appointment?  
+          Our friendly team is here to help. Reach out anytime—we're just a call or message away!
+        </p>
+        <div class="social-boxes">
+          <div class="social-box"></div>
+          <div class="social-box"></div>
+          <div class="social-box"></div>
+        </div>
+      </div>
+
+      <!-- Center: Navigation -->
+      <div class="footer-col nav-links">
+        <h3>Navigation</h3>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Right: Feedback Box -->
+      <div class="footer-col feedback-box">
+        <textarea placeholder="Write your feedback here..."></textarea>
+        <button class="feedback-btn">Send Feedback</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Login Modal -->
+  {% include 'Website/login_modal.html' %}
+
+  <!-- Register Modal -->
+  {% include 'Website/register_modal.html' %}
+          
+  <div id="modal-data"
+    data-show-register="{{ show_register|yesno:'true,false' }}"
+    data-show-login="{{ show_login|yesno:'true,false' }}"
+    hidden></div>
+
+
+
+  <!-- Footer Bottom section -->
+  <section class="footer-bottom">
+    <p>Terms of Use | Privacy Policy</p>
+  </section>
+
+  <script src="https://kit.fontawesome.com/603a80fa25.js" crossorigin="anonymous"></script>
+  <script src="{% static 'website/modal.js' %}"></script>
+
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const modalData = document.getElementById("modal-data");
+
+          const showRegister = modalData.dataset.showRegister === "true";
+          const showLogin = modalData.dataset.showLogin === "true";
+
+          if (showRegister) {
+              document.getElementById("registerModal").style.display = "block";
+          } else if (showLogin) {
+              document.getElementById("loginModal").style.display = "block";
+          }
+      });
+  </script>
+
+
+</body>
+</html>
