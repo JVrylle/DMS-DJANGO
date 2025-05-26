@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .decorators import role_required
 from .forms import PatientForm, ConsentForm,AppointmentForm, HealthInformationRecordForm
-from .models import Patient, IntraoralExamination, AdminLog, CustomUser
+from .models import Patient, IntraoralExamination, AdminLog, CustomUser, Notification
 from django.db.models import Q
 from django.contrib import messages
 from django.views.decorators.http import require_POST
@@ -212,6 +212,16 @@ def admin_system_logs(request):
                 metadata={"user_id": user.id}
             )
 
+            # Notification to users
+            Notification.objects.create(
+                user=user,
+                type='Account',
+                message='Your Health Information Record has been completed and your account has been verified.',
+                redirect_url='/User'  # optional: update if you have a user dashboard URL
+    )
+
+
+
             messages.success(request, f"HIR completed and patient '{user.username}' verified.")
             return redirect('admin_system_logs')
 
@@ -241,6 +251,16 @@ def verify_patient_from_log(request, user_id):
             affected_object_id=patient.id,
             metadata={"user_id": user.id}
         )
+
+        # Notification to users
+        Notification.objects.create(
+            user=user,
+            type='Account',
+            message='Your account has been successfully verified by the admin.',
+            redirect_url='/User'  # optional
+        )
+
+
 
         messages.success(request, f"Patient '{user.username}' has been verified.")
     else:

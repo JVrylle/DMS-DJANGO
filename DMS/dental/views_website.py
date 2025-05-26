@@ -103,7 +103,7 @@ def redirect_user_by_role(user):
         return redirect('admin_dash')
     elif user.role == 'DENTIST':
         return redirect('dentist_dash')
-    return redirect('user_health_record')
+    return redirect('user_dash')
 
 # FOR EMAIL VERIFICATION
 

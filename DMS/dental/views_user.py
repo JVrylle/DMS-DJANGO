@@ -1,31 +1,43 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
-from django.template import loader
 from .decorators import role_required
 from .forms import PatientInformationRecordForm, AppointmentForm
-from .models import Patient, IntraoralExamination,AdminLog, Appointment
-from django.db.models import Q
+from .models import Patient,AdminLog, Appointment, Notification
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.utils.timezone import now
-from datetime import datetime, date, time as time_obj, timedelta
+from datetime import datetime, time as time_obj
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 User = get_user_model()
 
 
-# USER
 @role_required(['USER'])
 def user_dash(request):
-    
-    #SIDEBAR
-    username = request.user.username
-    context = {
-        'username':username,
-    }
+    user = request.user
 
+    if request.method == 'POST' and request.POST.get('notification_id'):
+        notification_id = request.POST.get('notification_id')
+        try:
+            notification = Notification.objects.get(id=notification_id, user=user)
+            notification.is_read = True
+            notification.save()
+            return JsonResponse({'success': True})
+        except Notification.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Notification not found'}, status=404)
+
+    # For GET requests — normal page load
+    notifications = Notification.objects.filter(user=user).order_by('-created_at')
+    unread_notifications = notifications.filter(is_read=False)
+
+    context = {
+        'username': user.username,
+        'notifications': notifications,
+        'unread_notifications': unread_notifications,
+    }
 
     return render(request, 'User/user_dash.html', context)
 
@@ -210,9 +222,30 @@ def user_appointments(request):
 def user_analytics(request):
     return render(request, 'User/user_analytics.html')
 
+
 @role_required(['USER'])
 def user_notifications(request):
-    return render(request, 'User/user_notifications.html')
+    user = request.user
+
+    if request.method == 'POST':
+        # Handle AJAX request to mark notification as read
+        notif_id = request.POST.get('notification_id')
+        try:
+            notif = Notification.objects.get(id=notif_id, user=user)
+            notif.is_read = True
+            notif.save()
+            return JsonResponse({'status': 'success'})
+        except Notification.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
+
+    # GET request - render page with notifications
+    notifications = user.notifications.all().order_by('-created_at')
+    unread_notifications = notifications.filter(is_read=False)
+
+    return render(request, 'User/user_notifications.html', {
+        'notifications': notifications,
+        'unread_notifications': unread_notifications
+    })
 
 @role_required(['USER'])
 def user_prescription(request):

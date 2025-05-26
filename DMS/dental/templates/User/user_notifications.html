@@ -1,15 +1,24 @@
 
 {% extends "User/user_dash.html" %}
 {% block usercontent %}
+
+
 <div class="main-container">
-    <div class="main-containers first">Notifications</div>
-    <div class="main-containers second">Notifications</div>
-    <div class="main-containers third">Notifications</div>
-    <div class="main-containers fourth">Notifications</div>
+    <div class="main-containers first">
+        {% for note in notifications %}
+            <div class="notification-item {% if not note.is_read %}unread{% endif %}">
+                <strong>[{{ note.type }}]</strong> {{ note.message }} <br>
+                <small>{{ note.created_at }}</small>
+            </div>
+        {% empty %}
+            <p>No notifications yet.</p>
+        {% endfor %}
+    </div>
 </div>
 
 <script>
     document.getElementById('banner-title').innerText = 'Notifications';
+
 </script>
 
 {% endblock %}

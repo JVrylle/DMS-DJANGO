@@ -72,6 +72,69 @@ body {
 
 <div class="overlay" id="overlay"></div>
 
+<!-- Notification Modals for Unread -->
+
+<style>
+.modal {
+  display: none;
+  position: fixed;
+  top: 20px;
+  right: 100px;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  min-width: 250px;
+  max-width: 300px;
+}
+
+.close {
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+</style>
+
+{% for note in unread_notifications %}
+  <div id="notifModal{{ note.id }}" class="modal" style="display: block;">
+    <div class="modal-content">
+      <span class="close" onclick="markAsRead({{ note.id }})">&times;</span>
+      <p><strong>{{ note.type }}:</strong> {{ note.message }}</p>
+    </div>
+  </div>
+
+{% endfor %}
+
+<script>
+function markAsRead(notificationId) {
+    const modal = document.getElementById("notifModal" + notificationId);
+    modal.style.display = "none";
+
+    fetch("", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "notification_id=" + notificationId
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to mark as read");
+        }
+    })
+    .catch(error => console.error(error));
+}
+</script>
+
+
+
+
+
 <div class="main">
     <div class="main-header">
         <i class="fa-solid fa-bars" id="open-menu"></i>
@@ -96,12 +159,6 @@ body {
                     </form>
                 </div>
             </div>
-
-
-
-
-
-
 
         </div>
     </div>
