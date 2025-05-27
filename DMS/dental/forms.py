@@ -256,6 +256,25 @@ class HealthInformationRecordForm(forms.ModelForm):
 
 
 class PatientForm(forms.ModelForm):
+    mi_is_allergic = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=Patient.allergies,
+        label='Allergies (Check all that apply)'
+    )
+
+    mi_select_disease = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=Patient.diseases,
+        label='Do you have or have you had any of the following?'
+    )
+
+
+
+
+
+
     class Meta:
         model = Patient
         fields = ['last_name',
@@ -352,25 +371,12 @@ class PatientForm(forms.ModelForm):
             # 'mi_is_taking_prescription': forms.RadioSelect(),
             # 'mi_is_using_tobacco': forms.RadioSelect(),
             # 'mi_is_using_dangerous_drugs': forms.RadioSelect(),
-            'mi_is_allergic': forms.CheckboxSelectMultiple(choices=allergies),
+            # 'mi_is_allergic': forms.CheckboxSelectMultiple(choices=allergies),
             # 'mi_is_pregnant': forms.RadioSelect(),
             # 'mi_is_nursing': forms.RadioSelect(),
             # 'mi_is_birth_control': forms.RadioSelect(),
-            'mi_select_disease':forms.CheckboxSelectMultiple(choices=diseases),
+            # 'mi_select_disease':forms.CheckboxSelectMultiple(choices=diseases),
         }
-
-
-    def clean(self):
-        cleaned_data = super().clean()
-        birthdate = cleaned_data.get('birthdate')
-        age = cleaned_data.get('age')
-
-        if birthdate and age is not None:
-            today = date.today()
-            calculated_age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
-            
-            if age != calculated_age:
-                raise ValidationError(f"Age does not match the birthdate. Calculated age is {calculated_age}.")
 
 
 

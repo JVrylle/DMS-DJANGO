@@ -68,6 +68,10 @@
                 {% csrf_token %}
                 <button type="submit" name="add_record">Add Record</button>
             </form>
+            <form method="GET" style="display: flex; gap: 10px; margin-left: auto;">
+                <input type="text" name="search" placeholder="Search patient..." value="{{ search_query }}">
+                <button type="submit">Search</button>
+            </form>
         </div>
 
         <table>

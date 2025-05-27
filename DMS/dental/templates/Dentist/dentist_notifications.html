@@ -1,14 +1,74 @@
 {% extends "Dentist/dentist_dash.html" %}
 {% block dentistcontent %}
-<div class="main-container">
-    <div class="main-containers first"> Notification</div>
-    <div class="main-containers second">Notification</div>
-    <div class="main-containers third">Notification</div>
-    <div class="main-containers fourth">Notification</div>
+
+ <style>
+    .dentist-notification {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+      text-align: center;
+    }
+
+
+    .dentist-notification .container {
+      max-width: 600px;
+      padding: 20px;
+    }
+
+    .dentist-notification .icon {
+      font-size: 60px;
+      color: #00bfff;
+      margin-bottom: 20px;
+    }
+
+    .dentist-notification h1 {
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+    }
+
+    .dentist-notification p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    .dentist-notification .loader {
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top: 6px solid #00bfff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+
+
+<div class="main-container dentist-notification">
+    <div class="main-containers first"> 
+        <div class="container" style="margin: auto;">
+            <div class="icon">
+            <i class="fas fa-wrench"></i>
+            </div>
+            <h1>We're Fixing Things Up</h1>
+            <p>This page is currently undergoing updates. We'll be back with something awesome soon!</p>
+            <div class="loader" style="margin-bottom: 40px;"></div>
+        </div>
+    </div>
 </div>
 
 <script>
-    document.getElementById('banner-title').innerText = 'Notofication';
+    document.getElementById('banner-title').innerText = 'Notification';
 </script>
 
 {% endblock %}

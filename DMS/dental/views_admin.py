@@ -15,6 +15,8 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.utils.dateparse import parse_datetime
 import json
+from rapidfuzz import fuzz
+
 from django.db.models import Count, Q
 
 
@@ -123,43 +125,65 @@ def admin_appointments(request):
     })
 
 
-@role_required([ 'ADMIN'])
+
+@role_required(['ADMIN'])
 def admin_patient_info_records(request):
     if request.user.role != 'ADMIN':
         return redirect('forbidden')
 
-    filter_option = request.GET.get('filter', 'verified')
-
-    if filter_option == 'complete':
-        patients = Patient.objects.filter(is_verified=False, is_complete=True)
-    elif filter_option == 'incomplete':
-        patients = Patient.objects.filter(is_verified=False, is_complete=False)
-    else:  # Default: verified
-        patients = Patient.objects.filter(is_verified=True, is_complete=True)
-
+    filter_option = request.GET.get('filter', '')
+    search_query = request.GET.get('search', '').strip()
     show_form = False
-    patient_form = PatientForm()        # Initialize by default
-    consent_form = ConsentForm()        # Initialize by default
 
+    patient_form = PatientForm()
+    consent_form = ConsentForm()
+
+    # Step 1: Start with all patients
+    patients = Patient.objects.all()
+
+    # Step 2: Apply filter (verified, complete, incomplete)
+    if filter_option == 'verified':
+        patients = patients.filter(is_verified=True, is_complete=True)
+    elif filter_option == 'complete':
+        patients = patients.filter(is_verified=False, is_complete=True)
+    elif filter_option == 'incomplete':
+        patients = patients.filter(is_verified=False, is_complete=False)
+
+    # Step 3: Fuzzy search
+    if search_query:
+        search_query_lower = search_query.lower()
+        filtered = []
+        for patient in patients:
+            first = patient.first_name.lower()
+            last = patient.last_name.lower()
+            middle = patient.middle_name.lower() if patient.middle_name else ""
+
+            if (
+                fuzz.partial_ratio(first, search_query_lower) > 80 or
+                fuzz.partial_ratio(last, search_query_lower) > 80 or
+                fuzz.partial_ratio(middle, search_query_lower) > 80
+            ):
+                filtered.append(patient)
+        patients = filtered
+
+    # Handle form logic
     if request.method == 'POST':
         if 'add_record' in request.POST:
-            show_form = True  # Only show form
+            show_form = True
         else:
             patient_form = PatientForm(request.POST, request.FILES)
             consent_form = ConsentForm(request.POST)
-
             if patient_form.is_valid() and consent_form.is_valid():
                 if consent_form.cleaned_data['consent_signed']:
                     patient = patient_form.save(commit=False)
                     patient.is_complete = True
                     patient.is_verified = False
                     patient.save()
-                    print(f"Saved patient: {patient.first_name} {patient.last_name}")
                     messages.success(request, "Patient record successfully added.")
                     return redirect('admin_patient_info_records')
                 else:
                     consent_form.add_error('consent_signed', 'Consent must be signed before submission.')
-            show_form = True  # Form is invalid, so show again
+            show_form = True
 
     context = {
         'patients': patients,
@@ -169,7 +193,6 @@ def admin_patient_info_records(request):
         'filter_option': filter_option,
     }
     return render(request, 'Admin/admin_patient_info_records.html', context)
-
 
 
 

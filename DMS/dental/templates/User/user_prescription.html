@@ -1,10 +1,82 @@
 
 {% extends "User/user_dash.html" %}
 {% block usercontent %}
+ <style>
+    .user-prescription {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+      text-align: center;
+    }
+
+
+    .user-prescription .container {
+      max-width: 600px;
+      padding: 20px;
+    }
+
+    .user-prescription .icon {
+      font-size: 60px;
+      color: #00bfff;
+      margin-bottom: 20px;
+    }
+
+    .user-prescription h1 {
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+    }
+
+    .user-prescription p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    .user-prescription .loader {
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top: 6px solid #00bfff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+
+
 
 <div class="main-container"> 
 {% if verification_status == 'verified' %}
-    <div class="main-containers first">Prescriptions</div>
+    <div class="main-container user-prescription">
+        <div class="main-containers first"> 
+            <div class="container" style="margin: auto;">
+                <div class="icon">
+                <i class="fas fa-wrench"></i>
+                </div>
+                <h1>We're Fixing Things Up</h1>
+                <p>This page is currently undergoing updates. We'll be back with something awesome soon!</p>
+                <div class="loader" style="margin-bottom: 40px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
 {% else %}
     {% include 'User/includes/unverified_notice.html' %}
 {% endif %}
