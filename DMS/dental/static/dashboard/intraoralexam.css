@@ -9,7 +9,7 @@
       gap: 2px;
       width: max-content;
       margin: 5px;
-      background-color: white;
+      /* background-color: white; */
       border-radius: 40%;
     }
 
@@ -89,19 +89,21 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        height: auto;
     }
 
 /* ROW 1 */
     .row1 {
-        background-color: rgb(241, 241, 241);
+        /* background-color: rgb(241, 241, 241); */
         display: flex;
         flex-direction: row;
         justify-content: center;
+        height: auto;
     }
 
     .row1-leftside {
         display: flex;
-        flex-direction: row-reverse;
+        /* flex-direction: row-reverse; */
 
     }
 
@@ -113,7 +115,7 @@
 
 /* ROW 2 */
     .row2 {
-        background-color: rgb(241, 241, 241);
+        /* background-color: rgb(241, 241, 241); */
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -121,7 +123,7 @@
 
     .row2-leftside {
         display: flex;
-        flex-direction: row-reverse;
+        /* flex-direction: row-reverse; */
 
     }
 
@@ -132,7 +134,7 @@
     }
 /* ROW 3 */
     .row3 {
-        background-color: rgb(241, 241, 241);
+        /* background-color: rgb(241, 241, 241); */
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -140,7 +142,7 @@
 
     .row3-leftside {
         display: flex;
-        flex-direction: row-reverse;
+        /* flex-direction: row-reverse; */
 
     }
 
@@ -153,7 +155,7 @@
 
 /* ROW 4 */
     .row4 {
-        background-color: rgb(241, 241, 241);
+        /* background-color: rgb(241, 241, 241); */
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -161,7 +163,7 @@
 
     .row4-leftside {
         display: flex;
-        flex-direction: row-reverse;
+        /* flex-direction: row-reverse; */
 
     }
 
@@ -170,3 +172,75 @@
         flex-direction: row;
 
     }
+
+
+
+.tooth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 2px;
+}
+
+.status-field {
+    width: 32px;      /* Match your .tooth width or adjust as needed */
+    height: 32px;     /* Small height for legend */
+    margin-bottom: 2px;
+    text-align: center;
+    font-size: 0.85em;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    padding: 0;
+    box-sizing: border-box;
+    display: block;
+}
+
+.tooth {
+    width: 32px;      /* Match this to .status-field width */
+    height: 32px;
+    margin-bottom: 2px;
+    display: grid;
+    grid-template-areas:
+        ". top ."
+        "left center right"
+        ". bottom .";
+    grid-template-columns: 10px 16px 10px;
+    grid-template-rows: 10px 16px 10px;
+    position: relative;
+}
+
+/* NEW */
+
+.tooth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 2px;
+}
+
+.status-field {
+    width: 32px;     
+    height: 18px;    
+    margin-bottom: 2px;
+    text-align: center;
+    font-size: 0.85em;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    padding: 0;
+    box-sizing: border-box;
+    display: block;
+}
+
+.tooth {
+    width: 32px;    
+    height: 32px;
+    margin-bottom: 2px;
+    display: grid;
+    grid-template-areas:
+        ". top ."
+        "left center right"
+        ". bottom .";
+    grid-template-columns: 10px 12px 10px;
+    grid-template-rows: 10px 12px 10px;
+    position: relative;
+}

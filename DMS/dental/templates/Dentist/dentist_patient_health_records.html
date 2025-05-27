@@ -1,5 +1,7 @@
 {% extends "Dentist/dentist_dash.html" %}
+{% load tooth_extras %}
 {% block dentistcontent %}
+
 
 <style>
 .main-container {
@@ -92,6 +94,108 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* TOOTH CSS */
+
+.tooth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 2px;
+}
+
+.status-field {
+    width: 40px;
+    height: 32px;
+    margin-bottom: 2px;
+    text-align: center;
+    font-size: 1em;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    padding: 0;
+    box-sizing: border-box;
+    display: block;
+    background: #fff;
+    text-transform: uppercase;
+}
+
+.tooth {
+    width: 32px;    
+    height: 32px;
+    /* margin-bottom: 10px; */
+    display: grid;
+    grid-template-areas:
+        ". top ."
+        "left center right"
+        ". bottom .";
+    grid-template-columns: 8px 16px 8px;
+    grid-template-rows: 8px 16px 8px;
+    position: relative;
+}
+
+.row1 .tooth {
+    margin-bottom: 20px;
+}
+
+
+.row2 .tooth {
+    margin-bottom: 20px;
+}
+
+.row3 .tooth {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+
+.row4 .tooth {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+
+.row1, .row2, .row3, .row4 {
+    background-color: white;
+}
+
+.vertical-separator {
+    margin-left: 10px;
+}
+
+/* COLOR PICKER CSS */
+.color-picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+.color-btn {
+    width: 60px;
+    height: 28px;
+    border-radius: 4px;
+    border: 2px solid #888;
+    cursor: pointer;
+    font-weight: bold;
+    outline: none;
+    transition: border 0.2s;
+}
+.color-btn.selected {
+    border: 3px solid #222;
+}
+
+.status-field::-webkit-calendar-picker-indicator,
+.status-field::-webkit-inner-spin-button,
+.status-field::-webkit-outer-spin-button {
+    display: none;
+    -webkit-appearance: none;
+}
+
+input::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+
+
 
 </style>
 
@@ -209,638 +313,388 @@
     {% endif %}
 
 
-    {% if selected_patient and intraoralexamination_form %}
+    {% if selected_patient and intraoralexamination_form and not viewing_intraoral %}
     <div class="main-containers">
         <h2 class="record-title">Intraoral Examination for {{ selected_patient.first_name }} {{ selected_patient.last_name }}</h2>
+        <!-- Example for row1-leftside -->
+
+        <div class="color-picker">
+            <span>Select color:</span>
+            <button type="button" class="color-btn" data-color="white" style="background:white; border:1px solid #888;">White</button>
+            <button type="button" class="color-btn" data-color="blue" style="background:blue; color:white;">Blue</button>
+            <button type="button" class="color-btn" data-color="red" style="background:red; color:white;">Red</button>
+        </div>
+
+        <datalist id="legend-conditions">
+            <option value="/">
+            <option value="D">
+            <option value="M">
+            <option value="MO">
+            <option value="Im">
+            <option value="Sp">
+            <option value="Rf">
+            <option value="Un">
+
+        </datalist>
+
+
+        <datalist id="legend-restore-surgery">
+            <option value="Am">
+            <option value="Co">
+            <option value="JC">
+            <option value="Ab">
+            <option value="Att">
+            <option value="P">
+            <option value="In">
+            <option value="Imp">
+            <option value="S">
+            <option value="Rm">
+            <option value="X">
+            <option value="XO">
+        </datalist>
+
+
         <div class="row1">
             <div class="row1-leftside">
-
+                {% for tooth in row1_left %}
                 <div class="tooth-container">
-                    <h2>51</h2>
+                    <input class="status-field" type="text" maxlength="3" list="legend-restore-surgery">
+                    <input class="status-field" type="text" maxlength="3" list="legend-conditions">
+                    
+                    <h2>{{ tooth }}</h2>
                     <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
+                        <div class="surface top"></div>
+                        <div class="surface left"></div>
+                        <div class="surface center"></div>
+                        <div class="surface right"></div>
+                        <div class="surface bottom"></div>
                     </div>
                 </div>
-
-                <div class="tooth-container">
-                    <h2>52</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>53</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>54</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>55</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-            
+                {% endfor %}
             </div>
             <div class="vertical-separator"></div>
             <div class="row1-rightside">
-
-
+                {% for tooth in row1_right %}
                 <div class="tooth-container">
-                    <h2>61</h2>
+                    <input class="status-field" type="text" maxlength="3" list="legend-restore-surgery">
+                    <input class="status-field" type="text" maxlength="3" list="legend-conditions">
+                    <h2>{{ tooth }}</h2>
                     <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
+                        <div class="surface top"></div>
+                        <div class="surface left"></div>
+                        <div class="surface center"></div>
+                        <div class="surface right"></div>
+                        <div class="surface bottom"></div>
                     </div>
                 </div>
-
-                <div class="tooth-container">
-                    <h2>62</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>63</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>64</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>65</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
+                {% endfor %}
             </div>
         </div>
-
-
-
         <div class="row2">
             <div class="row2-leftside">
-
+                {% for tooth in row2_left %}
                 <div class="tooth-container">
-                    <h2>11</h2>
+                    <input class="status-field" type="text" maxlength="3" list="legend-restore-surgery">
+                    <input class="status-field" type="text" maxlength="3" list="legend-conditions">
+                    <h2>{{ tooth }}</h2>
                     <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
+                        <div class="surface top"></div>
+                        <div class="surface left"></div>
+                        <div class="surface center"></div>
+                        <div class="surface right"></div>
+                        <div class="surface bottom"></div>
                     </div>
                 </div>
-
-                <div class="tooth-container">
-                    <h2>12</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>13</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>14</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-                
-                <div class="tooth-container">
-                    <h2>15</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>16</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>17</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>18</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-            
+                {% endfor %}
             </div>
             <div class="vertical-separator"></div>
             <div class="row2-rightside">
-
-
+                {% for tooth in row2_right %}
                 <div class="tooth-container">
-                    <h2>21</h2>
+                    <input class="status-field" type="text" maxlength="3" list="legend-restore-surgery">
+                    <input class="status-field" type="text" maxlength="3" list="legend-conditions">
+                    <h2>{{ tooth }}</h2>
                     <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
+                        <div class="surface top"></div>
+                        <div class="surface left"></div>
+                        <div class="surface center"></div>
+                        <div class="surface right"></div>
+                        <div class="surface bottom"></div>
                     </div>
                 </div>
-
-                <div class="tooth-container">
-                    <h2>22</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>23</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>24</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>25</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>26</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>27</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
-                <div class="tooth-container">
-                    <h2>28</h2>
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                </div>
-
+                {% endfor %}
             </div>
         </div>
 
         <div class="horizontal-separator"></div>
 
-
         <div class="row3">
             <div class="row3-leftside">
-
+                {% for tooth in row3_left %}
                 <div class="tooth-container">
                     <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
+                        <div class="surface top"></div>
+                        <div class="surface left"></div>
+                        <div class="surface center"></div>
+                        <div class="surface right"></div>
+                        <div class="surface bottom"></div>
                     </div>
-                    <h2>41</h2>
+                    <h2>{{ tooth }}</h2>
+                    <input class="status-field" type="text" maxlength="3" list="legend-conditions">
+                    <input class="status-field" type="text" maxlength="3" list="legend-restore-surgery">
                 </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>42</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>43</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>44</h2>
-                </div>
-                
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>45</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>46</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>47</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>48</h2>
-                </div>
-
-            
+                {% endfor %}
             </div>
             <div class="vertical-separator"></div>
             <div class="row3-rightside">
-
-
+                {% for tooth in row3_right %}
                 <div class="tooth-container">
+                    
                     <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
+                        <div class="surface top"></div>
+                        <div class="surface left"></div>
+                        <div class="surface center"></div>
+                        <div class="surface right"></div>
+                        <div class="surface bottom"></div>
                     </div>
-                    <h2>31</h2>
+                    <h2>{{ tooth }}</h2>
+                    <input class="status-field" type="text" maxlength="3" list="legend-conditions">
+                    <input class="status-field" type="text" maxlength="3" list="legend-restore-surgery">
                 </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>32</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>33</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>34</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>35</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>36</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>37</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>38</h2>
-                </div>
-
+                {% endfor %}
             </div>
         </div>
-
-
-
 
         <div class="row4">
             <div class="row4-leftside">
-
+                {% for tooth in row4_left %}
                 <div class="tooth-container">
+                    
                     <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
+                        <div class="surface top"></div>
+                        <div class="surface left"></div>
+                        <div class="surface center"></div>
+                        <div class="surface right"></div>
+                        <div class="surface bottom"></div>
                     </div>
-                    <h2>81</h2>
+                    <h2>{{ tooth }}</h2>
+                    <input class="status-field" type="text" maxlength="3" list="legend-conditions">
+                    <input class="status-field" type="text" maxlength="3" list="legend-restore-surgery">
                 </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>82</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>83</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>84</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>85</h2>
-                </div>
-
-            
+                {% endfor %}
             </div>
             <div class="vertical-separator"></div>
             <div class="row4-rightside">
-
-
+                {% for tooth in row4_right %}
                 <div class="tooth-container">
+                    
                     <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
+                        <div class="surface top"></div>
+                        <div class="surface left"></div>
+                        <div class="surface center"></div>
+                        <div class="surface right"></div>
+                        <div class="surface bottom"></div>
                     </div>
-                    <h2>71</h2>
+                    <h2>{{ tooth }}</h2>
+                    <input class="status-field" type="text" maxlength="3" list="legend-conditions">
+                    <input class="status-field" type="text" maxlength="3" list="legend-restore-surgery">
                 </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>72</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>73</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>74</h2>
-                </div>
-
-                <div class="tooth-container">
-                    <div class="tooth">
-                            <div class="surface top"></div>
-                            <div class="surface left"></div>
-                            <div class="surface center"></div>
-                            <div class="surface right"></div>
-                            <div class="surface bottom"></div>
-                    </div>
-                    <h2>75</h2>
-                </div>
-
+                {% endfor %}
             </div>
         </div>
+
+        <button type="button" onclick="saveToothChartJSON()">Save Chart as JSON</button>
+
     </div>
     {% endif %}
+
+
+
+
+
+
+
+
+{% if selected_patient and viewing_intraoral %}
+<div class="main-containers">
+    <h2 class="record-title">Intraoral Examination for {{ selected_patient.first_name }} {{ selected_patient.last_name }}</h2>
+    {% with exam=selected_patient.intraoralexamination %}
+    {% if exam %}
+        {% with tooth_lookup=exam.teeth|dictsort:"tooth" %}
+        <div class="row1">
+            <div class="row1-leftside">
+                {% for tooth in row1_left %}
+                {% with t=exam.teeth|get_tooth:tooth %}
+                <div class="tooth-container">
+                    
+                    <input class="status-field" type="text" value="{{ t.restoration_surgery }}" readonly>
+                    <input class="status-field" type="text" value="{{ t.condition }}" readonly>
+                    <h2>{{ tooth }}</h2>
+                    <div class="tooth">
+                        <div class="surface top" style="background:{{ t.color.0|default:'white' }}"></div>
+                        <div class="surface left" style="background:{{ t.color.1|default:'white' }}"></div>
+                        <div class="surface center" style="background:{{ t.color.2|default:'white' }}"></div>
+                        <div class="surface right" style="background:{{ t.color.3|default:'white' }}"></div>
+                        <div class="surface bottom" style="background:{{ t.color.4|default:'white' }}"></div>
+                    </div>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+            <div class="vertical-separator"></div>
+            <div class="row1-rightside">
+                {% for tooth in row1_right %}
+                {% with t=exam.teeth|get_tooth:tooth %}
+                <div class="tooth-container">
+                    
+                    <input class="status-field" type="text" value="{{ t.restoration_surgery }}" readonly>
+                    <input class="status-field" type="text" value="{{ t.condition }}" readonly>
+                    <h2>{{ tooth }}</h2>
+                    <div class="tooth">
+                        <div class="surface top" style="background:{{ t.color.0|default:'white' }}"></div>
+                        <div class="surface left" style="background:{{ t.color.1|default:'white' }}"></div>
+                        <div class="surface center" style="background:{{ t.color.2|default:'white' }}"></div>
+                        <div class="surface right" style="background:{{ t.color.3|default:'white' }}"></div>
+                        <div class="surface bottom" style="background:{{ t.color.4|default:'white' }}"></div>
+                    </div>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row2">
+            <div class="row2-leftside">
+                {% for tooth in row2_left %}
+                {% with t=exam.teeth|get_tooth:tooth %}
+                <div class="tooth-container">
+                    
+                    <input class="status-field" type="text" value="{{ t.restoration_surgery }}" readonly>
+                    <input class="status-field" type="text" value="{{ t.condition }}" readonly>
+                    <h2>{{ tooth }}</h2>
+                    <div class="tooth">
+                        <div class="surface top" style="background:{{ t.color.0|default:'white' }}"></div>
+                        <div class="surface left" style="background:{{ t.color.1|default:'white' }}"></div>
+                        <div class="surface center" style="background:{{ t.color.2|default:'white' }}"></div>
+                        <div class="surface right" style="background:{{ t.color.3|default:'white' }}"></div>
+                        <div class="surface bottom" style="background:{{ t.color.4|default:'white' }}"></div>
+                    </div>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+            <div class="vertical-separator"></div>
+            <div class="row2-rightside">
+                {% for tooth in row2_right %}
+                {% with t=exam.teeth|get_tooth:tooth %}
+                <div class="tooth-container">
+                    
+                    <input class="status-field" type="text" value="{{ t.restoration_surgery }}" readonly>
+                    <input class="status-field" type="text" value="{{ t.condition }}" readonly>
+                    <h2>{{ tooth }}</h2>
+                    <div class="tooth">
+                        <div class="surface top" style="background:{{ t.color.0|default:'white' }}"></div>
+                        <div class="surface left" style="background:{{ t.color.1|default:'white' }}"></div>
+                        <div class="surface center" style="background:{{ t.color.2|default:'white' }}"></div>
+                        <div class="surface right" style="background:{{ t.color.3|default:'white' }}"></div>
+                        <div class="surface bottom" style="background:{{ t.color.4|default:'white' }}"></div>
+                    </div>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="horizontal-separator"></div>
+        <div class="row3">
+            <div class="row3-leftside">
+                {% for tooth in row3_left %}
+                {% with t=exam.teeth|get_tooth:tooth %}
+                <div class="tooth-container">
+                    
+                    <div class="tooth">
+                        <div class="surface top" style="background:{{ t.color.0|default:'white' }}"></div>
+                        <div class="surface left" style="background:{{ t.color.1|default:'white' }}"></div>
+                        <div class="surface center" style="background:{{ t.color.2|default:'white' }}"></div>
+                        <div class="surface right" style="background:{{ t.color.3|default:'white' }}"></div>
+                        <div class="surface bottom" style="background:{{ t.color.4|default:'white' }}"></div>
+                    </div>
+                    <h2>{{ tooth }}</h2>
+                    <input class="status-field" type="text" value="{{ t.condition }}" readonly>
+                    <input class="status-field" type="text" value="{{ t.restoration_surgery }}" readonly>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+            <div class="vertical-separator"></div>
+            <div class="row3-rightside">
+                {% for tooth in row3_right %}
+                {% with t=exam.teeth|get_tooth:tooth %}
+                <div class="tooth-container">
+                    
+                    <div class="tooth">
+                        <div class="surface top" style="background:{{ t.color.0|default:'white' }}"></div>
+                        <div class="surface left" style="background:{{ t.color.1|default:'white' }}"></div>
+                        <div class="surface center" style="background:{{ t.color.2|default:'white' }}"></div>
+                        <div class="surface right" style="background:{{ t.color.3|default:'white' }}"></div>
+                        <div class="surface bottom" style="background:{{ t.color.4|default:'white' }}"></div>
+                    </div>
+                    <h2>{{ tooth }}</h2>
+                    <input class="status-field" type="text" value="{{ t.condition }}" readonly>
+                    <input class="status-field" type="text" value="{{ t.restoration_surgery }}" readonly>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row4">
+            <div class="row4-leftside">
+                {% for tooth in row4_left %}
+                {% with t=exam.teeth|get_tooth:tooth %}
+                <div class="tooth-container">
+                    
+                    <div class="tooth">
+                        <div class="surface top" style="background:{{ t.color.0|default:'white' }}"></div>
+                        <div class="surface left" style="background:{{ t.color.1|default:'white' }}"></div>
+                        <div class="surface center" style="background:{{ t.color.2|default:'white' }}"></div>
+                        <div class="surface right" style="background:{{ t.color.3|default:'white' }}"></div>
+                        <div class="surface bottom" style="background:{{ t.color.4|default:'white' }}"></div>
+                    </div>
+                    <h2>{{ tooth }}</h2>
+                    <input class="status-field" type="text" value="{{ t.condition }}" readonly>
+                    <input class="status-field" type="text" value="{{ t.restoration_surgery }}" readonly>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+            <div class="vertical-separator"></div>
+            <div class="row4-rightside">
+                {% for tooth in row4_right %}
+                {% with t=exam.teeth|get_tooth:tooth %}
+                <div class="tooth-container">
+                    
+                    <div class="tooth">
+                        <div class="surface top" style="background:{{ t.color.0|default:'white' }}"></div>
+                        <div class="surface left" style="background:{{ t.color.1|default:'white' }}"></div>
+                        <div class="surface center" style="background:{{ t.color.2|default:'white' }}"></div>
+                        <div class="surface right" style="background:{{ t.color.3|default:'white' }}"></div>
+                        <div class="surface bottom" style="background:{{ t.color.4|default:'white' }}"></div>
+                    </div>
+                    <h2>{{ tooth }}</h2>
+                    <input class="status-field" type="text" value="{{ t.condition }}" readonly>
+                    <input class="status-field" type="text" value="{{ t.restoration_surgery }}" readonly>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endwith %}
+    {% else %}
+        <p>No intraoral exam data available.</p>
+    {% endif %}
+    {% endwith %}
+</div>
+{% endif %}
+
+
 
     {% if selected_patient and show_treatment_table %}
     <div class="main-containers">
@@ -902,10 +756,11 @@
             <p style="color:green;">{{ message }}</p>
         {% endif %}
 
-        <form method="POST">
+        <form method="POST" id="intraoral-exam-form">
             {% csrf_token %}
             <input type="hidden" name="patient_id" value="{{ selected_patient.id }}">
             {{ intraoralexamination_form.as_p }}
+            <input type="hidden" name="teeth_json" id="teeth-json-field">
             <button type="submit" name="submit_exam">Submit Exam</button>
         </form>
     </div>
@@ -927,4 +782,133 @@
 
 </div>
 
+
+<script>
+let selectedColor = "white";
+
+// Highlight the selected button
+document.querySelectorAll('.color-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedColor = this.getAttribute('data-color');
+    });
+});
+
+// Set default selected
+document.querySelector('.color-btn[data-color="white"]').classList.add('selected');
+
+// Change surface color on click
+document.querySelectorAll('.surface').forEach(surface => {
+    surface.addEventListener('click', function() {
+        this.style.backgroundColor = selectedColor;
+    });
+});
+</script>
+
+
+<script>
+function saveToothChartJSON() {
+    // Select all tooth containers
+    const teeth = document.querySelectorAll('.tooth-container');
+    const data = [];
+
+    teeth.forEach(container => {
+        // Get tooth number
+        const toothNum = container.querySelector('h2') ? container.querySelector('h2').innerText.trim() : "";
+
+        // Get surface colors in order: top, left, center, right, bottom
+        const surfaces = ['top', 'left', 'center', 'right', 'bottom'];
+        const colorArr = surfaces.map(surf =>
+            container.querySelector('.surface.' + surf)
+                ? container.querySelector('.surface.' + surf).style.backgroundColor || "white"
+                : "white"
+        );
+
+        // Get input values (condition and restoration_surgery)
+        // Assumes: condition is the input nearest h2, restoration_surgery is the other
+        const inputs = container.querySelectorAll('input.status-field');
+        let condition = "", restoration_surgery = "";
+        if (inputs.length === 2) {
+            // Find which input is closer to h2 (condition)
+            const h2 = container.querySelector('h2');
+            const h2Index = Array.from(container.children).indexOf(h2);
+            const input1Index = Array.from(container.children).indexOf(inputs[0]);
+            const input2Index = Array.from(container.children).indexOf(inputs[1]);
+            if (Math.abs(h2Index - input1Index) < Math.abs(h2Index - input2Index)) {
+                condition = inputs[0].value.trim();
+                restoration_surgery = inputs[1].value.trim();
+            } else {
+                condition = inputs[1].value.trim();
+                restoration_surgery = inputs[0].value.trim();
+            }
+        }
+
+        data.push({
+            tooth: toothNum,
+            color: colorArr,
+            condition: condition,
+            restoration_surgery: restoration_surgery,
+        });
+    });
+
+    // Output as JSON (show in console or download)
+    const json = JSON.stringify(data, null, 2);
+    console.log(json);
+
+    // Optional: Download as file
+    const blob = new Blob([json], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "tooth_chart.json";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+
+<script>
+document.getElementById('intraoral-exam-form').addEventListener('submit', function(e) {
+    const teeth = document.querySelectorAll('.tooth-container');
+    const data = [];
+
+    teeth.forEach(container => {
+        const toothNum = container.querySelector('h2') ? container.querySelector('h2').innerText.trim() : "";
+        const surfaces = ['top', 'left', 'center', 'right', 'bottom'];
+        const colorArr = surfaces.map(surf =>
+            container.querySelector('.surface.' + surf)
+                ? container.querySelector('.surface.' + surf).style.backgroundColor || "white"
+                : "white"
+        );
+        const inputs = container.querySelectorAll('input.status-field');
+        let condition = "", restoration_surgery = "";
+        if (inputs.length === 2) {
+            const h2 = container.querySelector('h2');
+            const h2Index = Array.from(container.children).indexOf(h2);
+            const input1Index = Array.from(container.children).indexOf(inputs[0]);
+            const input2Index = Array.from(container.children).indexOf(inputs[1]);
+            if (Math.abs(h2Index - input1Index) < Math.abs(h2Index - input2Index)) {
+                condition = inputs[0].value.trim();
+                restoration_surgery = inputs[1].value.trim();
+            } else {
+                condition = inputs[1].value.trim();
+                restoration_surgery = inputs[0].value.trim();
+            }
+        }
+        data.push({
+            tooth: toothNum,
+            color: colorArr,
+            condition: condition,
+            restoration_surgery: restoration_surgery
+        });
+    });
+
+    document.getElementById('teeth-json-field').value = JSON.stringify(data);
+});
+</script>
+
+
+
 {% endblock %}
+
+

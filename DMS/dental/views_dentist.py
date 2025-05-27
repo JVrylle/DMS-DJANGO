@@ -4,6 +4,7 @@ from django.template import loader
 from .decorators import role_required
 from .forms import  IntraoralExaminationForm, TreatmentRecordForm
 from .models import Patient, IntraoralExamination, TreatmentRecord
+import json
 
 
 # DENTIST
@@ -70,6 +71,11 @@ def dentist_patient_health_records(request):
             if intraoral_form.is_valid():
                 exam = intraoral_form.save(commit=False)
                 exam.patient = selected_patient
+
+                # Save the teeth JSON from the hidden field
+                teeth_json = request.POST.get('teeth_json')
+                if teeth_json:
+                    exam.teeth = json.loads(teeth_json)
                 exam.save()
                 message = "Intraoral examination submitted successfully."
                 intraoral_form = None
@@ -117,6 +123,14 @@ def dentist_patient_health_records(request):
         'show_patient_details': show_patient_details, 
         'show_treatment_table': show_treatment_table,
         'viewing_intraoral': viewing_intraoral,
+        'row1_left': [51, 52, 53, 54, 55],
+        'row1_right': [61, 62, 63, 64, 65],
+        'row2_left': [11, 12, 13, 14, 15, 16, 17, 18],
+        'row2_right': [21, 22, 23, 24, 25, 26, 27, 28],
+        'row3_left': [41, 42, 43, 44, 45, 46, 47, 48],
+        'row3_right': [31, 32, 33, 34, 35, 36, 37, 38],
+        'row4_left': [81, 82, 83, 84, 85],
+        'row4_right': [71, 72, 73, 74, 75],
     }
     return render(request, 'Dentist/dentist_patient_health_records.html', context)
 
