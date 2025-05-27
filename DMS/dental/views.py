@@ -14,7 +14,7 @@ from .models import Patient, IntraoralExamination
 
 # WEBSITE
 def website(request):
-    return render(request, 'website.html')
+    return render(request, 'webs.html')
 
 # USER
 # @role_required(['USER'])

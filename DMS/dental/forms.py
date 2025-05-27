@@ -10,6 +10,60 @@ from datetime import datetime, date, time as time_obj
 from django.core.exceptions import ValidationError
 
 
+yes_no = [
+    ('Yes', 'Yes'),
+    ('No', 'No'),
+]
+
+allergies = [
+    ('Local Anesthetic', 'Local Anesthetic (e.g., Lidocaine)'),
+    ('Penicillin, Antibiotics', 'Penicillin, Antibiotics'),
+    ('Sulfa Drugs', 'Sulfa Drugs'),
+    ('Aspirin', 'Aspirin'),
+    ('Latex', 'Latex'),
+    ('Others', 'Others')
+]
+
+diseases = [
+    ('High Blood Pressure', 'High Blood Pressure'),
+    ('Low Blood Pressure', 'Low Blood Pressure'),
+    ('Epilepsy/Convulsions', 'Epilepsy / Convulsions'),
+    ('AIDS or HIV Infection', 'AIDS or HIV Infection'),
+    ('Sexually Transmitted Disease', 'Sexually Transmitted Disease'),
+    ('Stomach Troubles / Ulcers', 'Stomach Troubles / Ulcers'),
+    ('Fainting Seizures', 'Fainting Seizures'),
+    ('Rapid Weight Loss', 'Rapid Weight Loss'),
+    ('Radiation Therapy', 'Radiation Therapy'),
+    ('Joint Replacement / Implant', 'Joint Replacement / Implant'),
+    ('Heart Surgery', 'Heart Surgery'),
+    ('Heart Attack', 'Heart Attack'),
+    ('Thyroid Problem', 'Thyroid Problem'),
+    ('Heart Disease', 'Heart Disease'),
+    ('Heart Murmur', 'Heart Murmur'),
+    ('Hepatitis / Liver Disease', 'Hepatitis / Liver Disease'),
+    ('Rheumatic Fever', 'Rheumatic Fever'),
+    ('Hay Fever / Allergies', 'Hay Fever / Allergies'),
+    ('Respiratory Problems', 'Respiratory Problems'),
+    ('Hepatitis / Jaundice', 'Hepatitis / Jaundice'),
+    ('Tuberculosis', 'Tuberculosis'),
+    ('Swollen Ankles', 'Swollen Ankles'),
+    ('Kidney Disease', 'Kidney Disease'),
+    ('Diabetes', 'Diabetes'),
+    ('Chest Pain', 'Chest Pain'),
+    ('Stroke', 'Stroke'),
+    ('Cancer / Tumors', 'Cancer / Tumors'),
+    ('Anemia', 'Anemia'),
+    ('Angina', 'Angina'),
+    ('Asthma', 'Asthma'),
+    ('Emphysema', 'Emphysema'),
+    ('Bleeding Problems', 'Bleeding Problems'),
+    ('Blood Diseases', 'Blood Diseases'),
+    ('Head Injuries', 'Head Injuries'),
+    ('Arthritis / Rheumatism', 'Arthritis / Rheumatism'),
+]
+
+
+
 
 class PatientInformationRecordForm(forms.ModelForm):
     class Meta:
@@ -17,7 +71,7 @@ class PatientInformationRecordForm(forms.ModelForm):
         fields = [
             'last_name', 'first_name', 'middle_name', 'nickname',
             'birthdate', 'age', 'sex', 'religion', 'nationality',
-            'home_address', 'occupation', 'dental_insurance',
+            'home_address', 'occupation','philhealth_no', 'dental_insurance',
             'dental_insurance_effective_date',
             'for_minors_parent_or_guardian_name',
             'for_minors_parent_or_guardian_occupation',
@@ -26,21 +80,70 @@ class PatientInformationRecordForm(forms.ModelForm):
         ]
 
 
-        sex_choices = [
-            ('Male','Male'),
-            ('Female','Female'),
-        ]     
-
-
         widgets = {
             'birthdate': forms.DateInput(attrs={'type': 'date'}),
             'dental_insurance_effective_date': forms.DateInput(attrs={'type': 'date'}),
-            'sex': forms.RadioSelect(choices=sex_choices),
         }
+
+
+        
+    def __init__(self, *args, **kwargs):
+        super(PatientInformationRecordForm, self).__init__(*args, **kwargs)
+        
+        # Define custom labels for your fields
+        custom_labels = {
+            'last_name': 'Last Name',
+            'first_name': 'First Name',
+            'middle_name': 'Middle Name',
+            'nickname': 'Nickname',
+            'birthdate': 'Date of Birth',
+            'age': 'Age',
+            'sex': 'Sex',
+            'religion': 'Religion',
+            'nationality': 'Nationality',
+            'home_address': 'Home Address',
+            'occupation': 'Occupation',
+            'philhealth_no': 'PhilHealth No.',
+            'dental_insurance': 'Dental Insurance Provider',
+            'dental_insurance_effective_date': 'Insurance Effective Date',
+            'for_minors_parent_or_guardian_name': 'For Minors: Parent/Guardian Name',
+            'for_minors_parent_or_guardian_occupation': 'For Minors: Parent/Guardian Occupation',
+            'home_no': 'Home Phone Number',
+            'office_no': 'Office Phone Number',
+            'fax_no': 'Fax Number',
+            'cel_mobile_no': 'Mobile Number',
+            'email': 'Email Address',
+            'referral_thanks': 'Whom may we thank for referring you?',
+            'dental_consultation_reason': 'What is your reason for dental consultation?',
+
+        }
+
+        #  Apply the custom labels
+        for field_name, label in custom_labels.items():
+            if field_name in self.fields:
+                self.fields[field_name].label = label
+
 
 
 
 class HealthInformationRecordForm(forms.ModelForm):
+    mi_is_allergic = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=Patient.allergies,
+        label='Allergies (Check all that apply)'
+    )
+
+    mi_select_disease = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=Patient.diseases,
+        label='Do you have or have you had any of the following?'
+    )
+
+
+
+
     class Meta:
         model = Patient
         fields = [
@@ -71,78 +174,83 @@ class HealthInformationRecordForm(forms.ModelForm):
                   'mi_bloodpressure',
                   'mi_select_disease',
                   'mi_select_disease_others',
+                  'digital_xrays',                 
+                  'patient_pictures',              
+                  'patient_signatures',     
         ]
 
-        allergies = [
-            ('LOCAL ANESTHETIC','Local Anesthetic (ex. Lidocaine)'),
-            ('PENICILIN, ANTIBIOTICS','Penicilin, Antibiotics'),
-            ('SULFA DRUGS','Sulfa Drugs'),
-            ('ASPIRIN','Aspirin'),
-            ('LATEX','Latex'),
-            ('OTHERS','Others')
-        ]
-
-        yes_no = [
-            ('Yes','Yes'),
-            ('Yes','No'),
-        ]
-
-        diseases = [
-            ('HIGH BLOOD PRESSURE','High Blood Pressure'),
-            ('LOW BLOOD PRESSURE','Low Blood Pressure'),
-            ('EPILEPSY/CONVULSIONS','Epilepsy / Conculsions'),
-            ('AIDS OR HIV INFECTION','AIDS or HIV Infection'),
-            ('SEXUALLY TRANSMITTED DISEASE','Sexually Transmitted Disease'),
-            ('STOMACH TROUBLES / ULCERS','Stomach Troubles / Ulcers'),
-            ('FAINTING SEIZURES','Fainting Seizures'),
-            ('RAPID WEIGHT LOSS','Rapid Weight Loss'),
-            ('RADIATION THERAPY','Radiation Therapy'),
-            ('JOINT REPLACEMENT / IMPLANT','Joint Replacement / Implant'),
-            ('HEART SURGERY','Heart Surgery'),
-            ('HEART ATTACK','Heart Attack'),
-            ('THYROID PROBLEM','Thyroid Problem'),
-            ('HEART DISEASE','Heart Disease'),
-            ('HEART MURMUR','Heart Murmur'),
-            ('HEPATITIS / LIVER DISEASE','Hepatitis / Liver Disease'),
-            ('RHEUMATIC FEVER','Rheumatic Fever'),
-            ('HAY FEVER / ALLERGIES','Hay Fever / Allergies'),
-            ('RESPIRATORY PROBLEMS','Respiratory Problems'),
-            ('HEPATITIS / JAUNDICE','Hepatitis / Jaundice'),
-            ('TUBERCULOSIS','Tuberculosis'),
-            ('SWOLLEN ANKLES','Swollen Ankles'),
-            ('KIDNEY DISEASE','Kidney Disease'),
-            ('DIABETES','Diabetes'),
-            ('CHEST PAIN','Chest Pain'),
-            ('STROKE','Stroke'),
-            ('CANCER / TUMORS','Cancer / Trumors'),
-            ('ANEMIA','Anemia'),
-            ('ANGINA','Angina'),
-            ('ASTHMA','Asthma'),
-            ('EMPHYSEMA','Empysema'),
-            ('BLEEDING PROBLEMS','Bleeding Problems'),
-            ('BLOOD DISEASES','Blood Diseases'),
-            ('HEAD INJURIES','Head Injuries'),
-            ('ARTHRITIS / RHEUMATISM','Arthritis / Rheumatism'),
-        ]
-
-
-
+        help_texts = {
+            'mi_isgoodhealth': 'Select "Yes" if you consider yourself to be in good general health.',
+            'mi_is_under_medical_treatment': 'Select "Yes" if you are currently undergoing any kind of medical treatment.',
+            'mi_is_under_medical_treatment_followup': 'Please provide details about the treatment you are currently receiving.',
+            'mi_is_serious_illness': 'Select "Yes" if you have had any serious illness in the past.',
+            'mi_is_serious_illness_followup': 'Mention the type of illness and any treatment received.',
+            'mi_is_hospitalized': 'Select "Yes" if you have been hospitalized recently.',
+            'mi_is_hospitalized_followup': 'State the reason for hospitalization and the date if possible.',
+            'mi_is_taking_prescription': 'Select "Yes" if you are currently taking any prescription medications.',
+            'mi_is_taking_prescription_followup': 'List all the prescription medications you are taking.',
+            'mi_is_using_tobacco': 'Select "Yes" if you use tobacco products such as cigarettes or chewing tobacco.',
+            'mi_is_using_dangerous_drugs': 'Select "Yes" if you are using or have used any dangerous drugs or substances.',
+            'mi_is_allergic': 'Select "Yes" if you are allergic to any medication, food, or other substances.',
+            'mi_is_allergic_others': 'List any other allergies not mentioned in the choices above.',
+            'mi_bleeding_time': 'Enter your average bleeding time (e.g., for minor cuts). Useful for assessing clotting issues.',
+            'mi_is_pregnant': 'Select "Yes" if you are currently pregnant.',
+            'mi_is_nursing': 'Select "Yes" if you are currently breastfeeding.',
+            'mi_is_birth_control': 'Select "Yes" if you are currently using any form of birth control.',
+            'mi_bloodtype': 'Enter your blood type if known (e.g., A+, O-, etc.).',
+            'mi_bloodpressure': 'Enter your usual blood pressure reading (e.g., 120/80).',
+            'mi_select_disease': 'Check any of the listed diseases or conditions that you have had or currently have.',
+            'mi_select_disease_others': 'List any diseases or conditions not covered in the options above.',
+        }
 
 
         widgets = {
-            'mi_isgoodhealth': forms.RadioSelect(choices=yes_no),
-            'mi_is_under_medical_treatment': forms.RadioSelect(choices=yes_no),
-            'mi_is_serious_illness': forms.RadioSelect(choices=yes_no),   
-            'mi_is_hospitalized': forms.RadioSelect(choices=yes_no),
-            'mi_is_taking_prescription': forms.RadioSelect(choices=yes_no),
-            'mi_is_using_tobacco': forms.RadioSelect(choices=yes_no),
-            'mi_is_using_dangerous_drugs': forms.RadioSelect(choices=yes_no),
-            'mi_is_allergic': forms.CheckboxSelectMultiple(choices=allergies),
-            'mi_is_pregnant': forms.RadioSelect(choices=yes_no),
-            'mi_is_nursing': forms.RadioSelect(choices=yes_no),
-            'mi_is_birth_control': forms.RadioSelect(choices=yes_no),
-            'mi_select_disease':forms.CheckboxSelectMultiple(choices=diseases),
+            'last_dental_visit': forms.DateInput(attrs={'type': 'date'}),
         }
+
+
+    def __init__(self, *args, **kwargs):
+        super(HealthInformationRecordForm, self).__init__(*args, **kwargs)
+        self.fields['mi_is_allergic'].initial = self.instance.mi_is_allergic or []
+        self.fields['mi_select_disease'].initial = self.instance.mi_select_disease or []
+
+        custom_labels = {
+            'prev_dentist': 'Previous Dentist: Dr.',
+            'last_dental_visit': 'Last Dental visit',
+            'physician_name': 'Physician Name',
+            'physician_specialty': 'Physician Specialty',
+            'physician_office_address': 'Physician Office Address:',
+            'physician_office_no':'Physician Office Number:',
+            'mi_isgoodhealth': 'Are you in good health?',
+            'mi_is_under_medical_treatment': 'Under medical treatment?',
+            'mi_is_under_medical_treatment_followup': 'If yes, explain',
+            'mi_is_serious_illness': 'Any serious illness?',
+            'mi_is_serious_illness_followup': 'If yes, explain',
+            'mi_is_hospitalized': 'Have you been hospitalized?',
+            'mi_is_hospitalized_followup': 'If yes, explain',
+            'mi_is_taking_prescription': 'Taking any prescriptions?',
+            'mi_is_taking_prescription_followup': 'If yes, explain',
+            'mi_is_using_tobacco': 'Do you use tobacco products?',
+            'mi_is_using_dangerous_drugs': 'Do you use alcohol, cocaine, or other dangerous drugs?',
+            'mi_is_allergic': 'Allergies (Check all that apply)',
+            'mi_is_allergic_others': 'Other allergies (if any)',
+            'mi_bleeding_time': 'Bleeding Time',
+            'mi_is_pregnant': 'For Women: Are you pregnant?',
+            'mi_is_nursing': 'Are you nursing?',
+            'mi_is_birth_control': 'Using birth control?',
+            'mi_bloodtype': 'Blood Type',
+            'mi_bloodpressure': 'Blood Pressure',
+            'mi_select_disease':'Do you have or have you had any of the following? Check which apply.' ,
+            'mi_select_disease_others':'Other Disease:', 
+        }
+
+        #  Apply the custom labels
+        for field_name, label in custom_labels.items():
+            if field_name in self.fields:
+                self.fields[field_name].label = label
+
+
+
 
 
 
@@ -161,6 +269,7 @@ class PatientForm(forms.ModelForm):
                   'nationality',
                   'home_address',
                   'occupation',
+                  'philhealth_no',
                   'dental_insurance',
                   'dental_insurance_effective_date',
                   'for_minors_parent_or_guardian_name',
@@ -199,82 +308,71 @@ class PatientForm(forms.ModelForm):
                   'mi_bloodpressure',
                   'mi_select_disease',
                   'mi_select_disease_others',
+
+            'digital_xrays',                
+            'patient_pictures',            
+            'patient_signatures',      
                   ]
 
-        sex_choices = [
-            ('Male','Male'),
-            ('Female','Female'),
-        ]
-
-        allergies = [
-            ('LOCAL ANESTHETIC','Local Anesthetic (ex. Lidocaine)'),
-            ('PENICILIN, ANTIBIOTICS','Penicilin, Antibiotics'),
-            ('SULFA DRUGS','Sulfa Drugs'),
-            ('ASPIRIN','Aspirin'),
-            ('LATEX','Latex'),
-            ('OTHERS','Others')
-        ]
-
-        yes_no = [
-            ('Yes','Yes'),
-            ('Yes','No'),
-        ]
-
-        diseases = [
-            ('HIGH BLOOD PRESSURE','High Blood Pressure'),
-            ('LOW BLOOD PRESSURE','Low Blood Pressure'),
-            ('EPILEPSY/CONVULSIONS','Epilepsy / Conculsions'),
-            ('AIDS OR HIV INFECTION','AIDS or HIV Infection'),
-            ('SEXUALLY TRANSMITTED DISEASE','Sexually Transmitted Disease'),
-            ('STOMACH TROUBLES / ULCERS','Stomach Troubles / Ulcers'),
-            ('FAINTING SEIZURES','Fainting Seizures'),
-            ('RAPID WEIGHT LOSS','Rapid Weight Loss'),
-            ('RADIATION THERAPY','Radiation Therapy'),
-            ('JOINT REPLACEMENT / IMPLANT','Joint Replacement / Implant'),
-            ('HEART SURGERY','Heart Surgery'),
-            ('HEART ATTACK','Heart Attack'),
-            ('THYROID PROBLEM','Thyroid Problem'),
-            ('HEART DISEASE','Heart Disease'),
-            ('HEART MURMUR','Heart Murmur'),
-            ('HEPATITIS / LIVER DISEASE','Hepatitis / Liver Disease'),
-            ('RHEUMATIC FEVER','Rheumatic Fever'),
-            ('HAY FEVER / ALLERGIES','Hay Fever / Allergies'),
-            ('RESPIRATORY PROBLEMS','Respiratory Problems'),
-            ('HEPATITIS / JAUNDICE','Hepatitis / Jaundice'),
-            ('TUBERCULOSIS','Tuberculosis'),
-            ('SWOLLEN ANKLES','Swollen Ankles'),
-            ('KIDNEY DISEASE','Kidney Disease'),
-            ('DIABETES','Diabetes'),
-            ('CHEST PAIN','Chest Pain'),
-            ('STROKE','Stroke'),
-            ('CANCER / TUMORS','Cancer / Trumors'),
-            ('ANEMIA','Anemia'),
-            ('ANGINA','Angina'),
-            ('ASTHMA','Asthma'),
-            ('EMPHYSEMA','Empysema'),
-            ('BLEEDING PROBLEMS','Bleeding Problems'),
-            ('BLOOD DISEASES','Blood Diseases'),
-            ('HEAD INJURIES','Head Injuries'),
-            ('ARTHRITIS / RHEUMATISM','Arthritis / Rheumatism'),
-        ]
+        help_texts = {
+            'mi_isgoodhealth': 'Select "Yes" if you consider yourself to be in good general health.',
+            'mi_is_under_medical_treatment': 'Select "Yes" if you are currently undergoing any kind of medical treatment.',
+            'mi_is_under_medical_treatment_followup': 'Please provide details about the treatment you are currently receiving.',
+            'mi_is_serious_illness': 'Select "Yes" if you have had any serious illness in the past.',
+            'mi_is_serious_illness_followup': 'Mention the type of illness and any treatment received.',
+            'mi_is_hospitalized': 'Select "Yes" if you have been hospitalized recently.',
+            'mi_is_hospitalized_followup': 'State the reason for hospitalization and the date if possible.',
+            'mi_is_taking_prescription': 'Select "Yes" if you are currently taking any prescription medications.',
+            'mi_is_taking_prescription_followup': 'List all the prescription medications you are taking.',
+            'mi_is_using_tobacco': 'Select "Yes" if you use tobacco products such as cigarettes or chewing tobacco.',
+            'mi_is_using_dangerous_drugs': 'Select "Yes" if you are using or have used any dangerous drugs or substances.',
+            'mi_is_allergic': 'Select "Yes" if you are allergic to any medication, food, or other substances.',
+            'mi_is_allergic_others': 'List any other allergies not mentioned in the choices above.',
+            'mi_bleeding_time': 'Enter your average bleeding time (e.g., for minor cuts). Useful for assessing clotting issues.',
+            'mi_is_pregnant': 'Select "Yes" if you are currently pregnant.',
+            'mi_is_nursing': 'Select "Yes" if you are currently breastfeeding.',
+            'mi_is_birth_control': 'Select "Yes" if you are currently using any form of birth control.',
+            'mi_bloodtype': 'Enter your blood type if known (e.g., A+, O-, etc.).',
+            'mi_bloodpressure': 'Enter your usual blood pressure reading (e.g., 120/80).',
+            'mi_select_disease': 'Check any of the listed diseases or conditions that you have had or currently have.',
+            'mi_select_disease_others': 'List any diseases or conditions not covered in the options above.',
+        }
+        
 
         widgets = {
             'birthdate': forms.DateInput(attrs={'type': 'date'}),
             'dental_insurance_effective_date': forms.DateInput(attrs={'type': 'date'}),
-            'sex': forms.RadioSelect(choices=sex_choices),
-            'mi_isgoodhealth': forms.RadioSelect(choices=yes_no),
-            'mi_is_under_medical_treatment': forms.RadioSelect(choices=yes_no),
-            'mi_is_serious_illness': forms.RadioSelect(choices=yes_no),   
-            'mi_is_hospitalized': forms.RadioSelect(choices=yes_no),
-            'mi_is_taking_prescription': forms.RadioSelect(choices=yes_no),
-            'mi_is_using_tobacco': forms.RadioSelect(choices=yes_no),
-            'mi_is_using_dangerous_drugs': forms.RadioSelect(choices=yes_no),
+            'last_dental_visit': forms.DateInput(attrs={'type': 'date'}),
+            
+            # 'sex': forms.RadioSelect(),
+            # 'mi_isgoodhealth': forms.RadioSelect(),
+            # 'mi_is_under_medical_treatment': forms.RadioSelect(),
+            # 'mi_is_serious_illness': forms.RadioSelect(),   
+            # 'mi_is_hospitalized': forms.RadioSelect(),
+            # 'mi_is_taking_prescription': forms.RadioSelect(),
+            # 'mi_is_using_tobacco': forms.RadioSelect(),
+            # 'mi_is_using_dangerous_drugs': forms.RadioSelect(),
             'mi_is_allergic': forms.CheckboxSelectMultiple(choices=allergies),
-            'mi_is_pregnant': forms.RadioSelect(choices=yes_no),
-            'mi_is_nursing': forms.RadioSelect(choices=yes_no),
-            'mi_is_birth_control': forms.RadioSelect(choices=yes_no),
+            # 'mi_is_pregnant': forms.RadioSelect(),
+            # 'mi_is_nursing': forms.RadioSelect(),
+            # 'mi_is_birth_control': forms.RadioSelect(),
             'mi_select_disease':forms.CheckboxSelectMultiple(choices=diseases),
         }
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        birthdate = cleaned_data.get('birthdate')
+        age = cleaned_data.get('age')
+
+        if birthdate and age is not None:
+            today = date.today()
+            calculated_age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+            
+            if age != calculated_age:
+                raise ValidationError(f"Age does not match the birthdate. Calculated age is {calculated_age}.")
+
+
 
     def __init__(self, *args, **kwargs):
         super(PatientForm, self).__init__(*args, **kwargs)
@@ -292,6 +390,7 @@ class PatientForm(forms.ModelForm):
             'nationality': 'Nationality',
             'home_address': 'Home Address',
             'occupation': 'Occupation',
+            'philhealth_no': 'PhilHealth No.',
             'dental_insurance': 'Dental Insurance Provider',
             'dental_insurance_effective_date': 'Insurance Effective Date',
             'for_minors_parent_or_guardian_name': 'For Minors: Parent/Guardian Name',
@@ -336,6 +435,11 @@ class PatientForm(forms.ModelForm):
         for field_name, label in custom_labels.items():
             if field_name in self.fields:
                 self.fields[field_name].label = label
+
+
+
+
+
 
 
 class ConsentForm(forms.Form):

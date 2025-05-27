@@ -1,14 +1,68 @@
 {% extends "Admin/admin_dash.html" %}
 {% block admincontent %}
+
 <div class="main-container">
-    <div class="main-containers first">Analytics</div>
-    <div class="main-containers second">Analytics</div>
-    <div class="main-containers third">Analytics</div>
-    <div class="main-containers fourth">Analytics</div>
+    <div class="main-containers">
+        <!-- Gender Pie Chart -->
+        <h3>Patient Gender Distribution</h3>
+        <div id="genderPieChart" style="width:100%;max-width:600px;height:400px;"></div>
+    </div>
+    <div class="main-containers ">
+        <!-- Age Group Bar Chart -->
+        <h4>Patients by Age Group</h4>
+        <div id="ageBarChart" style="width:100%;max-width:600px;height:400px;"></div>
+    </div>
+    <div class="main-containers ">
+        <!-- Religion Bar Chart -->
+        <h4>Top 5 Religions of Patients</h4>
+        <div id="religionBarChart" style="width:100%;max-width:600px;height:400px;"></div>
+    </div>
+    <div class="main-containers ">
+        <!-- PhilHealth Pie Chart -->
+        <h4>PhilHealth Coverage</h4>
+        <div id="philhealthPieChart" style="width:100%;max-width:600px;height:400px;"></div>
+    </div>
+
 </div>
+
+<!-- Load Plotly -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <script>
     document.getElementById('banner-title').innerText = 'Analytics';
-</script>
 
+    // Gender Pie Chart
+    Plotly.newPlot('genderPieChart', [{
+        type: 'pie',
+        labels: {{ gender_labels|safe }},
+        values: {{ gender_values|safe }},
+        textinfo: "label+percent",
+        insidetextorientation: "radial"
+    }], { title: 'Gender Distribution' });
+
+    // Age Group Bar Chart
+    Plotly.newPlot('ageBarChart', [{
+        type: 'bar',
+        x: {{ age_labels|safe }},
+        y: {{ age_values|safe }},
+        marker: { color: '#66b3ff' }
+    }], { title: 'Patients by Age Group', yaxis: { title: 'Count' } });
+
+    // Religion Bar Chart
+    Plotly.newPlot('religionBarChart', [{
+        type: 'bar',
+        x: {{ religion_labels|safe }},
+        y: {{ religion_values|safe }},
+        marker: { color: '#ff9999' }
+    }], { title: 'Top 5 Patient Religions', yaxis: { title: 'Count' } });
+
+    // PhilHealth Pie Chart
+    Plotly.newPlot('philhealthPieChart', [{
+        type: 'pie',
+        labels: {{ philhealth_labels|safe }},
+        values: {{ philhealth_values|safe }},
+        textinfo: "label+percent",
+        insidetextorientation: "radial"
+    }], { title: 'PhilHealth Coverage' });
+</script>
 {% endblock %}

@@ -9,6 +9,8 @@
 </style>
 
 
+
+
 {% if show_existing_patient_modal %}
 <!-- Modal Structure -->
 <div class="modal fade" id="existingPatientModal" tabindex="-1" aria-labelledby="existingPatientModalLabel" aria-hidden="true">
@@ -49,6 +51,9 @@
 <div class="main-container">
     
     <div class="main-containers first">
+        {% include 'User/includes/progress_bar.html' %}
+
+
         {% if patient %}
             <h2>Patient Information Record (PIR)</h2>
 

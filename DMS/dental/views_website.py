@@ -73,7 +73,7 @@ def register(request):
         else:
             # Form is invalid — show errors
             login_form = AuthenticationForm()
-            return render(request, 'Website/website.html', {
+            return render(request, 'Website/webs.html', {
                 'register_form': form,
                 'login_form': login_form,
                 'show_register': True
@@ -90,7 +90,7 @@ def login(request):
             return redirect_user_by_role(user)
         else:
             register_form = CustomUserCreationForm()
-            return render(request, 'Website/website.html', {
+            return render(request, 'Website/webs.html', {
                 'login_form': form,
                 'register_form': register_form,
                 'show_login': True  # Optional: used to open modal via JS

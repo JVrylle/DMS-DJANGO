@@ -67,5 +67,37 @@
     document.getElementById('banner-title').innerText = 'Notifications';
 
 </script>
+<script>
+document.querySelectorAll('.mark-read-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent full page reload
+
+        const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+        const notificationId = form.querySelector('[name=notification_id]').value;
+
+        fetch("", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": csrfToken
+            },
+            body: `notification_id=${notificationId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                // Optionally reload part of the page or just mark the row visually
+                location.reload(); // simplest: reload to reflect change
+            } else {
+                alert("Error marking notification as read.");
+            }
+        });
+    });
+});
+</script>
+
+
+
+
 
 {% endblock %}

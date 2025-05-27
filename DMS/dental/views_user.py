@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .decorators import role_required, patient_verified_required
+from .decorators import role_required, patient_verified_required, with_progress_bar
 from .forms import PatientInformationRecordForm, AppointmentForm
 from .models import Patient,AdminLog, Appointment, Notification
 from django.contrib.auth import get_user_model
@@ -9,11 +9,14 @@ from datetime import datetime, time as time_obj
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from collections import Counter
+
 
 
 
 User = get_user_model()
 
+@with_progress_bar
 @patient_verified_required
 @role_required(['USER'])
 def user_dash(request):
@@ -29,23 +32,33 @@ def user_dash(request):
         except Notification.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Notification not found'}, status=404)
 
+
+
+
+
+
     # For GET requests — normal page load
     notifications = Notification.objects.filter(user=user).order_by('-created_at')
     unread_notifications = notifications.filter(is_read=False)
+
+
 
     context = {
         'username': user.username,
         'notifications': notifications,
         'unread_notifications': unread_notifications,
         'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+        'progress': get_progress(user),
     }
 
     return render(request, 'User/user_dash.html', context)
 
 
+@with_progress_bar
 @patient_verified_required
 @role_required(['USER'])
 def user_appointments(request):
+    user = request.user
 
     patient = Patient.objects.filter(synced_user=request.user).first()
     if not patient:
@@ -212,6 +225,7 @@ def user_appointments(request):
         'appointment_purpose': appointment_purpose,
         'purpose_descriptions': purpose_descriptions, 
         'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+        'progress': get_progress(user),
     }
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -222,14 +236,52 @@ def user_appointments(request):
 
 
 
+@with_progress_bar
 @patient_verified_required
 @role_required(['USER'])
 def user_analytics(request):
+    user = request.user
+    patient = getattr(user, 'patient', None)
+
+    if not hasattr(user, 'patient') or user.patient is None:
+        context = {
+            'progress': get_progress(user),
+        }
+        return render(request, 'User/user_analytics.html', context)
+    patient = user.patient
+
+    appointments = patient.appointments.all()
+    upcoming = appointments.filter(status='Scheduled', date__gte=now().date()).order_by('date').first()
+
+    purpose_counts = Counter(appointments.values_list('purpose', flat=True))
+    common_purpose = purpose_counts.most_common(1)[0][0] if purpose_counts else "N/A"
+
     context = {
         'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+        'total_appointments': appointments.count(),
+        'completed': appointments.filter(status='Completed').count(),
+        'pending': appointments.filter(status='Pending').count(),
+        'cancelled': appointments.filter(status='Cancelled').count(),
+        'no_show': appointments.filter(status='No Show').count(),
+        'first_time_visits': appointments.filter(is_first_time_visit=True).count(),
+        'follow_up_visits': appointments.filter(is_first_time_visit=False).count(),
+        'common_purpose': common_purpose,
+        'last_visit': patient.last_dental_visit,
+        'prev_dentist': patient.prev_dentist,
+        'allergies': patient.mi_is_allergic or [],
+        'conditions': patient.mi_select_disease or [],
+        'blood_type': patient.mi_bloodtype,
+        'blood_pressure': patient.mi_bloodpressure,
+        'upcoming_appointment': upcoming,
+        'progress': get_progress(user),
     }
-    return render(request, 'User/user_analytics.html',context)
+    return render(request, 'User/user_analytics.html', context)
 
+
+
+
+
+@with_progress_bar
 @patient_verified_required
 @role_required(['USER'])
 def user_notifications(request):
@@ -242,9 +294,11 @@ def user_notifications(request):
             notif = Notification.objects.get(id=notif_id, user=user)
             notif.is_read = True
             notif.save()
-            return JsonResponse({'status': 'success'})
+            return render(request, 'User/user_notifications.html')
+
         except Notification.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
+            return render(request, 'User/user_notifications.html')
+
 
     # GET request - render page with notifications
     notifications = user.notifications.all().order_by('-created_at')
@@ -254,18 +308,25 @@ def user_notifications(request):
         'notifications': notifications,
         'unread_notifications': unread_notifications,
         'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+        'progress': get_progress(user),
     })
 
+@with_progress_bar
 @patient_verified_required
 @role_required(['USER'])
 def user_prescription(request):
+    user = request.user
     context = {
         'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+        'progress': get_progress(user),
     }
     return render(request, 'User/user_prescription.html', context)
 
+
+@with_progress_bar
 @role_required(['USER'])
 def user_health_record(request):
+    user = request.user
     try:
         patient = Patient.objects.get(synced_user=request.user)
     except Patient.DoesNotExist:
@@ -368,31 +429,44 @@ def user_health_record(request):
         'form': form,
         'patient': patient,
         'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
-        'show_existing_patient_modal': not patient
+        'show_existing_patient_modal': not patient,
+        'progress': get_progress(user),
     })
 
 
-
+@with_progress_bar
 @patient_verified_required
 @role_required(['USER'])
 def user_emergency(request):
+    user = request.user
     context = {
         'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+        'progress': get_progress(user),
     }
     return render(request, 'User/user_emergency.html', context)
 
+@with_progress_bar
 @patient_verified_required
 @role_required(['USER'])
 def user_faq(request):
+    user = request.user
     context = {
         'verification_status': getattr(request, 'patient_verification_status', 'unknown'),
+        'progress': get_progress(user),
     }
     return render(request, 'User/user_faq.html', context)
 
 
 
 
-
+def get_progress(user):
+    patient = Patient.objects.filter(synced_user=user).first()
+    return {
+        'account_created': user.is_authenticated,
+        'pir_filled': bool(patient),
+        'hir_filled': patient.is_complete if patient else False,
+        'verified': patient.is_verified if patient else False,
+    }
 
 
 

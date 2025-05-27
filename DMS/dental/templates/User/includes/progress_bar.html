@@ -1,0 +1,71 @@
+    
+<style>
+    /* FOR THE PROGRESS BAR */
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px auto;
+    padding: 0;
+    max-width: 800px;
+    list-style-type: none;
+    counter-reset: step;
+}
+
+.progress-step {
+    flex-grow: 1;
+    text-align: center;
+    position: relative;
+    counter-increment: step;
+    color: #999;
+}
+
+.progress-step:before {
+    content: counter(step);
+    width: 30px;
+    height: 30px;
+    border: 2px solid #ccc;
+    display: block;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: white;
+    line-height: 30px;
+}
+
+.progress-step:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #ccc;
+    top: 15px;
+    left: -50%;
+    z-index: -1;
+}
+
+.progress-step:first-child:after {
+    content: none;
+}
+
+.progress-step.completed {
+    color: green;
+    font-weight: bold;
+}
+
+.progress-step.completed:before {
+    border-color: green;
+    background: green;
+    color: white;
+}
+</style>
+
+
+
+    
+<div class="main-containers progress-bar">
+    <ul class="progress-container">
+        <li class="progress-step {% if progress.account_created %}completed{% endif %}">Account Created</li>
+        <li class="progress-step {% if progress.pir_filled %}completed{% endif %}">Patient Info (PIR)</li>
+        <li class="progress-step {% if progress.hir_filled %}completed{% endif %}">Health Info (HIR)</li>
+        <li class="progress-step {% if progress.verified %}completed{% endif %}">Admin Verified</li>
+    </ul>
+</div>

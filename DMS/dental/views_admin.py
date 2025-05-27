@@ -14,6 +14,9 @@ from django.utils import timezone
 from datetime import datetime 
 from django.http import JsonResponse
 from django.utils.dateparse import parse_datetime
+import json
+from django.db.models import Count, Q
+
 
 
 
@@ -142,7 +145,7 @@ def admin_patient_info_records(request):
         if 'add_record' in request.POST:
             show_form = True  # Only show form
         else:
-            patient_form = PatientForm(request.POST)
+            patient_form = PatientForm(request.POST, request.FILES)
             consent_form = ConsentForm(request.POST)
 
             if patient_form.is_valid() and consent_form.is_valid():
@@ -172,7 +175,59 @@ def admin_patient_info_records(request):
 
 @role_required(['ADMIN'])
 def admin_analytics(request):
-    return render(request, 'Admin/admin_analytics.html')
+    # Gender distribution
+    gender_data = Patient.objects.values('sex').annotate(count=Count('id'))
+    gender_labels = [entry['sex'] or 'Not Specified' for entry in gender_data]
+    gender_values = [entry['count'] for entry in gender_data]
+
+    # Age group bar chart
+    age_groups = {
+        '0-12': 0,
+        '13-19': 0,
+        '20-35': 0,
+        '36-50': 0,
+        '51+': 0
+    }
+    for patient in Patient.objects.all():
+        age = patient.age
+        if age <= 12:
+            age_groups['0-12'] += 1
+        elif age <= 19:
+            age_groups['13-19'] += 1
+        elif age <= 35:
+            age_groups['20-35'] += 1
+        elif age <= 50:
+            age_groups['36-50'] += 1
+        else:
+            age_groups['51+'] += 1
+
+    age_labels = list(age_groups.keys())
+    age_counts = list(age_groups.values())
+
+    # Religion distribution
+    religion_data = Patient.objects.values('religion').annotate(count=Count('id')).order_by('-count')[:5]
+    religion_labels = [entry['religion'] or 'Unknown' for entry in religion_data]
+    religion_values = [entry['count'] for entry in religion_data]
+
+    # PhilHealth coverage
+    has_philhealth = Patient.objects.filter(~Q(philhealth_no=None), ~Q(philhealth_no="")).count()
+    no_philhealth = Patient.objects.count() - has_philhealth
+
+    philhealth_labels = ['With PhilHealth', 'Without PhilHealth']
+    philhealth_values = [has_philhealth, no_philhealth]
+
+    context = {
+        'gender_labels': json.dumps(gender_labels),
+        'gender_values': json.dumps(gender_values),
+        'age_labels': json.dumps(age_labels),
+        'age_values': json.dumps(age_counts),
+        'religion_labels': json.dumps(religion_labels),
+        'religion_values': json.dumps(religion_values),
+        'philhealth_labels': json.dumps(philhealth_labels),
+        'philhealth_values': json.dumps(philhealth_values),
+    }
+    return render(request, 'Admin/admin_analytics.html', context)
+
 
 @role_required(['ADMIN'])
 def admin_system_logs(request):
@@ -183,47 +238,49 @@ def admin_system_logs(request):
     hir_form = None
     selected_patient = None
 
-    # 1. Admin clicks "Fill Up HIR"
-    if request.method == 'POST' and 'fill_hir' in request.POST:
+    if request.method == 'POST':
         user_id = request.POST.get('user_id')
         user = get_object_or_404(CustomUser, id=user_id)
         selected_patient = get_object_or_404(Patient, synced_user=user)
-        hir_form = HealthInformationRecordForm(instance=selected_patient)
 
-    # 2. Admin submits filled-out HIR
-    elif request.method == 'POST' and 'submit_hir' in request.POST:
-        user_id = request.POST.get('user_id')
-        user = get_object_or_404(CustomUser, id=user_id)
-        selected_patient = get_object_or_404(Patient, synced_user=user)
-        hir_form = HealthInformationRecordForm(request.POST, instance=selected_patient)
+        if 'fill_hir' in request.POST:
+            # Admin clicked Fill Up HIR, render empty form
+            hir_form = HealthInformationRecordForm(instance=selected_patient)
 
-        if hir_form.is_valid():
-            hir_form.save()
-            selected_patient.is_verified = True
-            selected_patient.is_complete = True
-            selected_patient.save()
+        elif 'submit_hir' in request.POST:
+            # Admin submitted the HIR form
+            hir_form = HealthInformationRecordForm(request.POST, request.FILES, instance=selected_patient)
 
-            AdminLog.objects.create(
-                admin=request.user,
-                log_type='SYSTEM',
-                action_description=f"Admin '{request.user.username}' filled out HIR and verified patient '{user.username}'.",
-                affected_model='Patient',
-                affected_object_id=selected_patient.id,
-                metadata={"user_id": user.id}
-            )
+            if hir_form.is_valid():
+                hir_form.save()
+                selected_patient.is_verified = True
+                selected_patient.is_complete = True
+                selected_patient.save()
 
-            # Notification to users
-            Notification.objects.create(
-                user=user,
-                type='Account',
-                message='Your Health Information Record has been completed and your account has been verified.',
-                redirect_url='/User'  # optional: update if you have a user dashboard URL
-    )
+                try:
+                    AdminLog.objects.create(
+                        admin=request.user,
+                        log_type='SYSTEM',
+                        action_description=f"Verified new patient '{user.username}' via admin logs",
+                        affected_model='Patient',
+                        affected_object_id=selected_patient.id,
+                        metadata={"user_id": user.id}
+                    )
+                except Exception as e:
+                    print("Error creating AdminLog:", e)
+                    messages.error(request, "Failed to log system action.")
 
+                Notification.objects.create(
+                    user=user,
+                    type='Account',
+                    message='Your Health Information Record has been completed and your account has been verified.',
+                    redirect_url='/User'
+                )
 
-
-            messages.success(request, f"HIR completed and patient '{user.username}' verified.")
-            return redirect('admin_system_logs')
+                messages.success(request, f"HIR completed and patient '{user.username}' verified.")
+                return redirect('admin_system_logs')
+            else:
+                messages.error(request, "Please correct the errors in the HIR form.")
 
     return render(request, 'Admin/admin_system_logs.html', {
         'system_logs': system_logs,

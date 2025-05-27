@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 
 
+
 #Create a manager to help us create users
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -66,7 +67,7 @@ class Patient(models.Model):
     nationality = models.CharField(max_length=100, null=False)
     home_address = models.CharField(max_length=255, null=False)
     occupation = models.CharField(max_length=100, null=False)
-    philhealth_no = models.IntegerField(null=True,blank=True)
+    philhealth_no = models.CharField(max_length=20,null=True,blank=True)
     dental_insurance = models.CharField(max_length=254, null=True, blank=True)
     dental_insurance_effective_date = models.DateField(null=True, blank=True)
 
@@ -101,16 +102,70 @@ class Patient(models.Model):
         ('No', 'No'),
     ]
 
+    allergies = [
+        ('Local Anesthetic', 'Local Anesthetic (e.g., Lidocaine)'),
+        ('Penicillin, Antibiotics', 'Penicillin, Antibiotics'),
+        ('Sulfa Drugs', 'Sulfa Drugs'),
+        ('Aspirin', 'Aspirin'),
+        ('Latex', 'Latex'),
+        ('Others', 'Others')
+    ]
+
+    diseases = [
+        ('High Blood Pressure', 'High Blood Pressure'),
+        ('Low Blood Pressure', 'Low Blood Pressure'),
+        ('Epilepsy/Convulsions', 'Epilepsy / Convulsions'),
+        ('AIDS or HIV Infection', 'AIDS or HIV Infection'),
+        ('Sexually Transmitted Disease', 'Sexually Transmitted Disease'),
+        ('Stomach Troubles / Ulcers', 'Stomach Troubles / Ulcers'),
+        ('Fainting Seizures', 'Fainting Seizures'),
+        ('Rapid Weight Loss', 'Rapid Weight Loss'),
+        ('Radiation Therapy', 'Radiation Therapy'),
+        ('Joint Replacement / Implant', 'Joint Replacement / Implant'),
+        ('Heart Surgery', 'Heart Surgery'),
+        ('Heart Attack', 'Heart Attack'),
+        ('Thyroid Problem', 'Thyroid Problem'),
+        ('Heart Disease', 'Heart Disease'),
+        ('Heart Murmur', 'Heart Murmur'),
+        ('Hepatitis / Liver Disease', 'Hepatitis / Liver Disease'),
+        ('Rheumatic Fever', 'Rheumatic Fever'),
+        ('Hay Fever / Allergies', 'Hay Fever / Allergies'),
+        ('Respiratory Problems', 'Respiratory Problems'),
+        ('Hepatitis / Jaundice', 'Hepatitis / Jaundice'),
+        ('Tuberculosis', 'Tuberculosis'),
+        ('Swollen Ankles', 'Swollen Ankles'),
+        ('Kidney Disease', 'Kidney Disease'),
+        ('Diabetes', 'Diabetes'),
+        ('Chest Pain', 'Chest Pain'),
+        ('Stroke', 'Stroke'),
+        ('Cancer / Tumors', 'Cancer / Tumors'),
+        ('Anemia', 'Anemia'),
+        ('Angina', 'Angina'),
+        ('Asthma', 'Asthma'),
+        ('Emphysema', 'Emphysema'),
+        ('Bleeding Problems', 'Bleeding Problems'),
+        ('Blood Diseases', 'Blood Diseases'),
+        ('Head Injuries', 'Head Injuries'),
+        ('Arthritis / Rheumatism', 'Arthritis / Rheumatism'),
+    ]
+
+
     mi_isgoodhealth = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+
     mi_is_under_medical_treatment = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_under_medical_treatment_followup = models.CharField(max_length=255, null=True, blank=True)
+
     mi_is_serious_illness = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_serious_illness_followup = models.CharField(max_length=255, null=True, blank=True)
+
     mi_is_hospitalized = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_hospitalized_followup = models.CharField(max_length=255, null=True, blank=True)
+
     mi_is_taking_prescription = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
     mi_is_taking_prescription_followup = models.CharField(max_length=255, null=True, blank=True)
+
     mi_is_using_tobacco = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+
     mi_is_using_dangerous_drugs = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
 
     mi_is_allergic = models.JSONField(default=list, null=True, blank=True)
@@ -139,12 +194,15 @@ class Patient(models.Model):
     patient_pictures = models.ImageField(upload_to='pictures/', blank=True, null=True)
     patient_signatures = models.ImageField(upload_to='signatures/', blank=True, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
     def __str__(self):
         return f'{self.last_name}, {self.first_name} {self.middle_name}'
     
     def get_full_name(self):
         return f"{self.first_name} {self.middle_name} {self.last_name}"
-
 
 
 
@@ -183,8 +241,8 @@ class TreatmentRecord(models.Model):
     tooth_number = models.IntegerField(null=True)
     treatment_procedure = models.TextField(null=True)
     treatment_dentist = models.CharField(max_length=255,null=True)
-    amount_charged = models.IntegerField(null=True)
-    amount_paid = models.IntegerField(null=True)
+    amount_charged = models.DecimalField(decimal_places=2, max_digits=10,null=True)
+    amount_paid = models.DecimalField(decimal_places=2, max_digits=10,null=True)
     balance = models.IntegerField(null=True)
     next_appointment = models.DateField(max_length=255,null=True)
 

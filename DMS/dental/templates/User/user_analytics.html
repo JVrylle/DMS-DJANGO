@@ -4,8 +4,44 @@
 <div class="main-container">
 {% if verification_status == 'verified' %}
     <div class="main-containers"> 
-        Analytics
+        <div class="analytics-section">
+            <h3>Total Appointments: {{ total_appointments }}</h3>
+            <ul>
+                <li>Completed: {{ completed }}</li>
+                <li>Pending: {{ pending }}</li>
+                <li>Cancelled: {{ cancelled }}</li>
+                <li>No Show: {{ no_show }}</li>
+            </ul>
+
+
+        </div>
     </div>
+    <div class="main-containers">
+
+            <h4>Most Common Purpose: {{ common_purpose }}</h4>
+            <h4>First Visits: {{ first_time_visits }}</h4>
+            <h4>Follow-up Visits: {{ follow_up_visits }}</h4>
+            
+
+    </div>
+    <div class="main-containers">
+
+        <h4>Known Allergies:</h4>
+        <ul>{% for allergy in allergies %}<li>{{ allergy }}</li>{% endfor %}</ul>
+
+        <h4>Medical Conditions:</h4>
+        <ul>{% for condition in conditions %}<li>{{ condition }}</li>{% endfor %}</ul>
+
+    </div>
+    <div class="main-containers">
+        <h4>Vitals:</h4>
+        <p>Blood Type: {{ blood_type }}</p>
+        <p>Blood Pressure: {{ blood_pressure }}</p>
+    </div>
+
+
+
+
 {% else %}
     {% include 'User/includes/unverified_notice.html' %}
 {% endif %}
