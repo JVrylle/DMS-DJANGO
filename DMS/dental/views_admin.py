@@ -251,12 +251,12 @@ def admin_analytics(request):
     }
     return render(request, 'Admin/admin_analytics.html', context)
 
-
 @role_required(['ADMIN'])
 def admin_system_logs(request):
     system_logs = AdminLog.objects.filter(log_type='SYSTEM').order_by('-timestamp')
     verified_patients = Patient.objects.select_related('synced_user')
     patient_map = {p.synced_user.id: p for p in verified_patients if p.synced_user}
+    consent_form = ConsentForm()
 
     hir_form = None
     selected_patient = None
@@ -269,47 +269,53 @@ def admin_system_logs(request):
         if 'fill_hir' in request.POST:
             # Admin clicked Fill Up HIR, render empty form
             hir_form = HealthInformationRecordForm(instance=selected_patient)
+            consent_form = ConsentForm()
 
         elif 'submit_hir' in request.POST:
-            # Admin submitted the HIR form
+            # Admin submitted the HIR form and consent form
             hir_form = HealthInformationRecordForm(request.POST, request.FILES, instance=selected_patient)
+            consent_form = ConsentForm(request.POST)
 
-            if hir_form.is_valid():
-                hir_form.save()
-                selected_patient.is_verified = True
-                selected_patient.is_complete = True
-                selected_patient.save()
+            if hir_form.is_valid() and consent_form.is_valid():
+                if consent_form.cleaned_data.get('consent_signed'):
+                    hir_form.save()
+                    selected_patient.is_verified = True
+                    selected_patient.is_complete = True
+                    selected_patient.save()
 
-                try:
-                    AdminLog.objects.create(
-                        admin=request.user,
-                        log_type='SYSTEM',
-                        action_description=f"Verified new patient '{user.username}' via admin logs",
-                        affected_model='Patient',
-                        affected_object_id=selected_patient.id,
-                        metadata={"user_id": user.id}
+                    try:
+                        AdminLog.objects.create(
+                            admin=request.user,
+                            log_type='SYSTEM',
+                            action_description=f"Verified new patient '{user.username}' via admin logs",
+                            affected_model='Patient',
+                            affected_object_id=selected_patient.id,
+                            metadata={"user_id": user.id}
+                        )
+                    except Exception as e:
+                        print("Error creating AdminLog:", e)
+                        messages.error(request, "Failed to log system action.")
+
+                    Notification.objects.create(
+                        user=user,
+                        type='Account',
+                        message='Your Health Information Record has been completed and your account has been verified.',
+                        redirect_url='/User'
                     )
-                except Exception as e:
-                    print("Error creating AdminLog:", e)
-                    messages.error(request, "Failed to log system action.")
 
-                Notification.objects.create(
-                    user=user,
-                    type='Account',
-                    message='Your Health Information Record has been completed and your account has been verified.',
-                    redirect_url='/User'
-                )
-
-                messages.success(request, f"HIR completed and patient '{user.username}' verified.")
-                return redirect('admin_system_logs')
+                    messages.success(request, f"HIR completed and patient '{user.username}' verified.")
+                    return redirect('admin_system_logs')
+                else:
+                    consent_form.add_error('consent_signed', 'Consent must be signed before submission.')
             else:
-                messages.error(request, "Please correct the errors in the HIR form.")
+                messages.error(request, "Please correct the errors in the HIR or Consent form.")
 
     return render(request, 'Admin/admin_system_logs.html', {
         'system_logs': system_logs,
         'patients': patient_map,
         'hir_form': hir_form,
         'selected_patient': selected_patient,
+        'consent_form': consent_form,
     })
 
 

@@ -30,7 +30,11 @@
 
 <script>
     document.getElementById('banner-title').innerText = 'Analytics';
+</script>
 
+
+<script>
+function initializeAdminAnalyticsCharts() {
     // Gender Pie Chart
     Plotly.newPlot('genderPieChart', [{
         type: 'pie',
@@ -64,5 +68,17 @@
         textinfo: "label+percent",
         insidetextorientation: "radial"
     }], { title: 'PhilHealth Coverage' });
+}
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof initializeAdminAnalyticsCharts === 'function') {
+        initializeAdminAnalyticsCharts();
+    }
+});
+</script>
+
+
+
 {% endblock %}

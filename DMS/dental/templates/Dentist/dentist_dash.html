@@ -191,26 +191,24 @@ body {
     }
  
     function navigateToFromData(buttonElement) {
-        const url = buttonElement.getAttribute('data-url');  // Get the URL from data-url
-        const bannerTitle = buttonElement.getAttribute('data-banner');  // Get the banner title from data-banner
+        const url = buttonElement.getAttribute('data-url');
+        const bannerTitle = buttonElement.getAttribute('data-banner');
 
-        // Use Fetch API to get the HTML content of the page
         fetch(url)
-            .then(response => response.text())  // Parse the HTML
+            .then(response => response.text())
             .then(html => {
-                // Create a temporary div to hold the fetched content
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
-
-                // Extract the new content for dynamic-main-content
                 const newContent = tempDiv.querySelector('#dynamic-main-content') || tempDiv;
                 document.getElementById('dynamic-main-content').innerHTML = newContent.innerHTML;
 
-                // Update the banner title
                 document.getElementById('banner-title').innerText = bannerTitle;
-
-                // Change the URL in the browser without reloading the page
                 window.history.pushState({ path: url }, '', url);
+
+                // --- ADD THIS: ---
+                if (typeof initializeAnalyticsCharts === 'function') {
+                    initializeAnalyticsCharts();
+                }
             })
             .catch(error => console.error('Error loading content:', error));
     }
@@ -222,20 +220,27 @@ body {
     }
 
     // Function to fetch and update the page content
-    function fetchPage(url) {
-        fetch(url)
-            .then(response => response.text())
-            .then(html => {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
-                const newContent = tempDiv.querySelector('#dynamic-main-content') || tempDiv;
-                document.getElementById('dynamic-main-content').innerHTML = newContent.innerHTML;
+function fetchPage(url) {
+    fetch(url)
+        .then(response => response.text())
+        .then(html => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            const newContent = tempDiv.querySelector('#dynamic-main-content') || tempDiv;
+            document.getElementById('dynamic-main-content').innerHTML = newContent.innerHTML;
 
-                const bannerTitle = tempDiv.querySelector('#banner-title').innerText;
-                document.getElementById('banner-title').innerText = bannerTitle;
-            })
-            .catch(error => console.error('Error loading page on back/forward navigation:', error));
-    }
+            const bannerTitle = tempDiv.querySelector('#banner-title').innerText;
+            document.getElementById('banner-title').innerText = bannerTitle;
+
+            // --- ADD THIS: ---
+            if (typeof initializeAnalyticsCharts === 'function') {
+                initializeAnalyticsCharts();
+            }
+        })
+        .catch(error => console.error('Error loading page on back/forward navigation:', error));
+}
+
+
 </script>
 
 

@@ -694,6 +694,91 @@ input::-webkit-calendar-picker-indicator {
 </div>
 {% endif %}
 
+{% if selected_patient and viewing_intraoral %}
+<div class="main-containers">
+    <h2 class="record-title">Intraoral Examination for {{ selected_patient.first_name }} {{ selected_patient.last_name }}</h2>
+    {% with exam=selected_patient.intraoralexamination %}
+    {% if exam %}
+        {% with tooth_lookup=exam.teeth|dictsort:"tooth" %}
+        <!-- ...your chart code here (already present)... -->
+        {% endwith %}
+
+        <section class="section-card">
+            <h3>Intraoral Exam Details</h3>
+            <div class="info-grid">
+                <p><strong>X-ray Taken:</strong>
+                    {% if exam.xray_taken %}
+                        {{ exam.xray_taken }}
+                        {{ exam.xray_taken_others }}
+                    {% else %}
+                        <span style="color:#888;">No data for X-ray taken.</span>
+                    {% endif %}
+                </p>
+                <p><strong>X-ray Periapical:</strong>
+                    {% if exam.xray_periapical %}
+                        {{ exam.xray_periapical }}
+                    {% else %}
+                        <span style="color:#888;">No data for Xray Periapical.</span>
+                    {% endif %}
+                </p>
+                <p><strong>Other X-rays:</strong>
+                    {% if exam.xray_taken_others %}
+                        {{ exam.xray_taken_others }}
+                    {% else %}
+                        <span style="color:#888;">No data for Other X-rays.</span>
+                    {% endif %}
+                </p>
+                <p><strong>Periodontal Screening:</strong>
+                    {% if exam.periodontal_screening %}
+                        {{ exam.periodontal_screening }}
+                    {% else %}
+                        <span style="color:#888;">No data for Periodontal Screening.</span>
+                    {% endif %}
+                </p>
+                <p><strong>Occlusion:</strong>
+                    {% if exam.occlusion %}
+                        {{ exam.occlusion }}
+                    {% else %}
+                        <span style="color:#888;">No data for Occlusion.</span>
+                    {% endif %}
+                </p>
+                <p><strong>Appliances:</strong>
+                    {% if exam.appliances %}
+                        {{ exam.appliances }}
+                    {% else %}
+                        <span style="color:#888;">No data for Appliances.</span>
+                    {% endif %}
+                </p>
+                <p><strong>Other Appliances:</strong>
+                    {% if exam.appliances_others %}
+                        {{ exam.appliances_others }}
+                    {% else %}
+                        <span style="color:#888;">No data for Other Appliances.</span>
+                    {% endif %}
+                </p>
+                <p><strong>TMD:</strong>
+                    {% if exam.tmd %}
+                        {{ exam.tmd }}
+                    {% else %}
+                        <span style="color:#888;">No data for TMD.</span>
+                    {% endif %}
+                </p>
+
+
+            </div>
+        </section>
+    {% else %}
+        <p>No intraoral exam data available.</p>
+    {% endif %}
+    {% endwith %}
+</div>
+{% endif %}
+
+
+
+
+
+
 
 
     {% if selected_patient and show_treatment_table %}
@@ -747,9 +832,9 @@ input::-webkit-calendar-picker-indicator {
 
 
 
-    {% if selected_patient and intraoralexamination_form %}
+    {% if selected_patient and intraoralexamination_form and not viewing_intraoral %}
     <div class="main-containers">
-        <h2>STEP 4: INTRAORAL EXAMINATION</h2>
+        <h2>INTRAORAL EXAMINATION</h2>
         <h3>Patient: {{ selected_patient.first_name }} {{ selected_patient.last_name }}</h3>
 
         {% if message %}

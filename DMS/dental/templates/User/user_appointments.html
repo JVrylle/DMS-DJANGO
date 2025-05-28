@@ -161,6 +161,67 @@ table.appointments-table th {
 </script>
 {% endif %} {% endcomment %}
 
+{% if form.errors or messages %}
+<div id="messageModal" style="
+    display: flex;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fde2e2;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    z-index: 1050;
+    min-width: 300px;
+    max-width: 90%;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    justify-content: space-between;
+    align-items: center;
+">
+    <span>
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div>{{ field.label }}: {{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if not form.errors %}
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+
+    </span>
+    <button onclick="document.getElementById('messageModal').style.display='none'" style="
+        background: none;
+        border: none;
+        color: #721c24;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 10px;
+    ">&times;</button>
+</div>
+<script>
+    setTimeout(() => {
+        const modal = document.getElementById('messageModal');
+        if (modal) modal.style.display = 'none';
+    }, 5000);
+</script>
+{% endif %}
+
+
+
+
 <div class="main-container">
 {% if verification_status == 'verified' %}
     <div class="main-containers">

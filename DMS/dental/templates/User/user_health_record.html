@@ -93,6 +93,44 @@
             <form method="POST" class="pir-form">
                 {% csrf_token %}
                 {{ form.as_p }} 
+
+                    <datalist id="religion-list">
+                        <option value="Roman Catholic">
+                        <option value="Iglesia ni Cristo">
+                        <option value="Protestant">
+                        <option value="Islam">
+                        <option value="Buddhist">
+                        <option value="Hindu">
+                        <option value="Born Again">
+                        <option value="Seventh-day Adventist">
+                        <option value="Jehovah's Witness">
+                        <option value="Other">
+                    </datalist>
+
+                    <datalist id="nationality-list">
+                        <option value="Filipino">
+                        <option value="American">
+                        <option value="Chinese">
+                        <option value="Japanese">
+                        <option value="Korean">
+                        <option value="Vietnamese">
+                    </datalist>
+
+                    <datalist id="home_address-list">
+                        <option value="Tayabas City">
+                        <option value="Lucena City">
+                        <option value="Sariaya Quezon">
+                        <option value="Candelaria Quezon">
+                        <option value="Pagbilao Quezon">
+                        <option value="Lucban Quezon">
+                        <option value="Mauban Quezon">
+                        <option value="Atimonan Quezon">
+                    </datalist>
+
+
+
+
+
                 <button type="submit">Submit</button>
             </form>
     </div>
@@ -100,6 +138,123 @@
 </div>
 
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const birthdateInput = document.getElementById('id_birthdate');
+    const ageInput = document.getElementById('id_age');
+
+    function calculateAge(birthdate) {
+        if (!birthdate) return '';
+        const today = new Date();
+        const dob = new Date(birthdate);
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    if (birthdateInput && ageInput) {
+        birthdateInput.addEventListener('change', function() {
+            ageInput.value = calculateAge(this.value);
+        });
+    }
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Utility to find the field's container (p, div, or li)
+    function getFieldRow(fieldId) {
+        const elem = document.getElementById('id_' + fieldId);
+        return elem?.closest('p') || elem?.closest('div') || elem?.closest('li');
+    }
+
+    // Hide "For Minors" if age >= 18
+    function toggleForMinors() {
+        const ageInput = document.getElementById('id_age');
+        const minorsFields = [
+            'for_minors_parent_or_guardian_name',
+            'for_minors_parent_or_guardian_occupation'
+        ];
+        const show = ageInput && Number(ageInput.value) < 18;
+        minorsFields.forEach(field => {
+            const fieldRow = getFieldRow(field);
+            if (fieldRow) fieldRow.style.display = show ? '' : 'none';
+        });
+    }
+
+    // Hide "For Women" if sex is Male
+    function toggleForWomen() {
+        const sexInputs = document.getElementsByName('sex');
+        let sex = '';
+        sexInputs.forEach(input => { if (input.checked) sex = input.value; });
+        const womenFields = [
+            'mi_is_pregnant',
+            'mi_is_nursing',
+            'mi_is_birth_control'
+        ];
+        const show = sex.toLowerCase() === 'female';
+        womenFields.forEach(field => {
+            const fieldRow = getFieldRow(field);
+            if (fieldRow) fieldRow.style.display = show ? '' : 'none';
+        });
+    }
+
+    // Show follow-up only if "Yes" is selected
+    function setupFollowUps() {
+        const followups = [
+            { main: 'mi_is_serious_illness', follow: 'mi_is_serious_illness_followup' },
+            { main: 'mi_is_hospitalized', follow: 'mi_is_hospitalized_followup' },
+            { main: 'mi_is_taking_prescription', follow: 'mi_is_taking_prescription_followup' },
+            { main: 'mi_is_under_medical_treatment', follow: 'mi_is_under_medical_treatment_followup' },
+            { main: 'mi_is_under_medical_treatment', follow: 'mi_is_under_medical_treatment_followup' },
+            // Add more pairs as needed
+        ];
+        followups.forEach(pair => {
+            const radios = document.getElementsByName(pair.main);
+            const followupRow = getFieldRow(pair.follow);
+            function toggle() {
+                let show = false;
+                radios.forEach(r => { if (r.checked && r.value === 'Yes') show = true; });
+                if (followupRow) followupRow.style.display = show ? '' : 'none';
+            }
+            radios.forEach(r => r.addEventListener('change', toggle));
+            toggle(); // Initial
+        });
+    }
+
+    // Age auto-calc
+    const birthdateInput = document.getElementById('id_birthdate');
+    const ageInput = document.getElementById('id_age');
+    function calculateAge(birthdate) {
+        if (!birthdate) return '';
+        const today = new Date();
+        const dob = new Date(birthdate);
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+        return age;
+    }
+    if (birthdateInput && ageInput) {
+        birthdateInput.addEventListener('change', function() {
+            ageInput.value = calculateAge(this.value);
+            toggleForMinors(); // Update minors fields if age changes
+        });
+    }
+
+    // Initial and on change
+    document.getElementById('id_age')?.addEventListener('input', toggleForMinors);
+    document.getElementsByName('sex').forEach(r => r.addEventListener('change', toggleForWomen));
+    toggleForMinors();
+    toggleForWomen();
+    setupFollowUps();
+});
+</script>
 
 
 

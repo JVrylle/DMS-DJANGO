@@ -73,9 +73,9 @@
                     <select name="status" id="status" onchange="this.form.submit()" class="mt-1">
                         <option value="">All</option>
                         <option value="Pending" {% if request.GET.status == 'Pending' %}selected{% endif %}>Pending</option>
-                        <option value="Pending-Walk-in" {% if request.GET.status == 'Pending-Walk-in' %}selected{% endif %}>Pending-Walk-in</option>
                         <option value="Approved" {% if request.GET.status == 'Approved' %}selected{% endif %}>Approved</option>
-                        <option value="Rejected" {% if request.GET.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                        <option value="Cancelled" {% if request.GET.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                        <option value="Rescheduled" {% if request.GET.status == 'Rescheduled' %}selected{% endif %}>Rescheduled</option>
                     </select>
                 </div>
 
@@ -146,7 +146,7 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="appointment_id" value="{{ appt.id }}">
                                         <input type="hidden" name="action" value="reject">
-                                        <button type="submit" class="bg-red-500 px-2 py-1 rounded">Reject</button>
+                                        <button type="submit" class="bg-red-500 px-2 py-1 rounded">Cancel</button>
                                     </form>
                                 {% elif edit_appt and edit_appt.id == appt.id %}
                                     <form method="post" class="flex gap-2">

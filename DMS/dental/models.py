@@ -62,7 +62,7 @@ class Patient(models.Model):
         ('Female', 'Female'),
     ]
 
-    sex = models.CharField(max_length=10, null=False, choices=sex_choices)
+    sex = models.CharField(max_length=10, null=False)
     religion = models.CharField(max_length=100, null=False)
     nationality = models.CharField(max_length=100, null=False)
     home_address = models.CharField(max_length=255, null=False)
@@ -150,32 +150,32 @@ class Patient(models.Model):
     ]
 
 
-    mi_isgoodhealth = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_isgoodhealth = models.CharField(max_length=10, null=True, blank=True)
 
-    mi_is_under_medical_treatment = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_under_medical_treatment = models.CharField(max_length=10, null=True, blank=True)
     mi_is_under_medical_treatment_followup = models.CharField(max_length=255, null=True, blank=True)
 
-    mi_is_serious_illness = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_serious_illness = models.CharField(max_length=10, null=True, blank=True)
     mi_is_serious_illness_followup = models.CharField(max_length=255, null=True, blank=True)
 
-    mi_is_hospitalized = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_hospitalized = models.CharField(max_length=10, null=True, blank=True, )
     mi_is_hospitalized_followup = models.CharField(max_length=255, null=True, blank=True)
 
-    mi_is_taking_prescription = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_taking_prescription = models.CharField(max_length=10, null=True, blank=True, )
     mi_is_taking_prescription_followup = models.CharField(max_length=255, null=True, blank=True)
 
-    mi_is_using_tobacco = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_using_tobacco = models.CharField(max_length=10, null=True, blank=True, )
 
-    mi_is_using_dangerous_drugs = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_using_dangerous_drugs = models.CharField(max_length=10, null=True, blank=True, )
 
     mi_is_allergic = models.JSONField(default=list, null=True, blank=True)
     mi_is_allergic_others = models.CharField(max_length=255, null=True, blank=True)
     mi_bleeding_time = models.CharField(max_length=255, null=True, blank=True)
 
     # MI For Women Only
-    mi_is_pregnant = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
-    mi_is_nursing = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
-    mi_is_birth_control = models.CharField(max_length=10, null=True, blank=True, choices=yes_no)
+    mi_is_pregnant = models.CharField(max_length=10, null=True, blank=True, )
+    mi_is_nursing = models.CharField(max_length=10, null=True, blank=True, )
+    mi_is_birth_control = models.CharField(max_length=10, null=True, blank=True, )
 
     mi_bloodtype = models.CharField(max_length=255, null=True, blank=True)
     mi_bloodpressure = models.CharField(max_length=255, null=True, blank=True)

@@ -15,6 +15,12 @@ yes_no = [
     ('No', 'No'),
 ]
 
+
+sex_choices = [
+    ('Male', 'Male'),
+    ('Female', 'Female'),
+]
+
 allergies = [
     ('Local Anesthetic', 'Local Anesthetic (e.g., Lidocaine)'),
     ('Penicillin, Antibiotics', 'Penicillin, Antibiotics'),
@@ -83,6 +89,11 @@ class PatientInformationRecordForm(forms.ModelForm):
         widgets = {
             'birthdate': forms.DateInput(attrs={'type': 'date'}),
             'dental_insurance_effective_date': forms.DateInput(attrs={'type': 'date'}),
+            'last_dental_visit': forms.DateInput(attrs={'type': 'date'}),
+            'religion': forms.TextInput(attrs={'list': 'religion-list'}),
+            'nationality': forms.TextInput(attrs={'list': 'nationality-list'}),
+            'home_address': forms.TextInput(attrs={'list': 'home_address-list'}),
+            'sex': forms.RadioSelect(choices=sex_choices),
         }
 
 
@@ -206,6 +217,18 @@ class HealthInformationRecordForm(forms.ModelForm):
 
         widgets = {
             'last_dental_visit': forms.DateInput(attrs={'type': 'date'}),
+            'mi_bloodtype': forms.TextInput(attrs={'list': 'bloodtype-list'}),
+            'mi_isgoodhealth': forms.RadioSelect(choices=yes_no),
+            'mi_is_under_medical_treatment': forms.RadioSelect(choices=yes_no),
+            'mi_is_serious_illness': forms.RadioSelect(choices=yes_no),   
+            'mi_is_hospitalized': forms.RadioSelect(choices=yes_no),
+            'mi_is_taking_prescription': forms.RadioSelect(choices=yes_no),
+            'mi_is_using_tobacco': forms.RadioSelect(choices=yes_no),
+            'mi_is_using_dangerous_drugs': forms.RadioSelect(choices=yes_no),
+            'mi_is_pregnant': forms.RadioSelect(choices=yes_no),
+            'mi_is_nursing': forms.RadioSelect(choices=yes_no),
+            'mi_is_birth_control': forms.RadioSelect(choices=yes_no),
+
         }
 
 
@@ -269,11 +292,6 @@ class PatientForm(forms.ModelForm):
         choices=Patient.diseases,
         label='Do you have or have you had any of the following?'
     )
-
-
-
-
-
 
     class Meta:
         model = Patient
@@ -362,19 +380,22 @@ class PatientForm(forms.ModelForm):
             'birthdate': forms.DateInput(attrs={'type': 'date'}),
             'dental_insurance_effective_date': forms.DateInput(attrs={'type': 'date'}),
             'last_dental_visit': forms.DateInput(attrs={'type': 'date'}),
-            
-            # 'sex': forms.RadioSelect(),
-            # 'mi_isgoodhealth': forms.RadioSelect(),
-            # 'mi_is_under_medical_treatment': forms.RadioSelect(),
-            # 'mi_is_serious_illness': forms.RadioSelect(),   
-            # 'mi_is_hospitalized': forms.RadioSelect(),
-            # 'mi_is_taking_prescription': forms.RadioSelect(),
-            # 'mi_is_using_tobacco': forms.RadioSelect(),
-            # 'mi_is_using_dangerous_drugs': forms.RadioSelect(),
+            'religion': forms.TextInput(attrs={'list': 'religion-list'}),
+            'nationality': forms.TextInput(attrs={'list': 'nationality-list'}),
+            'home_address': forms.TextInput(attrs={'list': 'home_address-list'}),
+            'mi_bloodtype': forms.TextInput(attrs={'list': 'bloodtype-list'}),
+            'sex': forms.RadioSelect(choices=sex_choices),
+            'mi_isgoodhealth': forms.RadioSelect(choices=yes_no),
+            'mi_is_under_medical_treatment': forms.RadioSelect(choices=yes_no),
+            'mi_is_serious_illness': forms.RadioSelect(choices=yes_no),   
+            'mi_is_hospitalized': forms.RadioSelect(choices=yes_no),
+            'mi_is_taking_prescription': forms.RadioSelect(choices=yes_no),
+            'mi_is_using_tobacco': forms.RadioSelect(choices=yes_no),
+            'mi_is_using_dangerous_drugs': forms.RadioSelect(choices=yes_no),
             # 'mi_is_allergic': forms.CheckboxSelectMultiple(choices=allergies),
-            # 'mi_is_pregnant': forms.RadioSelect(),
-            # 'mi_is_nursing': forms.RadioSelect(),
-            # 'mi_is_birth_control': forms.RadioSelect(),
+            'mi_is_pregnant': forms.RadioSelect(choices=yes_no),
+            'mi_is_nursing': forms.RadioSelect(choices=yes_no),
+            'mi_is_birth_control': forms.RadioSelect(choices=yes_no),
             # 'mi_select_disease':forms.CheckboxSelectMultiple(choices=diseases),
         }
 
@@ -443,7 +464,14 @@ class PatientForm(forms.ModelForm):
                 self.fields[field_name].label = label
 
 
-
+    def clean(self):
+        cleaned_data = super().clean()
+        birthdate = cleaned_data.get('birthdate')
+        if birthdate:
+            today = date.today()
+            age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+            cleaned_data['age'] = age
+        return cleaned_data
 
 
 

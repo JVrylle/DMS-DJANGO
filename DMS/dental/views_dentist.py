@@ -31,7 +31,7 @@ def dentist_patient_health_records(request):
     if request.user.role != 'DENTIST':
         return redirect('forbidden')
 
-    patients = Patient.objects.all()
+    patients = Patient.objects.filter(is_complete=True)
     selected_patient = None
     intraoral_form = None
     treatment_form = None
@@ -88,9 +88,10 @@ def dentist_patient_health_records(request):
             existing_exam = IntraoralExamination.objects.filter(patient=selected_patient).first()
             if existing_exam:
                 intraoral_form = IntraoralExaminationForm(instance=existing_exam)
+                exam = existing_exam
             else:
                 intraoral_form = IntraoralExaminationForm()
-            
+                exam = None
             viewing_intraoral = True  # New flag
 
         # Button clicked: View Treatment    
@@ -131,6 +132,7 @@ def dentist_patient_health_records(request):
         'row3_right': [31, 32, 33, 34, 35, 36, 37, 38],
         'row4_left': [81, 82, 83, 84, 85],
         'row4_right': [71, 72, 73, 74, 75],
+        'exam': locals().get('exam', None),
     }
     return render(request, 'Dentist/dentist_patient_health_records.html', context)
 
@@ -138,6 +140,7 @@ def dentist_patient_health_records(request):
 
 @role_required(['DENTIST'])
 def dentist_analytics(request):
+    
     return render(request, 'Dentist/dentist_analytics.html')
 
 @role_required(['DENTIST'])
